@@ -40,15 +40,16 @@ const setDefaultRows = (details) => {
 
 /**
  * @param info {}
+ * @param tab {}
  */
-const openTab = (info) => {
+const openTab = (info, tab) => {
     let url = rows[info.menuItemId].url;
     if (url.includes('%u'))
         url = url.replace('%u', info.linkUrl);
     else
         url += info.linkUrl;
 
-    browser.tabs.create({ url: url });
+    browser.tabs.create({ url: url, index: tab.index + 1 });
 };
 
 browser.storage.onChanged.addListener(updateContextMenus);
