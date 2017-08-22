@@ -1,0 +1,29 @@
+{
+    "manifest_version": 2,
+    "name": "Open Link to",
+    "version": "0.1.0",
+    "description": "Open link to passing URL as a parameter to some other site",
+
+    "icons": {
+        "48": "data/logo.svg"
+    },
+
+    "applications": {
+        "gecko": {
+            "id": "openlinkto@fluks"
+        }
+    },
+
+    "background": {
+        "scripts": [ "background/background.js" ]
+    },
+
+    "options_ui": {
+        "page": "options/options.html"
+    },
+
+    "permissions": [
+        "storage",
+        "contextMenus"
+    ]
+}

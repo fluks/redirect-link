@@ -1,0 +1,28 @@
+.center {
+  text-align: center;
+}
+
+.url-column {
+  width: 80%;
+}
+
+.url-input {
+  width: 100%;
+}
+
+.hidden {
+  display: none;
+}
+
+th {
+  text-align: left;
+}
+
+table {
+  width: 100%;
+  margin: 10px 0 0 0;
+}
+
+#save-button {
+  margin: 10px 0 10px 0;
+}
