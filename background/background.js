@@ -5,11 +5,11 @@ let rows = {};
 /**
  */
 const loadRows = () => {
-    browser.storage.local.get(null).then((options) => {
+    chrome.storage.local.get(null, (options) => {
         Object.keys(options).forEach(title => {
             const opt = options[title];
             if (opt.enabled) {
-                browser.contextMenus.create({
+                chrome.contextMenus.create({
                     id: title,
                     contexts: [ 'link' ],
                     title: title,
@@ -26,13 +26,13 @@ const loadRows = () => {
  * @param changes {}
  */
 const updateContextMenus = (changes) => {
-    browser.contextMenus.removeAll().then(() => {
+    chrome.contextMenus.removeAll(() => {
         rows = {};
         Object.keys(changes).forEach(title => {
             const options = changes[title].newValue;
 
             if (options && options.enabled) {
-                browser.contextMenus.create({
+                chrome.contextMenus.create({
                     id: title,
                     contexts: [ 'link' ],
                     title: title,
@@ -61,7 +61,7 @@ const setDefaultRows = (details) => {
         enabled: true,
         url: url,
     };
-    browser.storage.local.set(opt);
+    chrome.storage.local.set(opt);
 };
 
 /**
@@ -75,11 +75,11 @@ const openTab = (info, tab) => {
     else
         url += info.linkUrl;
 
-    browser.tabs.create({ url: url, index: tab.index + 1 });
+    chrome.tabs.create({ url: url, index: tab.index + 1 });
 };
 
 loadRows();
 
-browser.runtime.onInstalled.addListener(setDefaultRows);
-browser.storage.onChanged.addListener(updateContextMenus);
-browser.contextMenus.onClicked.addListener(openTab);
+chrome.runtime.onInstalled.addListener(setDefaultRows);
+chrome.storage.onChanged.addListener(updateContextMenus);
+chrome.contextMenus.onClicked.addListener(openTab);

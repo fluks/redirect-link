@@ -1,6 +1,6 @@
 'use strict';
 
-const _ = browser.i18n.getMessage;
+const _ = chrome.i18n.getMessage;
 
 /**
  */
@@ -40,10 +40,10 @@ const saveOptions = (tbody) => {
             url: tr.querySelector('.url-input').value,
         };
     });
-    browser.storage.local.clear().then(
-        browser.storage.local.set(rows).then(() =>
+    chrome.storage.local.clear(() => {
+        chrome.storage.local.set(rows, () =>
             showInfo(_('options_js_settingsSaved')))
-    );
+    });
 };
 
 /**
@@ -98,8 +98,7 @@ const addItems = (tbody, rows) => {
 const tbody = document.getElementsByTagName('tbody')[0];
 
 localize();
-browser.storage.local.get(null).then((rows) => addItems(tbody, rows),
-    (error) => console.log(error));
+chrome.storage.local.get(null, (rows) => addItems(tbody, rows));
 document.querySelector('#add-row-button').addEventListener(
     'click', () => addRow(tbody));
 document.querySelector('#save-button').addEventListener(
