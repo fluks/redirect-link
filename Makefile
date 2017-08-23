@@ -13,13 +13,22 @@ firefox_files := \
 chromium_files := \
 	$(common_files)
 
+# My node version is old, this adds Array.includes support.
+node := node --harmony_array_includes
+# Needed if you want to pass options for node.
+web-ext := ~/.npm-global/bin/web-ext
+firefox := ~/Downloads/firefox_dev/firefox
+ff-profile := dev-edition-default
+
 .PHONY: run firefox chromium clean change_to_firefox change_to_chromium lint doc
 
 run:
-	node --harmony_array_includes ~/.npm-global/bin/web-ext \
-		-f /home/jukka/Downloads/firefox_dev/firefox \
+	$(node) $(web-ext) \
+		-f $(firefox-bin) \
 		-u https://en.wikipedia.org/wiki/Main_Page \
-		-p dev-edition-default \
+		-u about:debugging \
+		-u about:addons \
+		-p $(ff-profile) \
 		run
 
 firefox: change_to_firefox
@@ -35,8 +44,10 @@ change_to_chromium:
 	cp chromium/manifest.json .
 
 lint:
+	# Check JSON syntax.
 	$(foreach file,$(locale_files),json_xs -f json < $(file) 1>/dev/null;)
 	eslint --env es6 $(js)
+	$(node) $(web-ext) lint
 
 doc:
 	jsdoc -c conf.json -d doc $(js)
