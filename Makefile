@@ -16,7 +16,8 @@ chromium_files := \
 .PHONY: run firefox chromium clean change_to_firefox change_to_chromium lint doc
 
 run:
-	web-ext -f /home/jukka/Downloads/firefox_dev/firefox \
+	node --harmony_array_includes ~/.npm-global/bin/web-ext \
+		-f /home/jukka/Downloads/firefox_dev/firefox \
 		-u https://en.wikipedia.org/wiki/Main_Page \
 		-p dev-edition-default \
 		run
