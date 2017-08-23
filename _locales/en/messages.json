@@ -1,0 +1,35 @@
+{
+    "extensionDescription": {
+        "message": "Open link to passing URL as a parameter to some other site"
+    },
+    "options_js_errorEmptyInput": {
+        "message": "Title or URL can't be empty"
+    },
+    "options_js_settingsSaved": {
+        "message": "Settings Saved"
+    },
+    "options_js_urlHelpTooltip": {
+        "message": "%u is replaced by the URL of the link you click. If %u doesn't appear in the input text, link's URL is appended to the input text.\nIf the URL contains a literal %u, which should not be replaced, write %25u instead."
+    },
+    "options_js_removeRowButton": {
+        "message": "Remove"
+    },
+    "options_html_addRowButton": {
+        "message": "Add Row"
+    },
+    "options_html_headerEnabled": {
+        "message": "Enabled"
+    },
+    "options_html_headerTitle": {
+        "message": "Title"
+    },
+    "options_html_headerURL": {
+        "message": "URL"
+    },
+    "options_html_headerRemove": {
+        "message": "Remove"
+    },
+    "options_html_saveButton": {
+        "message": "Save"
+    }
+}

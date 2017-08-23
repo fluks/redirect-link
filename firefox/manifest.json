@@ -2,7 +2,9 @@
     "manifest_version": 2,
     "name": "Open Link to",
     "version": "0.1.0",
-    "description": "Open link to passing URL as a parameter to some other site",
+    "description": "__MSG_extensionDescription__",
+
+    "default_locale": "en",
 
     "icons": {
         "48": "data/logo.svg"

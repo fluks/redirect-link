@@ -1,0 +1,35 @@
+{
+    "extensionDescription": {
+        "message": "Lisää linkin URL jonkun toisen sivun osoitteeseen ja avaa se uudessa välilehdessä"
+    },
+    "options_js_errorEmptyInput": {
+        "message": "Nimeä eikä URL:ä saa jättää tyhjäksi"
+    },
+    "options_js_settingsSaved": {
+        "message": "Asetukset tallennettu"
+    },
+    "options_js_urlHelpTooltip": {
+        "message": "%u korvataan linkin URL:lla, jota painoit. Jos %u:ta ei ole syötteessä, linkin URL lisätään syötteen perään.\n Jos URL sisältää %u:n, jota ei pidä korvata, kirjoita sen sijaan %25."
+    },
+    "options_js_removeRowButton": {
+        "message": "Poista"
+    },
+    "options_html_addRowButton": {
+        "message": "Lisää rivi"
+    },
+    "options_html_headerEnabled": {
+        "message": "Aktivoi"
+    },
+    "options_html_headerTitle": {
+        "message": "Nimi"
+    },
+    "options_html_headerURL": {
+        "message": "URL"
+    },
+    "options_html_headerRemove": {
+        "message": "Poista"
+    },
+    "options_html_saveButton": {
+        "message": "Tallenna"
+    }
+}

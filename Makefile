@@ -34,6 +34,7 @@ change_to_chromium:
 	cp chromium/manifest.json .
 
 lint:
+	$(foreach file,$(locale_files),json_xs -f json < $(file) 1>/dev/null;)
 	eslint --env es6 $(js)
 
 doc:

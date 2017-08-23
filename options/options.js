@@ -1,5 +1,15 @@
 'use strict';
 
+const _ = browser.i18n.getMessage;
+
+/**
+ */
+const localize = () => {
+    document.querySelectorAll('[data-i18n]').forEach(e => {
+        e.innerHTML = _(e.dataset.i18n);
+    });
+};
+
 /**
  * @param text {String}
  */
@@ -18,7 +28,7 @@ const saveOptions = (tbody) => {
     const inputs = tbody.querySelectorAll('.title-input, url-input');
     const empty = Array.from(inputs).find(input => !input.value);
     if (empty) {
-        showInfo('Title or URL can\'t be empty');
+        showInfo(_('options_js_errorEmptyInput'));
         return;
     }
 
@@ -31,7 +41,8 @@ const saveOptions = (tbody) => {
         };
     });
     browser.storage.local.clear().then(
-        browser.storage.local.set(rows).then(() => showInfo('Settings Saved'))
+        browser.storage.local.set(rows).then(() =>
+            showInfo(_('options_js_settingsSaved')))
     );
 };
 
@@ -49,11 +60,7 @@ const addRow = (tbody, row) => {
         url = row.url;
     }
 
-    const urlHelp =
-         "%u is replaced by the URL of the link you click. If %u doesn't " +
-         "appear in the input text, link's URL is appended to the input text.\n" +
-         "If the URL contains a literal %u, which should not be replaced, " +
-         "write %25u instead.";
+    const urlHelp = _('options_js_urlHelpTooltip');
     const columns =
         `<td class="center">
            <input class="enabled-input" type="checkbox" ${checked}/>
@@ -65,7 +72,7 @@ const addRow = (tbody, row) => {
            <input class="url-input" type="url" value="${url}" title="${urlHelp}" required/>
          </td>
          <td>
-           <input type="button" value="Remove"/>
+           <input type="button" value="${_('options_js_removeRowButton')}"/>
          </td>
          `;
     const tr = document.createElement('tr');
@@ -90,6 +97,7 @@ const addItems = (tbody, rows) => {
 
 const tbody = document.getElementsByTagName('tbody')[0];
 
+localize();
 browser.storage.local.get(null).then((rows) => addItems(tbody, rows),
     (error) => console.log(error));
 document.querySelector('#add-row-button').addEventListener(
