@@ -42,7 +42,7 @@ const saveOptions = (tbody) => {
     });
     chrome.storage.local.clear(() => {
         chrome.storage.local.set(rows, () =>
-            showInfo(_('options_js_settingsSaved')))
+            showInfo(_('options_js_settingsSaved')));
     });
 };
 
