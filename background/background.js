@@ -49,19 +49,16 @@ const updateContextMenus = (changes) => {
  * @param details {}
  */
 const setDefaultRows = (details) => {
-    const title = 'Google WebCache';
-    const url = 'https://webcache.googleusercontent.com/search?q=cache:';
+    if (details.reason !== 'install')
+        return;
 
-    rows[title] = {
-        url: url,
+    rows = {
+        'Google WebCache': { url: 'https://webcache.googleusercontent.com/search?q=cache:%u', enabled: true },
+        'Wayback Machine': { url: 'https://web.archive.org/web/*/%u', enabled: true },
+        'archive.is (search)': { url: 'https://archive.is/%u', enabled: true },
     };
 
-    const opt = {};
-    opt[title] = {
-        enabled: true,
-        url: url,
-    };
-    chrome.storage.local.set(opt);
+    chrome.storage.local.set(rows);
 };
 
 /**
