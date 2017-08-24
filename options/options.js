@@ -6,7 +6,7 @@ const _ = chrome.i18n.getMessage;
  */
 const localize = () => {
     document.querySelectorAll('[data-i18n]').forEach(e => {
-        e.innerHTML = _(e.dataset.i18n);
+        e.textContent = _(e.dataset.i18n);
     });
 };
 
@@ -15,7 +15,7 @@ const localize = () => {
  */
 const showInfo = (text) => {
     const info = document.querySelector('#info-text');
-    info.innerHTML = text;
+    info.textContent = text;
     const hidden = 'hidden';
     info.classList.remove(hidden);
     setTimeout(() => info.classList.add(hidden), 3000);
@@ -66,17 +66,20 @@ const addRow = (tbody, row) => {
            <input class="enabled-input" type="checkbox" ${checked}/>
          </td>
          <td class="title-column">
-           <input class="title-input" type="text" value="${title}" size="15" required/>
+           <input class="title-input" type="text" value="" size="15" required/>
          </td>
          <td class="url-column">
-           <input class="url-input" type="url" value="${url}" title="${urlHelp}" required/>
+           <input class="url-input" type="url" value="" title="${urlHelp}" required/>
          </td>
          <td>
            <input type="button" value="${_('options_js_removeRowButton')}"/>
          </td>
          `;
     const tr = document.createElement('tr');
+    // Should be safe innerHTML.
     tr.innerHTML = columns;
+    tr.querySelector('.title-input').setAttribute('value', title);
+    tr.querySelector('.url-input').setAttribute('value', url);
     tr.querySelector('input[type=button]').addEventListener(
         'click', () => tr.remove());
     tbody.appendChild(tr);
