@@ -17,7 +17,7 @@ chromium_files := \
 node := node --harmony_array_includes
 # Needed if you want to pass options for node.
 web-ext := ~/.npm-global/bin/web-ext
-firefox := ~/Downloads/firefox_dev/firefox
+firefox-bin := ~/Downloads/firefox_dev/firefox
 ff-profile := dev-edition-default
 
 .PHONY: run firefox chromium clean change_to_firefox change_to_chromium lint doc
