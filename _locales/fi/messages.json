@@ -31,5 +31,8 @@
     },
     "options_html_saveButton": {
         "message": "Tallenna"
+    },
+    "options_html_switchToOpenedTab": {
+        "message": "Vaihda avattuun välilehteen"
     }
 }

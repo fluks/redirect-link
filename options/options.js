@@ -22,7 +22,7 @@ const showInfo = (text) => {
 };
 
 /**
- * @param tbody {}
+ * @param tbody {HTMLElement}
  */
 const saveOptions = (tbody) => {
     const inputs = tbody.querySelectorAll('.title-input, url-input');
@@ -40,10 +40,13 @@ const saveOptions = (tbody) => {
             url: tr.querySelector('.url-input').value,
         };
     });
-    chrome.storage.local.clear(() => {
-        chrome.storage.local.set(rows, () =>
-            showInfo(_('options_js_settingsSaved')));
-    });
+
+    const switchToOpenedTab = document.querySelector('#switch-to-opened-tab');
+
+    chrome.storage.local.set({
+        rows: rows,
+        'switch-to-opened-tab': switchToOpenedTab.checked,
+    }, () => showInfo(_('options_js_settingsSaved')));
 };
 
 /**
@@ -86,22 +89,25 @@ const addRow = (tbody, row) => {
 };
 
 /**
- * Add all the item rows into the table.
- * @param tbody {}
- * @param rows {}
+ * Add all the stored options to the page.
+ * @param tbody {HTMLElement}
+ * @param options {}
  */
-const addItems = (tbody, rows) => {
-    Object.keys(rows).forEach((title) => {
-        const row = rows[title];
+const addItems = (tbody, options) => {
+    Object.keys(options.rows).forEach((title) => {
+        const row = options.rows[title];
         row['title'] = title;
         addRow(tbody, row);
     });
+
+    document.querySelector('#switch-to-opened-tab').checked =
+        options['switch-to-opened-tab'];
 };
 
 const tbody = document.getElementsByTagName('tbody')[0];
 
 localize();
-chrome.storage.local.get(null, (rows) => addItems(tbody, rows));
+chrome.storage.local.get(null, (options) => addItems(tbody, options));
 document.querySelector('#add-row-button').addEventListener(
     'click', () => addRow(tbody));
 document.querySelector('#save-button').addEventListener(

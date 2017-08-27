@@ -31,5 +31,8 @@
     },
     "options_html_saveButton": {
         "message": "Save"
+    },
+    "options_html_switchToOpenedTab": {
+        "message": "Switch to Opened Tab"
     }
 }

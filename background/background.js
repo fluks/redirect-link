@@ -1,21 +1,21 @@
 'use strict';
 
-let rows = {};
+let g_rows = {};
 
 /**
  */
 const loadRows = () => {
     chrome.storage.local.get(null, (options) => {
-        Object.keys(options).forEach(title => {
-            const opt = options[title];
-            if (opt.enabled) {
+        Object.keys(options.rows).forEach(title => {
+            const row = options.rows[title];
+            if (row.enabled) {
                 chrome.contextMenus.create({
                     id: title,
                     contexts: [ 'link' ],
                     title: title,
                 });
-                rows[title] = {
-                    url: opt.url,
+                g_rows[title] = {
+                    url: row.url,
                 };
             }
         });
@@ -27,18 +27,19 @@ const loadRows = () => {
  */
 const updateContextMenus = (changes) => {
     chrome.contextMenus.removeAll(() => {
-        rows = {};
-        Object.keys(changes).forEach(title => {
-            const options = changes[title].newValue;
+        g_rows = {};
+        const newRows = changes.rows.newValue;
+        Object.keys(newRows).forEach(title => {
+            const row = newRows[title];
 
-            if (options && options.enabled) {
+            if (row && row.enabled) {
                 chrome.contextMenus.create({
                     id: title,
                     contexts: [ 'link' ],
                     title: title,
                 });
-                rows[title] = {
-                    url: options.url,    
+                g_rows[title] = {
+                    url: row.url,
                 };
             }
         });
@@ -48,35 +49,43 @@ const updateContextMenus = (changes) => {
 /**
  * @param details {}
  */
-const setDefaultRows = (details) => {
+const setDefaultOptions = (details) => {
     if (details.reason !== 'install')
         return;
 
-    rows = {
+    g_rows = {
         'Google WebCache': { url: 'https://webcache.googleusercontent.com/search?q=cache:%u', enabled: true },
         'Wayback Machine': { url: 'https://web.archive.org/web/*/%u', enabled: true },
         'archive.is (search)': { url: 'https://archive.is/%u', enabled: true },
     };
 
-    chrome.storage.local.set(rows);
+    chrome.storage.local.set({
+        rows: g_rows,
+        'switch-to-opened-tab': false,
+    });
 };
 
 /**
  * @param info {}
- * @param tab {}
+ * @param tab {chrome.tabs.Tab}
  */
 const openTab = (info, tab) => {
-    let url = rows[info.menuItemId].url;
+    let url = g_rows[info.menuItemId].url;
     if (url.includes('%u'))
         url = url.replace('%u', info.linkUrl);
     else
         url += info.linkUrl;
 
-    chrome.tabs.create({ url: url, index: tab.index + 1 });
+    chrome.storage.local.get('switch-to-opened-tab', (option) => {
+        chrome.tabs.create({
+            url: url, index: tab.index + 1,
+            active: option['switch-to-opened-tab'],
+        });
+    });
 };
 
 loadRows();
 
-chrome.runtime.onInstalled.addListener(setDefaultRows);
+chrome.runtime.onInstalled.addListener(setDefaultOptions);
 chrome.storage.onChanged.addListener(updateContextMenus);
 chrome.contextMenus.onClicked.addListener(openTab);
