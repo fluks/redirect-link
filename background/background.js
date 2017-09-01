@@ -44,7 +44,7 @@ const addContextMenuItems = (rows) => {
  */
 const loadRows = () => {
     chrome.storage.local.get(null, (options) => {
-        if (!options)
+        if (!options || Object.keys(options).length === 0)
             options = g_defaultOptions;
         addContextMenuItems(options.rows);
     });
