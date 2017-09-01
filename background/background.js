@@ -1,5 +1,28 @@
 'use strict';
 
+/** Default options. */
+const g_defaultOptions = {
+    rows: {
+        'Google WebCache': {
+            url: 'https://webcache.googleusercontent.com/search?q=cache:%u',
+            enabled: true,
+         },
+        'Wayback Machine (search)': {
+            url: 'https://web.archive.org/web/*/%u',
+            enabled: true,
+         },
+        'Wayback Machine (save)': {
+            url: 'https://web.archive.org/save/%u',
+            enabled: true,
+         },
+        'archive.is (search)': {
+            url: 'https://archive.is/%u',
+            enabled: true,
+         },
+    },
+    'switch-to-opened-tab': false,
+};
+
 /**
  * @param rows {Object}
  */
@@ -21,6 +44,8 @@ const addContextMenuItems = (rows) => {
  */
 const loadRows = () => {
     chrome.storage.local.get(null, (options) => {
+        if (!options)
+            options = g_defaultOptions;
         addContextMenuItems(options.rows);
     });
 };
@@ -41,16 +66,7 @@ const setDefaultOptions = (details) => {
     if (details.reason !== 'install')
         return;
 
-    const rows = {
-        'Google WebCache': { url: 'https://webcache.googleusercontent.com/search?q=cache:%u', enabled: true },
-        'Wayback Machine': { url: 'https://web.archive.org/web/*/%u', enabled: true },
-        'archive.is (search)': { url: 'https://archive.is/%u', enabled: true },
-    };
-
-    chrome.storage.local.set({
-        rows: rows,
-        'switch-to-opened-tab': false,
-    });
+    chrome.storage.local.set(g_defaultOptions);
 };
 
 /**
@@ -72,8 +88,9 @@ const openTab = (info, tab) => {
     });
 };
 
+chrome.runtime.onInstalled.addListener(setDefaultOptions);
+
 loadRows();
 
-chrome.runtime.onInstalled.addListener(setDefaultOptions);
 chrome.storage.onChanged.addListener(updateContextMenus);
 chrome.contextMenus.onClicked.addListener(openTab);
