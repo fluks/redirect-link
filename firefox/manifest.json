@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "Open Link to",
+    "name": "Redirect Link",
     "version": "0.1.0",
     "description": "__MSG_extensionDescription__",
 
@@ -12,7 +12,7 @@
 
     "applications": {
         "gecko": {
-            "id": "openlinkto@fluks"
+            "id": "redirectlink@fluks"
         }
     },
 

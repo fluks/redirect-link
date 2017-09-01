@@ -32,10 +32,10 @@ run:
 		run
 
 firefox: change_to_firefox
-	zip -r open_link_to.xpi $(firefox_files)
+	zip -r redirect_link.xpi $(firefox_files)
 
 chromium: change_to_chromium
-	zip open_link_to.zip $(chromium_files)
+	zip redirect_link.zip $(chromium_files)
 
 change_to_firefox:
 	cp firefox/manifest.json .
