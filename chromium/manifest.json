@@ -3,6 +3,7 @@
     "name": "Redirect Link",
     "version": "0.1.0",
     "description": "__MSG_extensionDescription__",
+    "author": "fluks",
 
     "default_locale": "en",
 
