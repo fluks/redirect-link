@@ -9,7 +9,7 @@
         "message": "Asetukset tallennettu"
     },
     "options_js_urlHelpTooltip": {
-        "message": "%u korvataan linkin URL:lla, jota painoit. Jos %u:ta ei ole syötteessä, linkin URL lisätään syötteen perään.\n Jos URL sisältää %u:n, jota ei pidä korvata, kirjoita sen sijaan %25."
+        "message": "Tämä on URL, jonne klikattu linkki ohjataan. Se voi sisältää formaatteja, jotka korvataan linkin osilla.\nJos URL ei sisällä yhtään formaattia, linkin URL lisätään tämän URL:n perään.\nJos tämä URL sisältää formaatin, jota ei pidä korvata linkin osalla, kirjoita %25 ja formaatin kirjain sen sijaan.\n\nEsimerkki:\nhttp://example.com/?param=%u - http://example.com/?param=%25u\n\nFormaatit:\n%u - koko URL\n%s - skeema\n%h - omistaja\n%p - polku\n%q - toiminto\n%f - tiedon osa"
     },
     "options_js_removeRowButton": {
         "message": "Poista"

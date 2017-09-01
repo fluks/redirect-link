@@ -9,7 +9,7 @@
         "message": "Settings Saved"
     },
     "options_js_urlHelpTooltip": {
-        "message": "%u is replaced by the URL of the link you click. If %u doesn't appear in the input text, link's URL is appended to the input text.\nIf the URL contains a literal %u, which should not be replaced, write %25u instead."
+        "message": "This is the URL where the link is redirected to. It can contain formats, which are replaced by the component parts of the clicked link.\nIf the URL doesn't contain any formats, the link's URL is appended to this URL.\nIf this URL contains a literal format, which should not be replaced, write %25 and the format letter.\n\nExample:\nhttp://example.com/?param=%u - http://example.com/?param=%25u\n\nFormats:\n%u - entire URL\n%s - scheme\n%h - hostname\n%p - path\n%q - query parameters\n%f - fragment"
     },
     "options_js_removeRowButton": {
         "message": "Remove"

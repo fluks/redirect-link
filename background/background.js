@@ -70,16 +70,45 @@ const setDefaultOptions = (details) => {
 };
 
 /**
+ * Replace the formats in the redirect URL with parts from the link's URL. If
+ * the redirect URL doesn't contain any format, the link's URL is appended to
+ * the redirect URL.
+ * @param url {String} Redirect URL. Formats:
+ * %u - entire URL
+ * %s - scheme
+ * %h - hostname
+ * %p - path
+ * %q - query parameters
+ * %f - fragment
+ * @param linkUrl {String} Link's URL.
+ * @return {String} URL with formats replaced.
+ */
+const replaceFormats = (url, linkUrl) => {
+    const a = document.createElement('a');
+    a.href = linkUrl;
+
+    if (!/%(s|h|p|q|f|u)/.test(url))
+        url += linkUrl;
+    else {
+        url = url.replace(new RegExp('%s', 'g'), a.protocol.replace(':', ''));
+        url = url.replace(new RegExp('%h', 'g'), a.hostname);
+        url = url.replace(new RegExp('%p', 'g'), a.pathname);
+        url = url.replace(new RegExp('%q', 'g'), a.search.replace('?', ''));
+        url = url.replace(new RegExp('%f', 'g'), a.hash);
+        url = url.replace(new RegExp('%u', 'g'), linkUrl);
+    }
+
+    return url;
+};
+
+/**
  * @param info {}
  * @param tab {chrome.tabs.Tab}
  */
 const openTab = (info, tab) => {
     chrome.storage.local.get(null, (options) => {
         let url = options.rows[info.menuItemId].url;
-        if (url.includes('%u'))
-            url = url.replace('%u', info.linkUrl);
-        else
-            url += info.linkUrl;
+        url = replaceFormats(url, info.linkUrl);
 
         chrome.tabs.create({
             url: url, index: tab.index + 1,
