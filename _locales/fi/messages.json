@@ -1,6 +1,6 @@
 {
     "extensionDescription": {
-        "message": "Lisää linkin URL jonkun toisen sivun osoitteeseen ja avaa se uudessa välilehdessä"
+        "message": "Uudelleenohjaa linkki jonnekin toisaalle."
     },
     "options_js_errorEmptyInput": {
         "message": "Nimeä eikä URL:ä saa jättää tyhjäksi"
@@ -18,7 +18,7 @@
         "message": "Lisää rivi"
     },
     "options_html_headerEnabled": {
-        "message": "Aktivoi"
+        "message": "Käytössä"
     },
     "options_html_headerTitle": {
         "message": "Nimi"

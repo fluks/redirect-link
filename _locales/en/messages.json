@@ -1,12 +1,12 @@
 {
     "extensionDescription": {
-        "message": "Open link to passing URL as a parameter to some other site"
+        "message": "Redirect a link to somewhere else."
     },
     "options_js_errorEmptyInput": {
         "message": "Title or URL can't be empty"
     },
     "options_js_settingsSaved": {
-        "message": "Settings Saved"
+        "message": "Settings saved"
     },
     "options_js_urlHelpTooltip": {
         "message": "This is the URL where the link is redirected to. It can contain formats, which are replaced by the component parts of the clicked link.\nIf the URL doesn't contain any formats, the link's URL is appended to this URL.\nIf this URL contains a literal format, which should not be replaced, write %25 and the format letter.\n\nExample:\nhttp://example.com/?param=%u - http://example.com/?param=%25u\n\nFormats:\n%u - entire URL\n%s - scheme\n%h - hostname\n%p - path\n%q - query parameters\n%f - fragment"
