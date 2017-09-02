@@ -54,9 +54,11 @@ const loadRows = () => {
  * @param changes {}
  */
 const updateContextMenus = (changes) => {
-    chrome.contextMenus.removeAll(() => {
-        addContextMenuItems(changes.rows.newValue);
-    });
+    if (changes.hasOwnProperty('rows')) {
+        chrome.contextMenus.removeAll(() => {
+                addContextMenuItems(changes.rows.newValue);
+        });
+    }
 };
 
 /**
