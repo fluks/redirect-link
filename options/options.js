@@ -25,7 +25,7 @@ const showInfo = (text) => {
  * @param tbody {HTMLElement}
  */
 const saveOptions = (tbody) => {
-    const inputs = tbody.querySelectorAll('.title-input, url-input');
+    const inputs = tbody.querySelectorAll('.title-input, .url-input');
     const empty = Array.from(inputs).find(input => !input.value);
     if (empty) {
         showInfo(_('options_js_errorEmptyInput'));
