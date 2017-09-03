@@ -8,7 +8,10 @@
     "default_locale": "en",
 
     "icons": {
-        "48": "data/logo.svg"
+        "16": "data/logo_16x16.svg",
+        "48": "data/logo_48x48.svg",
+        "96": "data/logo_96x96.svg",
+        "128": "data/logo_128x128.svg"
     },
 
     "applications": {

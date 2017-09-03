@@ -6,12 +6,13 @@ common_files := \
 	$(locale_files) \
 	manifest.json \
 	background/* \
-	options/* \
-	data/*
+	options/*
 firefox_files := \
-	$(common_files)
+	$(common_files) \
+	data/*.svg
 chromium_files := \
-	$(common_files)
+	$(common_files) \
+	data/*.png
 
 # My node version is old, this adds Array.includes support.
 node := node --harmony_array_includes
