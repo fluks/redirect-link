@@ -1,6 +1,6 @@
 'use strict';
 
-/** Default options. */
+// Default options.
 const g_defaultOptions = {
     rows: {
         'Google WebCache': {
@@ -24,7 +24,8 @@ const g_defaultOptions = {
 };
 
 /**
- * @param rows {Object}
+ * Create context menu items.
+ * @param rows {Object} Redirect options.
  */
 const addContextMenuItems = (rows) => {
     Object.keys(rows).forEach(title => {
@@ -41,8 +42,9 @@ const addContextMenuItems = (rows) => {
 };
 
 /**
+ * Create context menu items when the addon is enabled.
  */
-const loadRows = () => {
+const setupContextMenus = () => {
     chrome.storage.local.get(null, (options) => {
         if (!options || Object.keys(options).length === 0)
             options = g_defaultOptions;
@@ -51,7 +53,8 @@ const loadRows = () => {
 };
 
 /**
- * @param changes {}
+ * Create context menu items when options are changed. 
+ * @param changes {Object} Options that changed.
  */
 const updateContextMenus = (changes) => {
     if (changes.hasOwnProperty('rows')) {
@@ -62,7 +65,8 @@ const updateContextMenus = (changes) => {
 };
 
 /**
- * @param details {}
+ * Save default options on addon install.
+ * @param details {Object} Details about installed addon.
  */
 const setDefaultOptions = (details) => {
     if (details.reason !== 'install')
@@ -104,8 +108,11 @@ const replaceFormats = (url, linkUrl) => {
 };
 
 /**
- * @param info {}
- * @param tab {chrome.tabs.Tab}
+ * Open and redirect the link in new tab.
+ * @param info {OnClickData} Information about the item clicked and the context
+ * where the click happened.
+ * @param tab {chrome.tabs.Tab} The details of the tab where the click took
+ * place.
  */
 const openTab = (info, tab) => {
     chrome.storage.local.get(null, (options) => {
@@ -121,7 +128,7 @@ const openTab = (info, tab) => {
 
 chrome.runtime.onInstalled.addListener(setDefaultOptions);
 
-loadRows();
+setupContextMenus();
 
 chrome.storage.onChanged.addListener(updateContextMenus);
 chrome.contextMenus.onClicked.addListener(openTab);

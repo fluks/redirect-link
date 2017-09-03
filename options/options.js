@@ -1,8 +1,12 @@
 'use strict';
 
+// Localization function.
 const _ = chrome.i18n.getMessage;
 
 /**
+ * Localize strings in the options page. Each string to be localized in the
+ * HTML has data-i18n attribute in the tag. This works currently only for the
+ * tag's text content.
  */
 const localize = () => {
     document.querySelectorAll('[data-i18n]').forEach(e => {
@@ -11,7 +15,8 @@ const localize = () => {
 };
 
 /**
- * @param text {String}
+ * Show an informational message for a while.
+ * @param text {String} Message shown to the user.
  */
 const showInfo = (text) => {
     const info = document.querySelector('#info-text');
@@ -22,7 +27,9 @@ const showInfo = (text) => {
 };
 
 /**
- * @param tbody {HTMLElement}
+ * Save all the options. Doesn't save anything if any of the titles or the URLs
+ * is an empty string.
+ * @param tbody {HTMLElement} The tag where the redirect options are added.
  */
 const saveOptions = (tbody) => {
     const inputs = tbody.querySelectorAll('.title-input, .url-input');
@@ -50,8 +57,9 @@ const saveOptions = (tbody) => {
 };
 
 /**
- * @param tbody {}
- * @param row {}
+ * Add a new row to the redirect options table.
+ * @param tbody {HTMLElement} The tag where the redirect options are added.
+ * @param row {Object} A redirect option.
  */
 const addRow = (tbody, row) => {
     let checked, title, url;
@@ -90,8 +98,8 @@ const addRow = (tbody, row) => {
 
 /**
  * Add all the stored options to the page.
- * @param tbody {HTMLElement}
- * @param options {}
+ * @param tbody {HTMLElement} The tag where the redirect options are added.
+ * @param options {Object} All the options.
  */
 const addItems = (tbody, options) => {
     Object.keys(options.rows).forEach((title) => {
