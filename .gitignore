@@ -1,3 +1,5 @@
 doc/
 *.xpi
 *.zip
+TODO
+manifest.json
