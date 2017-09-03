@@ -6,7 +6,8 @@ common_files := \
 	$(locale_files) \
 	manifest.json \
 	background/* \
-	options/*
+	options/* \
+	data/original_image.txt
 firefox_files := \
 	$(common_files) \
 	data/*.svg
