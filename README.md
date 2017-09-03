@@ -29,6 +29,10 @@ Formats:
     %q - query parameters
     %f - fragment
 
+## Screenshots
+
+![Screenshot](screenshot.png)
+
 ## License
 
 Everything else is licensed as GPL3, but the images are licensed as
