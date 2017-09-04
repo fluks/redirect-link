@@ -1,10 +1,17 @@
 ## Description
 
-A WebExtension for redirecting links to somewhere else. If you don't want
+A browser extension for redirecting links to somewhere else. If you don't want
 to support some site for some reason, you can view the page's content in
 Google's WebCache. Or if the site is small and doesn't have a lot of resources
 and it could go down, when a lot of people visit the site, you can easily open
-the link in Internet Archive's Wayback Machine.
+the link in Internet Archive's Wayback Machine. archive.is is also provided
+from start and you can add more.
+
+## Install
+
+[Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/redirect-link/)
+
+[Chrome Web Store](https://chrome.google.com/webstore/detail/redirect-link/jlmiipndkcgobnpmcdhinopedkkejkek)
 
 ## Options
 
