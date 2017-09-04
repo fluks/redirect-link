@@ -70,6 +70,8 @@ const addRow = (tbody, row) => {
         title = row.title;
         url = row.url;
     }
+    else
+        checked = 'checked';
 
     const urlHelp = _('options_js_urlHelpTooltip');
     const columns =
