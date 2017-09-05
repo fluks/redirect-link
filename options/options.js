@@ -73,28 +73,51 @@ const addRow = (tbody, row) => {
     else
         checked = 'checked';
 
-    const urlHelp = _('options_js_urlHelpTooltip');
-    const columns =
-        `<td class="center">
-           <input class="enabled-input" type="checkbox" ${checked}/>
-         </td>
-         <td class="title-column">
-           <input class="title-input" type="text" value="" size="15" required/>
-         </td>
-         <td class="url-column">
-           <input class="url-input" type="url" value="" title="${urlHelp}" required/>
-         </td>
-         <td>
-           <input type="button" value="${_('options_js_removeRowButton')}"/>
-         </td>
-         `;
     const tr = document.createElement('tr');
-    // Should be safe innerHTML.
-    tr.innerHTML = columns;
-    tr.querySelector('.title-input').setAttribute('value', title);
-    tr.querySelector('.url-input').setAttribute('value', url);
-    tr.querySelector('input[type=button]').addEventListener(
-        'click', () => tr.remove());
+
+    // Redirect enabled cell.
+    let td = document.createElement('td');
+    td.className = 'center';
+    let input = document.createElement('input');
+    input.type = 'checkbox';
+    input.className = 'enabled-input';
+    input.checked = checked;
+    td.appendChild(input);
+    tr.appendChild(td);
+
+    // Title cell.
+    td = document.createElement('td');
+    td.className = 'title-column';
+    input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'title-input';
+    input.required = true;
+    input.size = 15;
+    input.value = title;
+    td.appendChild(input);
+    tr.appendChild(td);
+
+    // URL cell.
+    td = document.createElement('td');
+    td.className = 'url-column';
+    input = document.createElement('input');
+    input.type = 'url';
+    input.className = 'url-input';
+    input.required = true;
+    input.value = url;
+    input.title = _('options_js_urlHelpTooltip');
+    td.appendChild(input);
+    tr.appendChild(td);
+
+    // Remove row button cell.
+    td = document.createElement('td');
+    input = document.createElement('input');
+    input.type = 'button';
+    input.value = _('options_js_removeRowButton');
+    input.addEventListener('click', () => tr.remove());
+    td.appendChild(input);
+    tr.appendChild(td);
+
     tbody.appendChild(tr);
 };
 
