@@ -19,6 +19,10 @@ const g_defaultOptions = {
             url: 'https://archive.is/%u',
             enabled: true,
          },
+        'archive.is (save)': {
+            url: 'https://archive.is/?run=1&url=%u',
+            enabled: true,
+         },
     },
     'switch-to-opened-tab': false,
 };
