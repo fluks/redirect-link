@@ -25,7 +25,8 @@ const g_defaultOptions = {
          },
     },
     'switch-to-opened-tab': false,
-};
+},
+g_currentTabIdSuffix = '-current';
 
 /**
  * Create context menu items.
@@ -39,6 +40,12 @@ const addContextMenuItems = (rows) => {
             chrome.contextMenus.create({
                 id: title,
                 contexts: [ 'link' ],
+                title: title,
+            });
+
+            chrome.contextMenus.create({
+                id: title + g_currentTabIdSuffix,
+                contexts: [ 'page' ],
                 title: title,
             });
         }
@@ -112,21 +119,33 @@ const replaceFormats = (url, linkUrl) => {
 };
 
 /**
- * Open and redirect the link in new tab.
+ * Redirect the current tab or link to new tab.
  * @param info {OnClickData} Information about the item clicked and the context
  * where the click happened.
  * @param tab {chrome.tabs.Tab} The details of the tab where the click took
  * place.
  */
-const openTab = (info, tab) => {
+const redirect = (info, tab) => {
     chrome.storage.local.get(null, (options) => {
-        let url = options.rows[info.menuItemId].url;
-        url = replaceFormats(url, info.linkUrl);
+        // Redirect current tab.
+        if (info.menuItemId.endsWith(g_currentTabIdSuffix)) {
+            const menuItemId = info.menuItemId.split(g_currentTabIdSuffix, 1)[0];
+            const currentUrl = tab.url;
+            let redirectUrl = options.rows[menuItemId].url;
+            redirectUrl = replaceFormats(redirectUrl, currentUrl);
 
-        chrome.tabs.create({
-            url: url, index: tab.index + 1,
-            active: options['switch-to-opened-tab'],
-        });
+            chrome.tabs.update({ url: redirectUrl });
+        }
+        // Redirect link.
+        else {
+            let redirectUrl = options.rows[info.menuItemId].url;
+            redirectUrl = replaceFormats(redirectUrl, info.linkUrl);
+
+            chrome.tabs.create({
+                url: redirectUrl, index: tab.index + 1,
+                active: options['switch-to-opened-tab'],
+            });
+        }
     });
 };
 
@@ -135,4 +154,4 @@ chrome.runtime.onInstalled.addListener(setDefaultOptions);
 setupContextMenus();
 
 chrome.storage.onChanged.addListener(updateContextMenus);
-chrome.contextMenus.onClicked.addListener(openTab);
+chrome.contextMenus.onClicked.addListener(redirect);
