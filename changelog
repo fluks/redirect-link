@@ -1,0 +1,14 @@
+1.1.0
+
+  * Add redirect current page feature.
+  * Add a new redirection to save a page by archive.is.
+  * Enable new redirection by default in options.
+  * Don't use innerHTML.
+
+ -- fluks <fluks.github@gmail.com>  
+
+1.0.0
+
+  * First published version.
+
+ -- fluks <fluks.github@gmail.com>  Sun, 03 Sep 2017 06:11:41 +0300
