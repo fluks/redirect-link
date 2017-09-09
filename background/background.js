@@ -127,25 +127,26 @@ const replaceFormats = (url, linkUrl) => {
  */
 const redirect = (info, tab) => {
     chrome.storage.local.get(null, (options) => {
+        let targetUrl = '',
+            menuItemId = '';
         // Redirect current tab.
         if (info.menuItemId.endsWith(g_currentTabIdSuffix)) {
-            const menuItemId = info.menuItemId.split(g_currentTabIdSuffix, 1)[0];
-            const currentUrl = tab.url;
-            let redirectUrl = options.rows[menuItemId].url;
-            redirectUrl = replaceFormats(redirectUrl, currentUrl);
-
-            chrome.tabs.update({ url: redirectUrl });
+            menuItemId = info.menuItemId.split(g_currentTabIdSuffix, 1)[0];
+            targetUrl = tab.url;
         }
         // Redirect link.
         else {
-            let redirectUrl = options.rows[info.menuItemId].url;
-            redirectUrl = replaceFormats(redirectUrl, info.linkUrl);
-
-            chrome.tabs.create({
-                url: redirectUrl, index: tab.index + 1,
-                active: options['switch-to-opened-tab'],
-            });
+            menuItemId = info.menuItemId;
+            targetUrl = info.linkUrl;
         }
+
+        let redirectUrl = options.rows[menuItemId].url;
+        redirectUrl = replaceFormats(redirectUrl, targetUrl);
+
+        chrome.tabs.create({
+            url: redirectUrl, index: tab.index + 1,
+            active: options['switch-to-opened-tab'],
+        });
     });
 };
 
