@@ -6,23 +6,26 @@ const g_defaultOptions = {
         'Google WebCache': {
             url: 'https://webcache.googleusercontent.com/search?q=cache:%u',
             enabled: true,
-         },
+        },
         'Wayback Machine (search)': {
             url: 'https://web.archive.org/web/*/%u',
             enabled: true,
-         },
+        },
         'Wayback Machine (save)': {
             url: 'https://web.archive.org/save/%u',
             enabled: true,
-         },
+        },
         'archive.is (search)': {
             url: 'https://archive.is/%u',
             enabled: true,
-         },
+        },
+        // Start update rows.
+        // Add these also in setDefaultOptions if the reason is update.
         'archive.is (save)': {
             url: 'https://archive.is/?run=1&url=%u',
             enabled: true,
-         },
+        },
+        // End update rows.
     },
     'switch-to-opened-tab': false,
 },
@@ -70,7 +73,7 @@ const setupContextMenus = () => {
 const updateContextMenus = (changes) => {
     if (changes.hasOwnProperty('rows')) {
         chrome.contextMenus.removeAll(() => {
-                addContextMenuItems(changes.rows.newValue);
+            addContextMenuItems(changes.rows.newValue);
         });
     }
 };
@@ -80,10 +83,26 @@ const updateContextMenus = (changes) => {
  * @param details {Object} Details about installed addon.
  */
 const setDefaultOptions = (details) => {
-    if (details.reason !== 'install')
-        return;
+    if (details.reason === 'install')
+        chrome.storage.local.set(g_defaultOptions);
+    else if (details.reason === 'update') {
+        chrome.storage.local.get([ 'rows' ], (rows) => {
+            // Copy these from g_defaultOptions between start update rows and
+            // end update rows.
+            const updateRows = {
+                'archive.is (save)': {
+                    url: 'https://archive.is/?run=1&url=%u',
+                    enabled: true,
+                },
+            };
+            Object.keys(updateRows).forEach(k => {
+                if (!rows.rows.hasOwnProperty(k))
+                    rows.rows[k] = updateRows[k];
+            });
 
-    chrome.storage.local.set(g_defaultOptions);
+            chrome.storage.local.set(rows);
+        });
+    }
 };
 
 /**
