@@ -14,6 +14,9 @@
     "options_js_removeRowButton": {
         "message": "Remove"
     },
+    "options_js_enableURLTooltip": {
+        "message": "A URL of a link or a page where this redirect is enabled. Otherwise the redirect is hidden in the context menu. You can use a regular expression. Leave empty to enable always."
+    },
     "options_html_addRowButton": {
         "message": "Add Row"
     },
@@ -25,6 +28,9 @@
     },
     "options_html_headerURL": {
         "message": "URL"
+    },
+    "options_html_headerEnableURL": {
+        "message": "Enable URL"
     },
     "options_html_headerRemove": {
         "message": "Remove"

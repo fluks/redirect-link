@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8"/>
     <link rel="stylesheet" type="text/css" href="options.css">
   </head>
   <body>
@@ -9,11 +10,19 @@
     </div>
     <div>
       <table id="table">
+        <colgroup>
+          <col id="enabled-width"/>
+          <col id="title-width"/>
+          <col id="url-width"/>
+          <col id="enabled-url-width"/>
+          <col id="remove-width"/>
+        </colgroup>
         <thead>
           <tr>
             <th data-i18n="options_html_headerEnabled"></th>
             <th data-i18n="options_html_headerTitle"></th>
             <th data-i18n="options_html_headerURL"></th>
+            <th data-i18n="options_html_headerEnableURL"></th>
             <th data-i18n="options_html_headerRemove"></th>
           </tr>
         </thead>
@@ -22,6 +31,7 @@
             <th data-i18n="options_html_headerEnabled"></th>
             <th data-i18n="options_html_headerTitle"></th>
             <th data-i18n="options_html_headerURL"></th>
+            <th data-i18n="options_html_headerEnableURL"></th>
             <th data-i18n="options_html_headerRemove"></th>
           </tr>
         </tfoot>
@@ -33,11 +43,13 @@
       <label for="switch-to-opened-tab" data-i18n="options_html_switchToOpenedTab"></label>
       <input type="checkbox" id="switch-to-opened-tab"/>
     </div>
-    <div>
-      <button id="save-button" data-i18n="options_html_saveButton"></button>
-    </div>
-    <div>
-      <span id="info-text" class="hidden"></span>
+    <div class="center">
+      <div id="save-div">
+        <button id="save-button" data-i18n="options_html_saveButton"></button>
+      </div>
+      <div id="info-text-div">
+        <span id="info-text" class="hidden"></span>
+      </div>
     </div>
     <script src="options.js"></script>
   </body>

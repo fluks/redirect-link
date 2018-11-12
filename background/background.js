@@ -169,9 +169,35 @@ const redirect = (info, tab) => {
     });
 };
 
+/**
+ * Hide redirects which have an enableURL setting set and doesn't match the
+ * link's or page's URL.
+ * @param info {Object} OnClickData and contexts and menuIds.
+ * @param tab {tabs.Tab} Details of the tab where the menu is shown.
+ */
+const hideRedirects = (info, tab) => {
+    if (!info.contexts.some(c => [ 'page', 'link' ].includes(c)))
+        return;
+
+    const url = info.linkUrl || info.pageUrl;
+    chrome.storage.local.get([ 'rows' ], (rows) => {
+        Object.keys(rows.rows).forEach(i => {
+            const enablePattern = rows.rows[i].enableURL;
+            if (rows.rows[i].enabled && enablePattern) {
+                const regex = new RegExp(enablePattern);
+                const prop = { visible: regex.test(url) };
+                chrome.contextMenus.update(i, prop);
+                chrome.contextMenus.update(i + g_currentTabIdSuffix, prop);
+            }
+        });
+        chrome.contextMenus.refresh();
+    });
+};
+
 chrome.runtime.onInstalled.addListener(setDefaultOptions);
 
 setupContextMenus();
 
 chrome.storage.onChanged.addListener(updateContextMenus);
 chrome.contextMenus.onClicked.addListener(redirect);
+chrome.contextMenus.onShown.addListener(hideRedirects);

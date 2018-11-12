@@ -45,6 +45,7 @@ const saveOptions = (tbody) => {
         rows[title] = {
             enabled: tr.querySelector('.enabled-input').checked,
             url: tr.querySelector('.url-input').value,
+            enableURL: tr.querySelector('.enable-url-input').value,
         };
     });
 
@@ -62,13 +63,14 @@ const saveOptions = (tbody) => {
  * @param row {Object} A redirect option.
  */
 const addRow = (tbody, row) => {
-    let checked, title, url;
-    checked = title = url = '';
+    let checked, title, url, enableURL;
+    checked = title = url = enableURL = '';
 
     if (row) {
         checked = row.enabled ? 'checked' : '';
         title = row.title;
         url = row.url;
+        enableURL = row.enableURL || '';
     }
     else
         checked = 'checked';
@@ -106,6 +108,17 @@ const addRow = (tbody, row) => {
     input.required = true;
     input.value = url;
     input.title = _('options_js_urlHelpTooltip');
+    td.appendChild(input);
+    tr.appendChild(td);
+
+    // EnableURL cell.
+    td = document.createElement('td');
+    td.className = 'enable-url-column';
+    input = document.createElement('input');
+    input.type = 'url';
+    input.className = 'enable-url-input';
+    input.value = enableURL;
+    input.title = _('options_js_enableURLTooltip');
     td.appendChild(input);
     tr.appendChild(td);
 

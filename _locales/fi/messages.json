@@ -14,6 +14,9 @@
     "options_js_removeRowButton": {
         "message": "Poista"
     },
+    "options_js_enableURLTooltip": {
+        "message": "Linkin tai sivun URL, missä tämä uudelleenohjaus on käytössä. Muussa tapauksessa tämä uudelleenohjaus piilotetaan pikavalikosta. Voit käyttää säännöllistä lauseketta. Jätä tyhjäksi, että uudelleenohjaus sallitaan kaikkialla."
+    },
     "options_html_addRowButton": {
         "message": "Lisää rivi"
     },
@@ -25,6 +28,9 @@
     },
     "options_html_headerURL": {
         "message": "URL"
+    },
+    "options_html_headerEnableURL": {
+        "message": "Salli URL"
     },
     "options_html_headerRemove": {
         "message": "Poista"

@@ -2,12 +2,24 @@
   text-align: center;
 }
 
-.url-column {
-  width: 80%;
+input[type=text], input[type=url] {
+  width: 100%;
 }
 
-.url-input {
-  width: 100%;
+#url-width, #enabled-url-width {
+  width: 34%;
+}
+
+#title-width {
+  width: 17%;
+}
+
+#enabled-width {
+  width: 5%;
+}
+
+#remove-width {
+  width: 10%;
 }
 
 .hidden {
@@ -15,18 +27,28 @@
 }
 
 th {
-  text-align: left;
+  text-align: center;
+}
+
+td {
+  padding: 0 10px 0 10px;
+  text-align: center;
 }
 
 table {
+  table-layout: fixed;
   width: 100%;
   margin: 10px 0 0 0;
 }
 
-#save-button {
-  margin: 25px 0 5px 0;
+#save-div {
+  margin-top: 25px;
 }
 
 #other-options {
   margin: 10px 0 0px 0;
+}
+
+#info-text-div {
+  margin-top: 10px;
 }
