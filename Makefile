@@ -16,9 +16,9 @@ chromium_files := \
 	data/*.png
 
 # My node version is old, this adds Array.includes support.
-node := node --harmony_array_includes
+node :=
 # Needed if you want to pass options for node.
-web-ext := ~/.npm-global/bin/web-ext
+web-ext := web-ext
 firefox-bin := ~/Downloads/firefox_dev/firefox
 ff-profile := dev-edition-default
 
@@ -27,6 +27,7 @@ ff-profile := dev-edition-default
 run:
 	$(node) $(web-ext) \
 		-f $(firefox-bin) \
+		--pref intl.locale.requested=fi \
 		-u https://en.wikipedia.org/wiki/Main_Page \
 		-u about:debugging \
 		-u about:addons \
