@@ -53,8 +53,8 @@ change_to_chromium:
 lint:
 	# Check JSON syntax.
 	$(foreach file,$(locale_files),json_xs -f json < $(file) 1>/dev/null;)
-	eslint --env es6 $(js)
 	$(node) $(web-ext) lint
+	eslint --env es6 $(js)
 
 doc:
 	jsdoc -c conf.json -d doc $(js)
