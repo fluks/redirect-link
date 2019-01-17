@@ -50,11 +50,12 @@ change_to_firefox:
 change_to_chromium:
 	cp chromium/manifest.json .
 
-lint:
+# web-ext lint finds errors if manifest.json isn't the Firefox version.
+lint: change_to_firefox
 	# Check JSON syntax.
 	$(foreach file,$(locale_files),json_xs -f json < $(file) 1>/dev/null;)
 	$(node) $(web-ext) lint
-	eslint --env es6 $(js)
+	eslint $(js)
 
 doc:
 	jsdoc -c conf.json -d doc $(js)

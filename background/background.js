@@ -233,9 +233,8 @@ const redirect = (info, tab) => {
  * <all_urls> permission is needed for many of info's properties, @see
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/menus/onShown.
  * @param info {Object} OnClickData and contexts and menuIds.
- * @param tab {tabs.Tab} Details of the tab where the menu is shown.
  */
-const hideRedirects = (info, tab) => {
+const hideRedirects = (info) => {
     if (!info.contexts.some(c => [ 'page', 'link' ].includes(c)))
         return;
 

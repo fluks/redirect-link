@@ -14,11 +14,11 @@ export const getBrowser = async () => {
             return 'firefox_android';
         return 'firefox';
     }
-    catch (e) {}
+    catch (e) { /* Ignore eslint empty block statement. */ }
     try {
         if (chrome) {
             return 'chrome';
         }
     }
-    catch (e) {}
+    catch (e) { /* Ignore eslint empty block statement. */ }
 };
