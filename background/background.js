@@ -1,5 +1,7 @@
 'use strict';
 
+import * as common from '../common/common.js';
+
 // Default options.
 const g_defaultOptions = {
     rows: {
@@ -258,4 +260,7 @@ setupContextMenus();
 
 chrome.storage.onChanged.addListener(updateContextMenus);
 chrome.contextMenus.onClicked.addListener(redirect);
-chrome.contextMenus.onShown.addListener(hideRedirects);
+(async function () {
+if (await common.getBrowser() !== 'chrome')
+    chrome.contextMenus.onShown.addListener(hideRedirects);
+})();

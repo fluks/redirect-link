@@ -15,16 +15,18 @@
     },
 
     "background": {
-        "scripts": [ "background/background.js" ]
+        "page": "background/background.html"
     },
 
     "options_ui": {
-        "page": "options/options.html"
+        "page": "options/options.html",
+        "open_in_tab": true
     },
 
     "permissions": [
         "storage",
         "contextMenus",
-        "tabs"
+        "tabs",
+        "<all_urls>"
     ]
 }

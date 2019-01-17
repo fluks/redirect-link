@@ -1,7 +1,22 @@
 'use strict';
 
+import * as common from '../common/common.js';
+
 // Localization function.
 const _ = chrome.i18n.getMessage;
+
+/**
+ * Remove static elements when on a platform that doesn't support APIs
+ * required for enabling URLs.
+ * @async
+ */
+const removeUnsupportedStaticElements = async () => {
+    if (await common.getBrowser() !== 'chrome')
+        return;
+
+    Array.from(document.querySelectorAll('.remove'))
+        .forEach(e => e.remove());
+};
 
 /**
  * Localize strings in the options page. Each string to be localized in the
@@ -45,8 +60,10 @@ const saveOptions = (tbody) => {
         rows[title] = {
             enabled: tr.querySelector('.enabled-input').checked,
             url: tr.querySelector('.url-input').value,
-            enableURL: tr.querySelector('.enable-url-input').value,
         };
+        const enableURLElement = tr.querySelector('.enable-url-input');
+        if (enableURLElement)
+            rows[title].enableURL = enableURLElement.value;
     });
 
     const switchToOpenedTab = document.querySelector('#switch-to-opened-tab');
@@ -62,7 +79,7 @@ const saveOptions = (tbody) => {
  * @param tbody {HTMLElement} The tag where the redirect options are added.
  * @param row {Object} A redirect option.
  */
-const addRow = (tbody, row) => {
+const addRow = async (tbody, row) => {
     let checked, title, url, enableURL;
     checked = title = url = enableURL = '';
 
@@ -112,15 +129,17 @@ const addRow = (tbody, row) => {
     tr.appendChild(td);
 
     // EnableURL cell.
-    td = document.createElement('td');
-    td.className = 'enable-url-column';
-    input = document.createElement('input');
-    input.type = 'url';
-    input.className = 'enable-url-input';
-    input.value = enableURL;
-    input.title = _('options_js_enableURLTooltip');
-    td.appendChild(input);
-    tr.appendChild(td);
+    if (await common.getBrowser() !== 'chrome') {
+        td = document.createElement('td');
+        td.className = 'enable-url-column';
+        input = document.createElement('input');
+        input.type = 'url';
+        input.className = 'enable-url-input';
+        input.value = enableURL;
+        input.title = _('options_js_enableURLTooltip');
+        td.appendChild(input);
+        tr.appendChild(td);
+    }
 
     // Remove row button cell.
     td = document.createElement('td');
@@ -152,6 +171,7 @@ const addItems = (tbody, options) => {
 
 const tbody = document.getElementsByTagName('tbody')[0];
 
+removeUnsupportedStaticElements();
 localize();
 chrome.storage.local.get(null, (options) => addItems(tbody, options));
 document.querySelector('#add-row-button').addEventListener(
