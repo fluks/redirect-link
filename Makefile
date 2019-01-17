@@ -1,12 +1,14 @@
 js := \
 	background/*.js \
-	options/*.js
+	options/*.js \
+	common/*.js
 locale_files := $(shell find _locales -type f)
 common_files := \
 	$(locale_files) \
 	manifest.json \
 	background/* \
 	options/* \
+	common/* \
 	data/original_image.txt
 firefox_files := \
 	$(common_files) \
