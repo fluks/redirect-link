@@ -24,6 +24,8 @@ web-ext := web-ext
 firefox-bin := ~/Downloads/firefox_dev/firefox
 ff-profile := dev-edition-default
 
+version_suffix := $(shell grep -o '[0-9]\.[0-9]\.[0-9]' manifest.json | head -1 | sed 's/\./_/g')
+
 .PHONY: run firefox chromium clean change_to_firefox change_to_chromium lint doc
 
 run:
@@ -37,10 +39,10 @@ run:
 		run
 
 firefox: change_to_firefox
-	zip -r redirect_link.xpi $(firefox_files)
+	zip -r redirect_link-$(version_suffix).xpi $(firefox_files)
 
 chromium: change_to_chromium
-	zip redirect_link.zip $(chromium_files)
+	zip redirect_link-$(version_suffix).zip $(chromium_files)
 
 change_to_firefox:
 	cp firefox/manifest.json .
