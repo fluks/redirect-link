@@ -117,8 +117,10 @@ const setDefaultOptions = (details) => {
  * the path has path parts.
  */
 const replacePath = (format, paths, path) => {
-    if (format === '%p')
-        return path;
+    if (format === '%p') {
+        // Remove the first slash, it will always be there, even if there's no path in the URL.
+        return path.slice(1);
+    }
     const m = format.match(/\[(\d+)\]/);
     if (m[1] >= paths.length)
         throw 'Path index out of bounds';

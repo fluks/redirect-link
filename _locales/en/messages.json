@@ -9,7 +9,7 @@
         "message": "Settings saved"
     },
     "options_js_urlHelpTooltip": {
-        "message": "This is the URL where the link is redirected to. It can contain formats, which are replaced by the component parts of the clicked link.\nIf the URL doesn't contain any formats, the link's URL is appended to this URL.\nIf this URL contains a literal format, which should not be replaced, write %25 and the format letter.\n\nExample:\nhttp://example.com/?param=%u - http://example.com/?param=%25u\n\nFormats:\n%u - entire URL\n%s - scheme\n%h - hostname\n%p - whole path or %p[N], where N is index of the path part. e.g. in http://example.com/a/b/c?param=1, %p[0] is a, %p[1] is b and %p[2] is c\n%q - all query parameters or %q[KEY], where KEY is the name of the query parameter. e.g. in http://example.com/?a=1&b=2, %q[a] is 1 and %q[b] is 2\n%f - fragment"
+        "message": "This is the URL where the link is redirected to. It can contain formats, which are replaced by the component parts of the clicked link.\nIf the URL doesn't contain any formats, the link's URL is appended to this URL.\nIf this URL contains a literal format, which should not be replaced, write %25 and the format letter.\n\nExample:\nhttp://example.com/?param=%u - http://example.com/?param=%25u\n\nFormats:\n%u - entire URL\n%s - scheme\n%h - hostname\n%p - whole path without the leading slash or %p[N], where N is index of the path part. e.g. in http://example.com/a/b/c?param=1, %p[0] is a, %p[1] is b and %p[2] is c\n%q - all query parameters or %q[KEY], where KEY is the name of the query parameter. e.g. in http://example.com/?a=1&b=2, %q[a] is 1 and %q[b] is 2\n%f - fragment"
     },
     "options_js_removeRowButton": {
         "message": "Remove"
