@@ -18,7 +18,7 @@
         "message": "A URL of a link or a page where this redirect is enabled. Otherwise the redirect is hidden in the context menu. You can use a regular expression. Leave empty to enable always."
     },
     "options_html_addRowButton": {
-        "message": "Add Row"
+        "message": "_A_dd Row"
     },
     "options_html_headerEnabled": {
         "message": "Enabled"
@@ -36,9 +36,9 @@
         "message": "Remove"
     },
     "options_html_saveButton": {
-        "message": "Save"
+        "message": "_S_ave"
     },
     "options_html_switchToOpenedTab": {
-        "message": "Switch to Opened Tab"
+        "message": "S_w_itch to Opened Tab"
     }
 }

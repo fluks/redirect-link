@@ -18,7 +18,7 @@
         "message": "Linkin tai sivun URL, missä tämä uudelleenohjaus on käytössä. Muussa tapauksessa tämä uudelleenohjaus piilotetaan pikavalikosta. Voit käyttää säännöllistä lauseketta. Jätä tyhjäksi, että uudelleenohjaus sallitaan kaikkialla."
     },
     "options_html_addRowButton": {
-        "message": "Lisää rivi"
+        "message": "_L_isää rivi"
     },
     "options_html_headerEnabled": {
         "message": "Käytössä"
@@ -36,9 +36,9 @@
         "message": "Poista"
     },
     "options_html_saveButton": {
-        "message": "Tallenna"
+        "message": "_T_allenna"
     },
     "options_html_switchToOpenedTab": {
-        "message": "Vaihda avattuun välilehteen"
+        "message": "_V_aihda avattuun välilehteen"
     }
 }

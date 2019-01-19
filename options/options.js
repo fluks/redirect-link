@@ -19,13 +19,41 @@ const removeUnsupportedStaticElements = async () => {
 };
 
 /**
+ * Add text and accesskey as a span element for a text which has underscores
+ * around a character, meaning to create an accesskey for it and that it can
+ * be used as a shortcut on the UI.
+ * @param elem {HTMLElement} Element where the accesskey and texts are appended
+ * to as children.
+ * @param match {Array} Matches for underscore text, will contain the character
+ * surrounded by underscores and strings on the left and right sides of the
+ * underscores, they can be empty.
+ */
+const addAccesskey = (elem, match) => {
+    const textLeft = document.createTextNode(match[1]);
+    elem.appendChild(textLeft);
+
+    const accesskey = document.createElement('span');
+    accesskey.classList.add('accesskey');
+    accesskey.setAttribute('accesskey', match[2]);
+    accesskey.textContent = match[2];
+    elem.appendChild(accesskey);
+
+    const textRight = document.createTextNode(match[3]);
+    elem.appendChild(textRight);
+};
+
+/**
  * Localize strings in the options page. Each string to be localized in the
- * HTML has data-i18n attribute in the tag. This works currently only for the
- * tag's text content.
+ * HTML has data-i18n attribute in the tag.
  */
 const localize = () => {
     document.querySelectorAll('[data-i18n]').forEach(e => {
-        e.textContent = _(e.dataset.i18n);
+        const text = _(e.dataset.i18n);
+        const m = text.match(/(.*)_(.)_(.*)/);
+        if (m)
+            addAccesskey(e, m);
+        else
+            e.textContent = text;
     });
 };
 
@@ -175,6 +203,11 @@ removeUnsupportedStaticElements();
 localize();
 chrome.storage.local.get(null, (options) => addItems(tbody, options));
 document.querySelector('#add-row-button').addEventListener(
-    'click', () => addRow(tbody));
+    'click', async () => {
+        await addRow(tbody);
+        const trs = document.querySelectorAll('tr');
+        const lastTr = trs[trs.length - 1];
+        lastTr.querySelector('.title-input').focus();
+});
 document.querySelector('#save-button').addEventListener(
     'click', () => saveOptions(tbody));
