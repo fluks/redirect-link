@@ -1,7 +1,10 @@
+/** @module common */
+
 'use strict';
 
 /**
  * Get the current browser.
+ * @function getBrowser
  * @async
  * @return {Promise<String>} 'firefox', 'firefox_android', 'chrome' or
  * undefined if browser can't be determined.

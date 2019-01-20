@@ -1,3 +1,5 @@
+/** @module options */
+
 'use strict';
 
 import * as common from '../common/common.js';
@@ -8,6 +10,7 @@ const _ = chrome.i18n.getMessage;
 /**
  * Remove static elements when on a platform that doesn't support APIs
  * required for enabling URLs.
+ * @function removeUnsupportedStaticElements
  * @async
  */
 const removeUnsupportedStaticElements = async () => {
@@ -22,6 +25,7 @@ const removeUnsupportedStaticElements = async () => {
  * Add text and accesskey as a span element for a text which has underscores
  * around a character, meaning to create an accesskey for it and that it can
  * be used as a shortcut on the UI.
+ * @function addAccesskey
  * @param elem {HTMLElement} Element where the accesskey and texts are appended
  * to as children.
  * @param match {Array} Matches for underscore text, will contain the character
@@ -45,6 +49,7 @@ const addAccesskey = (elem, match) => {
 /**
  * Localize strings in the options page. Each string to be localized in the
  * HTML has data-i18n attribute in the tag.
+ * @function localize
  */
 const localize = () => {
     document.querySelectorAll('[data-i18n]').forEach(e => {
@@ -59,6 +64,7 @@ const localize = () => {
 
 /**
  * Show an informational message for a while.
+ * @function showInfo
  * @param text {String} Message shown to the user.
  */
 const showInfo = (text) => {
@@ -72,6 +78,7 @@ const showInfo = (text) => {
 /**
  * Save all the options. Doesn't save anything if any of the titles or the URLs
  * is an empty string.
+ * @function saveOptions
  * @param tbody {HTMLElement} The tag where the redirect options are added.
  */
 const saveOptions = (tbody) => {
@@ -104,6 +111,8 @@ const saveOptions = (tbody) => {
 
 /**
  * Add a new row to the redirect options table.
+ * @function addRow
+ * @async
  * @param tbody {HTMLElement} The tag where the redirect options are added.
  * @param row {Object} A redirect option.
  */
@@ -183,6 +192,7 @@ const addRow = async (tbody, row) => {
 
 /**
  * Add all the stored options to the page.
+ * @function addItems
  * @param tbody {HTMLElement} The tag where the redirect options are added.
  * @param options {Object} All the options.
  */

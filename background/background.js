@@ -1,3 +1,5 @@
+/** @module background */
+
 'use strict';
 
 import * as common from '../common/common.js';
@@ -35,6 +37,7 @@ g_currentTabIdSuffix = '-current';
 
 /**
  * Create context menu items.
+ * @function addContextMenuItems
  * @param rows {Object} Redirect options.
  */
 const addContextMenuItems = (rows) => {
@@ -59,6 +62,7 @@ const addContextMenuItems = (rows) => {
 
 /**
  * Create context menu items when the addon is enabled.
+ * @function setupContextMenus
  */
 const setupContextMenus = () => {
     chrome.storage.local.get(null, (options) => {
@@ -70,6 +74,7 @@ const setupContextMenus = () => {
 
 /**
  * Create context menu items when options are changed. 
+ * @function updateContextMenus
  * @param changes {Object} Options that changed.
  */
 const updateContextMenus = (changes) => {
@@ -82,6 +87,7 @@ const updateContextMenus = (changes) => {
 
 /**
  * Save default options on addon install.
+ * @function setDefaultOptions
  * @param details {Object} Details about installed addon.
  */
 const setDefaultOptions = (details) => {
@@ -109,8 +115,9 @@ const setDefaultOptions = (details) => {
 
 /**
  * Replace a path format string.
+ * @function replacePath
  * @param format {String} Path format string.
- * @param paths {Array[String]} All the path parts in an array.
+ * @param paths {String[]} All the path parts in an array.
  * @param path {String} Whole path in one string.
  * @return {String} The replacement string for the path format.
  * @throw {String} If path format has an index that is greater or equal than
@@ -129,8 +136,9 @@ const replacePath = (format, paths, path) => {
 
 /**
  * Replace a query parametformat string.
+ * @function replaceParam
  * @param format {String} Query parameter format string.
- * @param params {Object[String]} All the query parameters in an object.
+ * @param params {Object} All the query parameters in an object.
  * @param param {String} All the query parameters in one string.
  * @return {String} The replacement string for the query parameter format.
  * @throw {String} If query parameter format has a key that doesn't exist in
@@ -149,6 +157,7 @@ const replaceParam = (format, params, param) => {
  * Replace the formats in the redirect URL with parts from the link's URL. If
  * the redirect URL doesn't contain any format, the link's URL is appended to
  * the redirect URL.
+ * @function replaceFormats
  * @param url {String} Redirect URL. Formats:
  * %u - entire URL
  * %s - scheme
@@ -193,6 +202,7 @@ const replaceFormats = (url, linkUrl) => {
 /**
  * Redirect the current tab or link to new tab. If replaceFormats throws an
  * error, redirection doesn't happen.
+ * @function redirect
  * @param info {OnClickData} Information about the item clicked and the context
  * where the click happened.
  * @param tab {chrome.tabs.Tab} The details of the tab where the click took
