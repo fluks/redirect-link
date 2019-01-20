@@ -26,7 +26,7 @@ ff-profile := dev-edition-default
 
 version_suffix := $(shell grep -o '[0-9]\.[0-9]\.[0-9]' manifest.json | head -1 | sed 's/\./_/g')
 
-.PHONY: run firefox chromium clean change_to_firefox change_to_chromium lint doc
+.PHONY: run firefox chromium clean change_to_firefox change_to_chromium lint doc supported_versions
 
 run:
 	$(node) $(web-ext) \
@@ -56,6 +56,10 @@ lint: change_to_firefox
 	$(foreach file,$(locale_files),json_xs -f json < $(file) 1>/dev/null;)
 	$(node) $(web-ext) lint
 	eslint $(js)
+
+supported_versions:
+	# Set verbosity on command line: verbosity='-v{1,2}'
+	min_ext_ver.pl -b firefox,chrome $(verbosity) $(js)
 
 doc:
 	jsdoc -c conf.json -d doc $(js)
