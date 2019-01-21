@@ -9,7 +9,8 @@ common_files := \
 	background/* \
 	options/* \
 	common/* \
-	data/original_image.txt
+	data/original_image.txt \
+	LICENSE
 firefox_files := \
 	$(common_files) \
 	data/*.svg
