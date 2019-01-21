@@ -2,11 +2,13 @@
 
   * Add formats for more detailed path and query parameters.
   * Remove the leading slash from path substitution.
+  * Open options to a tab.
   * Add shortcuts to options page.
  Firefox
-  * Add a setting to enable redirection on certain URLs.
+  * Minimum Firefox version is now 60.
+  * Add a setting to enable redirection only on certain URLs.
 
- -- fluks <fluks.github@gmail.com>  Mon, 21 Jan 2019 01:58:26 +0200
+ -- fluks <fluks.github@gmail.com>  Mon, 21 Jan 2019 04:35:52 +0200
 
 1.1.1
 
