@@ -55,7 +55,7 @@ change_to_chromium:
 lint: change_to_firefox
 	# Check JSON syntax.
 	$(foreach file,$(locale_files),json_xs -f json < $(file) 1>/dev/null;)
-	$(node) $(web-ext) lint
+	$(node) $(web-ext) lint --ignore-files doc/*
 	eslint $(js)
 
 supported_versions:
