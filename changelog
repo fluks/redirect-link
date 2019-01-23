@@ -1,3 +1,9 @@
+2.1.0
+
+ * Disable enable URL feature on Firefox < 63.
+
+ -- fluks <fluks.github@gmail.com>  Wed, 23 Jan 2019 03:04:43 +0200
+
 2.0.0
 
   * Add formats for more detailed path and query parameters.
