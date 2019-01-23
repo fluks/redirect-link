@@ -47,7 +47,7 @@ regular expression also.  This feature works only on versions 63 and newer.
 Remember to save if you changed options!
 
 Propose or share new redirections at GitHub in this issue:
-[](https://github.com/fluks/redirect-link/issues/7.)
+https://github.com/fluks/redirect-link/issues/7
 
 ## Permissions
 
