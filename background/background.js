@@ -272,6 +272,6 @@ setupContextMenus();
 chrome.storage.onChanged.addListener(updateContextMenus);
 chrome.contextMenus.onClicked.addListener(redirect);
 (async function () {
-if (await common.getBrowser() !== 'chrome')
+if (await common.isSupportedEnableURL())
     chrome.contextMenus.onShown.addListener(hideRedirects);
 })();

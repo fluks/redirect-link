@@ -3,25 +3,22 @@
 'use strict';
 
 /**
- * Get the current browser.
- * @function getBrowser
+ * Check is enable URL feature supported.
+ * @function isSupportedEnableURL
  * @async
- * @return {Promise<String>} 'firefox', 'firefox_android', 'chrome' or
- * undefined if browser can't be determined.
+ * @return {Promise<Bool>} True if enable URL is supported, false otherwise.
  */
-export const getBrowser = async () => {
+export const isSupportedEnableURL = async () => {
     try {
-        let b = await browser.runtime.getBrowserInfo();
-        b = b.name.toLowerCase();
-        if (b.includes('android'))
-            return 'firefox_android';
-        return 'firefox';
+        const b = await browser.runtime.getBrowserInfo();
+
+        // menus.onShown is supported only in Firefox.
+        // visible property for menus.update() is supported only in Firefox >=63.
+        // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/menus/create
+        return b.name === 'Firefox' &&
+            (parseFloat(b.version)) - 63.0 >= -Number.EPSILON;
     }
-    catch (e) { /* Ignore eslint empty block statement. */ }
-    try {
-        if (chrome) {
-            return 'chrome';
-        }
+    catch (e) {
+        return false;
     }
-    catch (e) { /* Ignore eslint empty block statement. */ }
 };

@@ -14,7 +14,7 @@ const _ = chrome.i18n.getMessage;
  * @async
  */
 const removeUnsupportedStaticElements = async () => {
-    if (await common.getBrowser() !== 'chrome')
+    if (await common.isSupportedEnableURL())
         return;
 
     Array.from(document.querySelectorAll('.remove'))
@@ -166,7 +166,7 @@ const addRow = async (tbody, row) => {
     tr.appendChild(td);
 
     // EnableURL cell.
-    if (await common.getBrowser() !== 'chrome') {
+    if (await common.isSupportedEnableURL()) {
         td = document.createElement('td');
         td.className = 'enable-url-column';
         input = document.createElement('input');
