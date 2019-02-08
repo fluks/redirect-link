@@ -4,21 +4,25 @@
 
 import * as common from '../common/common.js';
 
-// Localization function.
-const _ = chrome.i18n.getMessage;
+const _ = chrome.i18n.getMessage,
+    g_openInContainer = document.querySelector('#open-in-container'),
+    g_switchToOpenedTab = document.querySelector('#switch-to-opened-tab');
 
 /**
- * Remove static elements when on a platform that doesn't support APIs
- * required for enabling URLs.
+ * Remove static elements when on a platform that doesn't support required
+ * APIs.
  * @function removeUnsupportedStaticElements
  * @async
  */
 const removeUnsupportedStaticElements = async () => {
-    if (await common.isSupportedEnableURL())
-        return;
-
-    Array.from(document.querySelectorAll('.remove'))
-        .forEach(e => e.remove());
+    if (!await common.isSupportedEnableURL()) {
+        Array.from(document.querySelectorAll('.remove-enableurl'))
+            .forEach(e => e.remove());
+    }
+    if (!await common.isSupportedContainer()) {
+        Array.from(document.querySelectorAll('.remove-container'))
+            .forEach(e => e.remove());
+    }
 };
 
 /**
@@ -79,9 +83,10 @@ const showInfo = (text) => {
  * Save all the options. Doesn't save anything if any of the titles or the URLs
  * is an empty string.
  * @function saveOptions
+ * @async
  * @param tbody {HTMLElement} The tag where the redirect options are added.
  */
-const saveOptions = (tbody) => {
+const saveOptions = async (tbody) => {
     const inputs = tbody.querySelectorAll('.title-input, .url-input');
     const empty = Array.from(inputs).find(input => !input.value);
     if (empty) {
@@ -101,12 +106,14 @@ const saveOptions = (tbody) => {
             rows[title].enableURL = enableURLElement.value;
     });
 
-    const switchToOpenedTab = document.querySelector('#switch-to-opened-tab');
-
-    chrome.storage.local.set({
+    const opts = {
         rows: rows,
-        'switch-to-opened-tab': switchToOpenedTab.checked,
-    }, () => showInfo(_('options_js_settingsSaved')));
+        'switch-to-opened-tab': g_switchToOpenedTab.checked,
+    };
+    if (await common.isSupportedContainer())
+        opts['open-in-container'] = g_openInContainer.checked;
+
+    chrome.storage.local.set(opts, () => showInfo(_('options_js_settingsSaved')));
 };
 
 /**
@@ -193,23 +200,25 @@ const addRow = async (tbody, row) => {
 /**
  * Add all the stored options to the page.
  * @function addItems
+ * @async
  * @param tbody {HTMLElement} The tag where the redirect options are added.
  * @param options {Object} All the options.
  */
-const addItems = (tbody, options) => {
+const addItems = async (tbody, options) => {
     Object.keys(options.rows).forEach((title) => {
         const row = options.rows[title];
         row['title'] = title;
         addRow(tbody, row);
     });
 
-    document.querySelector('#switch-to-opened-tab').checked =
-        options['switch-to-opened-tab'];
+    g_switchToOpenedTab.checked = options['switch-to-opened-tab'];
+    if (await common.isSupportedContainer())
+        g_openInContainer.checked = options['open-in-container'];
 };
 
 const tbody = document.getElementsByTagName('tbody')[0];
 
-removeUnsupportedStaticElements();
+(async () => await removeUnsupportedStaticElements())();
 localize();
 chrome.storage.local.get(null, (options) => addItems(tbody, options));
 document.querySelector('#add-row-button').addEventListener(

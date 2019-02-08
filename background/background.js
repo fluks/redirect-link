@@ -32,6 +32,7 @@ const g_defaultOptions = {
         // End update rows.
     },
     'switch-to-opened-tab': false,
+    'open-in-container': true,
 },
 g_currentTabIdSuffix = '-current';
 
@@ -94,9 +95,10 @@ const setDefaultOptions = (details) => {
     if (details.reason === 'install')
         chrome.storage.local.set(g_defaultOptions);
     else if (details.reason === 'update') {
-        chrome.storage.local.get([ 'rows' ], (rows) => {
-            // Copy these from g_defaultOptions between start update rows and
-            // end update rows.
+        chrome.storage.local.get(null, (opts) => {
+            // Add new options here.
+            // These are new redirections from g_defaultOptions between start
+            // update rows and end update rows.
             const updateRows = {
                 'archive.is (save)': {
                     url: 'https://archive.is/?run=1&url=%u',
@@ -104,11 +106,14 @@ const setDefaultOptions = (details) => {
                 },
             };
             Object.keys(updateRows).forEach(k => {
-                if (!rows.rows.hasOwnProperty(k))
-                    rows.rows[k] = updateRows[k];
+                if (!opts.rows.hasOwnProperty(k))
+                    opts.rows[k] = updateRows[k];
             });
 
-            chrome.storage.local.set(rows);
+            if (!opts.hasOwnProperty('open-in-container'))
+                opts['open-in-container'] = true;
+
+            chrome.storage.local.set(opts);
         });
     }
 };
@@ -209,7 +214,7 @@ const replaceFormats = (url, linkUrl) => {
  * place.
  */
 const redirect = (info, tab) => {
-    chrome.storage.local.get(null, (options) => {
+    chrome.storage.local.get(null, async (options) => {
         let targetUrl = '',
             menuItemId = '';
         // Redirect current tab.
@@ -232,10 +237,13 @@ const redirect = (info, tab) => {
             return;
         }
 
-        chrome.tabs.create({
+        const args = {
             url: redirectUrl, index: tab.index + 1,
             active: options['switch-to-opened-tab'],
-        });
+        };
+        if (await common.isSupportedContainer() && options['open-in-container'])
+            args.cookieStoreId = tab.cookieStoreId;
+        chrome.tabs.create(args);
     });
 };
 

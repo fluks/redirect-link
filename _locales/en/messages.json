@@ -40,5 +40,8 @@
     },
     "options_html_switchToOpenedTab": {
         "message": "S_w_itch to Opened Tab"
+    },
+    "options_html_openInContainer": {
+        "message": "_O_pen in a Container (only if containers are enabled)"
     }
 }

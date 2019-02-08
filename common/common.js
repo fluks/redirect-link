@@ -22,3 +22,20 @@ export const isSupportedEnableURL = async () => {
         return false;
     }
 };
+
+/**
+ * Check whether containers can be supported. This doesn't mean containers are
+ * enabled, only loosely that it's possible.
+ * @function isSupportedContainer
+ * @async
+ * @return {Promise<Bool>} True if containers are supported, false otherwise.
+ */
+export const isSupportedContainer = async () => {
+    try {
+        const b = await browser.runtime.getBrowserInfo();
+        return /firefox/i.test(b.name);
+    }
+    catch (e) {
+        return false;
+    }
+};

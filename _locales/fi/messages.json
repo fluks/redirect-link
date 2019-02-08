@@ -40,5 +40,8 @@
     },
     "options_html_switchToOpenedTab": {
         "message": "_V_aihda avattuun välilehteen"
+    },
+    "options_html_openInContainer": {
+        "message": "_A_vaa eristystilassa (vain jos eristystilat on käytössä)"
     }
 }
