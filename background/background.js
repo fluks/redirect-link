@@ -208,27 +208,37 @@ const replaceFormats = (url, linkUrl) => {
  * Redirect the current tab or link to new tab. If replaceFormats throws an
  * error, redirection doesn't happen.
  * @function redirect
- * @param info {OnClickData} Information about the item clicked and the context
- * where the click happened.
+ * @param info {?OnClickData} Information about the item clicked and the context
+ * where the click happened, null if browser action is used.
  * @param tab {chrome.tabs.Tab} The details of the tab where the click took
  * place.
+ * @param url {String|undefined} Redirect URL when browser action is used,
+ * undefined otherwise.
  */
-const redirect = (info, tab) => {
+const redirect = (info, tab, url) => {
     chrome.storage.local.get(null, async (options) => {
         let targetUrl = '',
-            menuItemId = '';
+            menuItemId = '',
+            redirectUrl = '';
+
+        // Browser action.
+        if (info === null) {
+            targetUrl = tab.url;
+            redirectUrl = url;
+        }
         // Redirect current tab.
-        if (info.menuItemId.endsWith(g_currentTabIdSuffix)) {
+        else if (info.menuItemId.endsWith(g_currentTabIdSuffix)) {
             menuItemId = info.menuItemId.split(g_currentTabIdSuffix, 1)[0];
+            redirectUrl = options.rows[menuItemId].url;
             targetUrl = tab.url;
         }
         // Redirect link.
         else {
             menuItemId = info.menuItemId;
+            redirectUrl = options.rows[menuItemId].url;
             targetUrl = info.linkUrl;
         }
 
-        let redirectUrl = options.rows[menuItemId].url;
         try {
             redirectUrl = replaceFormats(redirectUrl, targetUrl);
         }
@@ -283,3 +293,7 @@ chrome.contextMenus.onClicked.addListener(redirect);
 if (await common.isSupportedEnableURL())
     chrome.contextMenus.onShown.addListener(hideRedirects);
 })();
+chrome.runtime.onMessage.addListener((request) => {
+    if (request.name === 'redirect')
+        redirect(null, request.tab, request.redirectUrl);
+});

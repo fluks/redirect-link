@@ -1,13 +1,15 @@
 js := \
 	background/*.js \
 	options/*.js \
-	common/*.js
+	common/*.js \
+	browser_action/*.js
 locale_files := $(shell find _locales -type f)
 common_files := \
 	$(locale_files) \
 	manifest.json \
 	background/* \
 	options/* \
+	browser_action/* \
 	common/* \
 	data/original_image.txt \
 	LICENSE
