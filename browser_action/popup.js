@@ -2,6 +2,8 @@
 
 'use strict';
 
+import * as common from '../common/common.js';
+
 const g_rowsDiv = document.querySelector('#redirections');
 
 /**
@@ -44,4 +46,17 @@ const loadRows = (options) => {
     });
 };
 
+/**
+ * Add class to an HTML element if we're on mobile, so that CSS can take that
+ * into account.
+ * @function addMobileClass
+ * @async
+ */
+const addMobileClass = async () => {
+    if (await common.isMobile()) {
+        document.body.classList.add('mobile');
+    }
+};
+
 chrome.storage.local.get([ 'rows' ], loadRows);
+document.addEventListener('DOMContentLoaded', addMobileClass);

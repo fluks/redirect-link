@@ -287,11 +287,14 @@ chrome.runtime.onInstalled.addListener(setDefaultOptions);
 
 setupContextMenus();
 
-chrome.storage.onChanged.addListener(updateContextMenus);
-chrome.contextMenus.onClicked.addListener(redirect);
 (async function () {
-if (await common.isSupportedEnableURL())
-    chrome.contextMenus.onShown.addListener(hideRedirects);
+    const isMenusSupported = await common.isSupportedMenus();
+    if (isMenusSupported) {
+        chrome.storage.onChanged.addListener(updateContextMenus);
+        chrome.contextMenus.onClicked.addListener(redirect);
+    }
+    if (await common.isSupportedEnableURL() && isMenusSupported)
+        chrome.contextMenus.onShown.addListener(hideRedirects);
 })();
 chrome.runtime.onMessage.addListener((request) => {
     if (request.name === 'redirect')

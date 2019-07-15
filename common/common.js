@@ -39,3 +39,35 @@ export const isSupportedContainer = async () => {
         return false;
     }
 };
+
+/**
+ * Check are context menus supported. They are not on mobile.
+ * @function isSupportedMenus
+ * @async
+ * @return {Promise<Bool>}
+ */
+export const isSupportedMenus = async () => {
+    try {
+        const b = await browser.runtime.getBrowserInfo();
+        return /firefox/i.test(b.name);
+    }
+    catch (e) {
+        return false;
+    }
+};
+
+/**
+ * Check is the client a mobile client. Only Firefox for Android.
+ * @function isMobile
+ * @async
+ * @return {Promise<Bool>}
+ */
+export const isMobile = async () => {
+    try {
+        const b = await browser.runtime.getBrowserInfo();
+        return /fennec/i.test(b.name);
+    }
+    catch (e) {
+        return false;
+    }
+};
