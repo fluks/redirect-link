@@ -20,27 +20,29 @@ chromium_files := \
 	$(common_files) \
 	data/*.png
 
-# My node version is old, this adds Array.includes support.
-node :=
-# Needed if you want to pass options for node.
-web-ext := web-ext
+# Change this to point to a Firefox binary or remove the line from run target
+# to use the default Firefox in your path.
 firefox-bin := ~/Downloads/firefox_dev/firefox
+# Change this to your profile or remove the line from run target to use a
+# temporary profile.
 ff-profile := dev-edition-default
 
 version_suffix := $(shell grep -o '[0-9]\.[0-9]\.[0-9]' manifest.json | head -1 | sed 's/\./_/g')
 
+# Change to empty variable if you want to use globally installed packages.
+npm_bin := $(shell npm bin)/
+
 .PHONY: run firefox chromium clean change_to_firefox change_to_chromium lint \
-	doc supported_versions compare_install_and_source
+	doc show_doc supported_versions compare_install_and_source
 
 run:
-	$(node) $(web-ext) \
-		-f $(firefox-bin) \
-		--pref intl.locale.requested=fi \
+	$(npm_bin)web-ext run \
+		--firefox-binary $(firefox-bin) \
+		--firefox-profile $(ff-profile) \
+		--pref intl.locale.requested=en \
 		-u https://en.wikipedia.org/wiki/Main_Page \
 		-u about:debugging \
-		-u about:addons \
-		-p $(ff-profile) \
-		run
+		-u about:addons
 
 firefox: change_to_firefox
 	zip -r redirect_link-$(version_suffix).xpi $(firefox_files)
@@ -57,9 +59,9 @@ change_to_chromium:
 # web-ext lint finds errors if manifest.json isn't the Firefox version.
 lint: change_to_firefox
 	# Check JSON syntax.
-	$(foreach file,$(locale_files),json_xs -f json < $(file) 1>/dev/null;)
-	$(node) $(web-ext) lint --ignore-files doc/*
-	eslint $(js)
+	$(foreach file,$(locale_files),python -m json.tool < $(file) 1>/dev/null || exit;)
+	$(npm_bin)web-ext lint --ignore-files doc/*
+	$(npm_bin)eslint $(js)
 
 supported_versions:
 	# Set verbosity on command line: verbosity='-v{1,2}'
@@ -81,7 +83,10 @@ compare_install_and_source:
 	@rm -rf $(tmp_install) $(tmp_source)
 
 doc:
-	jsdoc -c conf.json -d doc $(js)
+	$(npm_bin)jsdoc -c conf.json -d doc $(js)
+
+show_doc:
+	$(shell firefox file://$(shell readlink -f doc/index.html))
 
 clean:
 	rm manifest.json
