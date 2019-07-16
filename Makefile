@@ -33,7 +33,7 @@ version_suffix := $(shell grep -o '[0-9]\.[0-9]\.[0-9]' manifest.json | head -1 
 npm_bin := $(shell npm bin)/
 
 .PHONY: run firefox chromium clean change_to_firefox change_to_chromium lint \
-	doc show_doc supported_versions compare_install_and_source
+	doc show_doc supported_versions compare_install_and_source install_dependencies
 
 run:
 	$(npm_bin)web-ext run \
@@ -62,6 +62,9 @@ lint: change_to_firefox
 	$(foreach file,$(locale_files),python -m json.tool < $(file) 1>/dev/null || exit;)
 	$(npm_bin)web-ext lint --ignore-files doc/*
 	$(npm_bin)eslint $(js)
+
+install_dependencies:
+	npm install --only=dev
 
 supported_versions:
 	# Set verbosity on command line: verbosity='-v{1,2}'

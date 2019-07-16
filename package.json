@@ -1,0 +1,7 @@
+{
+  "devDependencies": {
+    "web-ext": "latest",
+    "eslint": "latest",
+    "jsdoc": "latest"
+  }
+}
