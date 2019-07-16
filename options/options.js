@@ -15,10 +15,6 @@ const _ = chrome.i18n.getMessage,
  * @async
  */
 const removeUnsupportedStaticElements = async () => {
-    if (!await common.isSupportedEnableURL()) {
-        Array.from(document.querySelectorAll('.remove-enableurl'))
-            .forEach(e => e.remove());
-    }
     if (!await common.isSupportedContainer()) {
         Array.from(document.querySelectorAll('.remove-container'))
             .forEach(e => e.remove());
@@ -173,17 +169,15 @@ const addRow = async (tbody, row) => {
     tr.appendChild(td);
 
     // EnableURL cell.
-    if (await common.isSupportedEnableURL()) {
-        td = document.createElement('td');
-        td.className = 'enable-url-column';
-        input = document.createElement('input');
-        input.type = 'url';
-        input.className = 'enable-url-input';
-        input.value = enableURL;
-        input.title = _('options_js_enableURLTooltip');
-        td.appendChild(input);
-        tr.appendChild(td);
-    }
+    td = document.createElement('td');
+    td.className = 'enable-url-column';
+    input = document.createElement('input');
+    input.type = 'url';
+    input.className = 'enable-url-input';
+    input.value = enableURL;
+    input.title = _('options_js_enableURLTooltip');
+    td.appendChild(input);
+    tr.appendChild(td);
 
     // Remove row button cell.
     td = document.createElement('td');
