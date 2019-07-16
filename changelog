@@ -1,3 +1,9 @@
+3.0.0
+
+ * Add support for Firefox for Android.
+
+ -- fluks <fluks.github@gmail.com>  Tue, 16 Jul 2019 14:53:10 +0300
+
 2.3.0
 
  * Add a toolbar button.
