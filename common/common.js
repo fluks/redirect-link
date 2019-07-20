@@ -3,13 +3,22 @@
 'use strict';
 
 /**
- * Check whether containers can be supported. This doesn't mean containers are
- * enabled, only loosely that it's possible.
- * @function isSupportedContainer
- * @async
- * @return {Promise<Bool>} True if containers are supported, false otherwise.
+ * Check whether the browser is Chromium based.
+ * @function isChromium
+ * @return {Bool} Return true if browser is Chromium based, false otherwise.
  */
-export const isSupportedContainer = async () => {
+const isChromium = () => {
+    return !!window.chrome &&
+        (!!window.chrome.webstore || !!window.chrome.runtime);
+};
+
+/**
+ * Check whether the browser is desktop Firefox.
+ * @function isFirefox
+ * @async
+ * @return {Promise<Bool>} Return true if browser is desktop Firefox, false otherwise.
+ */
+const isFirefox = async () => {
     try {
         const b = await browser.runtime.getBrowserInfo();
         return /firefox/i.test(b.name);
@@ -20,6 +29,17 @@ export const isSupportedContainer = async () => {
 };
 
 /**
+ * Check whether containers can be supported. This doesn't mean containers are
+ * enabled, only loosely that it's possible.
+ * @function isSupportedContainer
+ * @async
+ * @return {Promise<Bool>} True if containers are supported, false otherwise.
+ */
+export const isSupportedContainer = async () => {
+    return isFirefox();
+};
+
+/**
  * Check are context menus supported. They are not on mobile.
  * @function isSupportedMenus
  * @async
@@ -27,8 +47,8 @@ export const isSupportedContainer = async () => {
  */
 export const isSupportedMenus = async () => {
     try {
-        const b = await browser.runtime.getBrowserInfo();
-        return /firefox/i.test(b.name);
+        return isChromium() ||
+            /firefox/i.test((await browser.runtime.getBrowserInfo()).name);
     }
     catch (e) {
         return false;
@@ -49,4 +69,14 @@ export const isMobile = async () => {
     catch (e) {
         return false;
     }
+};
+
+/**
+ * Check is contextMenus.onShown supported by the browser.
+ * @function isSupportedMenuOnShown
+ * @async
+ * @return {Promise<Bool>}
+ */
+export const isSupportedMenuOnShown = async () => {
+    return isFirefox();
 };

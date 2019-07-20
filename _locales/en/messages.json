@@ -15,7 +15,7 @@
         "message": "Remove"
     },
     "options_js_enableURLTooltip": {
-        "message": "A URL of a link or a page where this redirect is enabled. Otherwise the redirect is hidden in the context menu. You can use a regular expression. Leave empty to enable always."
+        "message": "A URL of a link or a page where this redirect is enabled. Otherwise the redirect is hidden in the context menu and toolbar popup. You can use a regular expression. Leave empty to enable always.\n\nThis doesn't work in the context menu on Chrome, but does in the toolbar's popup."
     },
     "options_html_addRowButton": {
         "message": "_A_dd Row"

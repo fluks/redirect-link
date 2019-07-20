@@ -262,6 +262,7 @@ const redirect = (info, tab, url) => {
  * link's or page's URL.
  * <all_urls> permission is needed for many of info's properties, @see
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/menus/onShown.
+ * Not needed on Chromium because it doesn't have necessary APIs.
  * @param info {Object} OnClickData and contexts and menuIds.
  */
 const hideRedirects = (info) => {
@@ -285,16 +286,21 @@ const hideRedirects = (info) => {
 
 chrome.runtime.onInstalled.addListener(setDefaultOptions);
 
+// TODO This uses contextMenus API, move it to the below the isSupportedMenus
+// check.
 setupContextMenus();
 
 (async () => {
     if (await common.isSupportedMenus()) {
         chrome.storage.onChanged.addListener(updateContextMenus);
         chrome.contextMenus.onClicked.addListener(redirect);
-        chrome.contextMenus.onShown.addListener(hideRedirects);
+        if (await common.isSupportedMenuOnShown()) {
+            chrome.contextMenus.onShown.addListener(hideRedirects);
+        }
     }
 })();
 chrome.runtime.onMessage.addListener((request) => {
-    if (request.name === 'redirect')
+    if (request.name === 'redirect') {
         redirect(null, request.tab, request.redirectUrl);
+    }
 });

@@ -15,7 +15,7 @@
         "message": "Poista"
     },
     "options_js_enableURLTooltip": {
-        "message": "Linkin tai sivun URL, missä tämä uudelleenohjaus on käytössä. Muussa tapauksessa tämä uudelleenohjaus piilotetaan pikavalikosta. Voit käyttää säännöllistä lauseketta. Jätä tyhjäksi, että uudelleenohjaus sallitaan kaikkialla."
+        "message": "Linkin tai sivun URL, missä tämä uudelleenohjaus on käytössä. Muussa tapauksessa tämä uudelleenohjaus piilotetaan pikavalikosta ja ponnahdusikkunasta. Voit käyttää säännöllistä lauseketta. Jätä tyhjäksi, että uudelleenohjaus sallitaan kaikkialla.\n\nTämä ei toimi Chromen pikavalikossa, työkalurivin ponnahdusikkunassa toimii."
     },
     "options_html_addRowButton": {
         "message": "_L_isää rivi"
