@@ -1,3 +1,9 @@
+3.1.0
+
+ * Update Chromium
+
+ -- fluks <fluks.github@gmail.com>  Sat, 20 Jul 2019 17:52:18 +0300
+
 3.0.0
 
  * Add support for Firefox for Android.
