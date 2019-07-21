@@ -79,7 +79,7 @@ const setupContextMenus = () => {
  * @param changes {Object} Options that changed.
  */
 const updateContextMenus = (changes) => {
-    if (changes.hasOwnProperty('rows')) {
+    if (Object.prototype.hasOwnProperty.call(changes, 'rows')) {
         chrome.contextMenus.removeAll(() => {
             addContextMenuItems(changes.rows.newValue);
         });
@@ -106,11 +106,11 @@ const setDefaultOptions = (details) => {
                 },
             };
             Object.keys(updateRows).forEach(k => {
-                if (!opts.rows.hasOwnProperty(k))
+                if (!Object.prototype.hasOwnProperty.call(opts.rows, k))
                     opts.rows[k] = updateRows[k];
             });
 
-            if (!opts.hasOwnProperty('open-in-container'))
+            if (!Object.prototype.hasOwnProperty.call(opts, 'open-in-container'))
                 opts['open-in-container'] = true;
 
             chrome.storage.local.set(opts);
@@ -153,7 +153,7 @@ const replaceParam = (format, params, param) => {
     if (format === '%q')
         return param;
     const m = format.match(/\[([^\]]+)\]/);
-    if (!params.hasOwnProperty(m[1]))
+    if (!Object.prototype.hasOwnProperty.call(params, m[1]))
         throw 'Non-existing query parameter';
     return params[m[1]];
 };
