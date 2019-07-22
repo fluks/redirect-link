@@ -64,5 +64,7 @@ const addMobileClass = async () => {
     }
 };
 
-chrome.storage.local.get([ 'rows' ], loadRows);
-document.addEventListener('DOMContentLoaded', addMobileClass);
+document.addEventListener('DOMContentLoaded', () => {
+    addMobileClass();
+    chrome.storage.local.get([ 'rows' ], loadRows);
+});
