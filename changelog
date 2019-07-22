@@ -1,3 +1,9 @@
+3.2.1
+
+ * Fix toolbar popup order bug.
+
+ -- fluks <fluks.github@gmail.com>  Mon, 22 Jul 2019 23:16:59 +0300
+
 3.2.0
 
  * Firefox, Chromium
