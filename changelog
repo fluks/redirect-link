@@ -1,3 +1,9 @@
+3.2.2
+
+ * Try to fix toolbar popup loading content ony every second time.
+
+ -- fluks <fluks.github@gmail.com>  Tue, 23 Jul 2019 02:36:04 +0300
+
 3.2.1
 
  * Fix toolbar popup order bug.
