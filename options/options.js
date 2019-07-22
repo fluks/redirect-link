@@ -91,11 +91,12 @@ const saveOptions = async (tbody) => {
     }
 
     const rows = {};
-    tbody.querySelectorAll('tr').forEach(tr => {
+    tbody.querySelectorAll('tr').forEach((tr, i) => {
         const title = tr.querySelector('.title-input').value;
         rows[title] = {
             enabled: tr.querySelector('.enabled-input').checked,
             url: tr.querySelector('.url-input').value,
+            index: i,
         };
         const enableURLElement = tr.querySelector('.enable-url-input');
         if (enableURLElement)
@@ -110,6 +111,91 @@ const saveOptions = async (tbody) => {
         opts['open-in-container'] = g_openInContainer.checked;
 
     chrome.storage.local.set(opts, () => showInfo(_('options_js_settingsSaved')));
+};
+
+/**
+ * Check is an element a tr in the header.
+ * @function isHeaderRow
+ * @param node {HTMLElement} The element to check.
+ * @return {Bool} True if node is tr in header, false otherwise.
+ */
+const isHeaderRow = (node) => {
+    return node.tagName === 'TR' && node.parentNode.tagName === 'THEAD';
+};
+
+/**
+ * Check is an element a redirection row.
+ * @function isRedirectionRow
+ * @param node {HTMLElement} The element to check.
+ * @return {Bool} True if node is a redirection row, false otherwise.
+ */
+const isRedirectionRow = (node) => {
+    return node.tagName === 'TR' && node.parentNode.tagName === 'TBODY';
+};
+
+/**
+ * Find where user is trying to move a row.
+ * @function findMoveTargetRow
+ * @param node {HTMLElement} Target node where user tried to move a row.
+ * @param tbody {HTMLElement} Element which children redirection rows are.
+ * @return {Array[HTMLElement]} A redirection row and its next sibling if node
+ * is a header or redirection row, or null or undefined and undefined otherwise.
+ */
+const findMoveTargetRow = (node, tbody) => {
+    let referenceNode;
+    do {
+        // Mouseup on top of header row. Insert as a first row.
+        if (isHeaderRow(node)) {
+            referenceNode = tbody.children[0];
+            break;
+        }
+        // Mouseup on top of any redirection row. Insert after it.
+        else if (isRedirectionRow(node)) {
+            referenceNode = node.nextSibling;
+            break;
+        }
+        node = node.parentNode;
+    } while (node);
+
+    return [ node, referenceNode ];
+};
+
+/**
+ * Move a row.
+ * @function startMovingARow
+ * @param tr {HTMLElement} Row to move.
+ * @param e {MouseEvent} Mousedown event.
+ */
+const startMovingARow = (tr, e) => {
+    if (!(e.ctrlKey && e.altKey))
+        return;
+
+    const tbody = tr.parentNode;
+
+    const showMovingARow = (e) => {
+        const [ node ] = findMoveTargetRow(e.target, tbody);
+        if (node)
+            node.style.setProperty('--row-move-highlight-size', 1);
+    };
+    const table = document.getElementsByTagName('table')[0];
+    table.addEventListener('mouseover', showMovingARow);
+
+    const nextSibling = tr.nextSibling;
+    tr.remove();
+    const moveRow = (e) => {
+        const [ node, referenceNode ] = findMoveTargetRow(e.target, tbody);
+        if (node)
+            tbody.insertBefore(tr, referenceNode);
+        // Moved to incorrect area, move the row back where it was.
+        else
+            tbody.insertBefore(tr, nextSibling);
+
+        table.querySelectorAll('tr').forEach(r =>
+            r.style.setProperty('--row-move-highlight-size', 0));
+        document.removeEventListener('mouseup', moveRow);
+        table.removeEventListener('mouseover', showMovingARow);
+    };
+    document.addEventListener('mouseup', moveRow);
 };
 
 /**
@@ -133,6 +219,7 @@ const addRow = async (tbody, row) => {
         checked = 'checked';
 
     const tr = document.createElement('tr');
+    tr.addEventListener('mousedown', (e) => startMovingARow(tr, e));
 
     // Redirect enabled cell.
     let td = document.createElement('td');
@@ -199,11 +286,14 @@ const addRow = async (tbody, row) => {
  * @param options {Object} All the options.
  */
 const addItems = async (tbody, options) => {
-    Object.keys(options.rows).forEach((title) => {
-        const row = options.rows[title];
-        row['title'] = title;
-        addRow(tbody, row);
-    });
+    Object.keys(options.rows)
+        .sort((title1, title2) =>
+            common.compareRowIndices(options.rows, title1, title2))
+        .forEach((title) => {
+            const row = options.rows[title];
+            row['title'] = title;
+            addRow(tbody, row);
+        });
 
     g_switchToOpenedTab.checked = options['switch-to-opened-tab'];
     if (await common.isSupportedContainer())

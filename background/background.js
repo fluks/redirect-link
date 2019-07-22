@@ -42,23 +42,26 @@ g_currentTabIdSuffix = '-current';
  * @param rows {Object} Redirect options.
  */
 const addContextMenuItems = (rows) => {
-    Object.keys(rows).forEach(title => {
-        const row = rows[title];
+    Object.keys(rows)
+        .sort((title1, title2) =>
+            common.compareRowIndices(rows, title1, title2))
+        .forEach(title => {
+            const row = rows[title];
 
-        if (row && row.enabled) {
-            chrome.contextMenus.create({
-                id: title,
-                contexts: [ 'link' ],
-                title: title,
-            });
+            if (row && row.enabled) {
+                chrome.contextMenus.create({
+                    id: title,
+                    contexts: [ 'link' ],
+                    title: title,
+                });
 
-            chrome.contextMenus.create({
-                id: title + g_currentTabIdSuffix,
-                contexts: [ 'page' ],
-                title: title,
-            });
-        }
-    });
+                chrome.contextMenus.create({
+                    id: title + g_currentTabIdSuffix,
+                    contexts: [ 'page' ],
+                    title: title,
+                });
+            }
+        });
 };
 
 /**

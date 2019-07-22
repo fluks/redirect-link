@@ -30,20 +30,23 @@ const redirect = (redirectUrl, tab) => {
 const loadRows = (options) => {
     const tabs = browser.tabs.query({ active: true, currentWindow: true });
 
-    Object.keys(options.rows).forEach(async (key) => {
-        const row = options.rows[key];
-        // No need to check is enableURL supported.
-        if (row.enabled && (!row.enableURL ||
-                (new RegExp(row.enableURL)).test((await tabs)[0].url))) {
-            const div = document.createElement('div');
-            const button = document.createElement('button');
-            button.textContent = key;
-            const tab = (await tabs)[0];
-            button.addEventListener('click', () => redirect(row.url, tab));
-            div.appendChild(button);
-            g_rowsDiv.appendChild(div);
-        }
-    });
+    Object.keys(options.rows)
+        .sort((key1, key2) =>
+            common.compareRowIndices(options.rows, key1, key2))
+        .forEach(async (key) => {
+            const row = options.rows[key];
+            // No need to check is enableURL supported.
+            if (row.enabled && (!row.enableURL ||
+                    (new RegExp(row.enableURL)).test((await tabs)[0].url))) {
+                const div = document.createElement('div');
+                const button = document.createElement('button');
+                button.textContent = key;
+                const tab = (await tabs)[0];
+                button.addEventListener('click', () => redirect(row.url, tab));
+                div.appendChild(button);
+                g_rowsDiv.appendChild(div);
+            }
+        });
 };
 
 /**

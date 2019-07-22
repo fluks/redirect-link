@@ -80,3 +80,19 @@ export const isMobile = async () => {
 export const isSupportedMenuOnShown = async () => {
     return isFirefox();
 };
+
+/**
+ * Compare indices of rows for sorting them.
+ * @function compareRowIndices
+ * @param obj {Object} Redirection rows.
+ * @param title1 {String} Title of the row.
+ * @param title2 {String} Title of next row.
+ * @return {Integer} -1 if row with title1 comes before row with title2, 0 if
+ * they have the same index and +1 if row with title2 comes before row with
+ * title1.
+ */
+export const compareRowIndices = (obj, title1, title2) => {
+    const index1 = obj[title1].index || 0;
+    const index2 = obj[title2].index || 0;
+    return index1 - index2;
+};
