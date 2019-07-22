@@ -25,23 +25,26 @@ const redirect = (redirectUrl, tab) => {
  * Create redirection buttons for redirections which are enabled and their
  * enable URL matches the current URL, if they have one.
  * @function loadRows
+ * @async
  * @param options {Object} 'rows' property of options, all redirections.
  */
-const loadRows = (options) => {
-    const tabs = browser.tabs.query({ active: true, currentWindow: true });
+const loadRows = async (options) => {
+    const tab = (await browser.tabs.query({
+        active: true,
+        currentWindow: true,
+    }))[0];
 
     Object.keys(options.rows)
-        .sort((key1, key2) =>
-            common.compareRowIndices(options.rows, key1, key2))
-        .forEach(async (key) => {
-            const row = options.rows[key];
+        .sort((title1, title2) =>
+            common.compareRowIndices(options.rows, title1, title2))
+        .forEach((title) => {
+            const row = options.rows[title];
             // No need to check is enableURL supported.
             if (row.enabled && (!row.enableURL ||
-                    (new RegExp(row.enableURL)).test((await tabs)[0].url))) {
+                    (new RegExp(row.enableURL)).test(tab.url))) {
                 const div = document.createElement('div');
                 const button = document.createElement('button');
-                button.textContent = key;
-                const tab = (await tabs)[0];
+                button.textContent = title;
                 button.addEventListener('click', () => redirect(row.url, tab));
                 div.appendChild(button);
                 g_rowsDiv.appendChild(div);
