@@ -114,26 +114,6 @@ const saveOptions = async (tbody) => {
 };
 
 /**
- * Check is an element a tr in the header.
- * @function isHeaderRow
- * @param node {HTMLElement} The element to check.
- * @return {Bool} True if node is tr in header, false otherwise.
- */
-const isHeaderRow = (node) => {
-    return node.tagName === 'TR' && node.parentNode.tagName === 'THEAD';
-};
-
-/**
- * Check is an element a redirection row.
- * @function isRedirectionRow
- * @param node {HTMLElement} The element to check.
- * @return {Bool} True if node is a redirection row, false otherwise.
- */
-const isRedirectionRow = (node) => {
-    return node.tagName === 'TR' && node.parentNode.tagName === 'TBODY';
-};
-
-/**
  * Find where user is trying to move a row.
  * @function findMoveTargetRow
  * @param node {HTMLElement} Target node where user tried to move a row.
@@ -145,12 +125,12 @@ const findMoveTargetRow = (node, tbody) => {
     let referenceNode;
     do {
         // Mouseup on top of header row. Insert as a first row.
-        if (isHeaderRow(node)) {
+        if (node.classList && node.classList.contains('header-row')) {
             referenceNode = tbody.children[0];
             break;
         }
         // Mouseup on top of any redirection row. Insert after it.
-        else if (isRedirectionRow(node)) {
+        else if (node.classList && node.classList.contains('redirect-row')) {
             referenceNode = node.nextSibling;
             break;
         }
@@ -219,6 +199,7 @@ const addRow = async (tbody, row) => {
         checked = 'checked';
 
     const tr = document.createElement('tr');
+    tr.classList.add('redirect-row');
     tr.addEventListener('mousedown', (e) => startMovingARow(tr, e));
 
     // Redirect enabled cell.
