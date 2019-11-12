@@ -2,7 +2,8 @@
   "devDependencies": {
     "web-ext": "latest",
     "eslint": "latest",
-    "jsdoc": "latest"
+    "jsdoc": "latest",
+    "qunit": "^2.9.2"
   },
   "dependencies": {
     "webextension-polyfill": "^0.4.0"

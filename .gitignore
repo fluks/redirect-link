@@ -1,5 +1,1 @@
-doc/
-*.xpi
-*.zip
-TODO
-manifest.json
+node_modules/

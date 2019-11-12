@@ -33,7 +33,8 @@ version_suffix := $(shell grep -o '[0-9]\.[0-9]\.[0-9]' manifest.json | head -1 
 npm_bin := $(shell npm bin)/
 
 .PHONY: run firefox chromium clean change_to_firefox change_to_chromium lint \
-	doc show_doc supported_versions compare_install_and_source install_dependencies
+	doc show_doc supported_versions compare_install_and_source 				 \
+	install_dependencies test
 
 run:
 	$(npm_bin)web-ext run \
@@ -93,3 +94,6 @@ show_doc:
 
 clean:
 	rm manifest.json
+
+test:
+	$(firefox-bin) -P $(ff-profile) test/main.html
