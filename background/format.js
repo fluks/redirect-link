@@ -5,7 +5,7 @@ const format = {
     /**
      * Get a path part.
      * @function _getPath
-     * @param paths {Array[String]} Path parts in a URL.
+     * @param paths {String[]} Path parts in a URL.
      * @param i {Integer} Index in paths.
      * @return {String} Path part.
      * @throw {String} If path index is out of bounds.

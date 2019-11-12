@@ -118,7 +118,7 @@ const saveOptions = async (tbody) => {
  * @function findMoveTargetRow
  * @param node {HTMLElement} Target node where user tried to move a row.
  * @param tbody {HTMLElement} Element which children redirection rows are.
- * @return {Array[HTMLElement]} A redirection row and its next sibling if node
+ * @return {HTMLElement[]} A redirection row and its next sibling if node
  * is a header or redirection row, or null or undefined and undefined otherwise.
  */
 const findMoveTargetRow = (node, tbody) => {
