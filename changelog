@@ -1,3 +1,11 @@
+3.3.0
+
+ * Small UI changes on options page.
+ * Fix replace format bug.
+ * Add regular expression format.
+
+ -- fluks <fluks.github@gmail.com>  Sat, 16 Nov 2019 00:59:35 +0200
+
 3.2.2
 
  * Try to fix toolbar popup loading content ony every second time.
