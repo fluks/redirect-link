@@ -31,6 +31,58 @@ const format = {
     },
 
     /**
+     * Replace a regular expression format.
+     * @function _replaceRegex
+     * @param url {String} Page's or link's URL to be redirected.
+     * @param regex {String} Regular expression from a regex format.
+     * @return {String} Regex's match or matched groups concatenated or empty
+     * string if there's no match.
+     * @throw {String} If regex is invalid regular expression.
+     */
+    _replaceRegex(url, regex) {
+        let m;
+        // Right bracket in character classes must be escaped in the format.
+        // Remove the backslash. E.g. '%r[[a-z\]+]' -> '%r[[a-z]+]'
+        regex = regex.replace(/\\]/g, ']');
+        try {
+            const re = new RegExp(regex);
+            m = url.match(re);
+        } catch (e) {
+            throw e.message;
+        }
+
+        if (!m)
+            return '';
+        // Return all groups concatenated.
+        else if (m.length > 1) {
+            m.shift();
+            return m.join('');
+        }
+        return m[0];
+    },
+
+    /**
+     * Get regular expression from regex format.
+     * @function _getRegex
+     * @param url {String} Redirection url from i'th index.
+     * @return {String|undefined} Regex without format characters
+     * ('%r[' and ']') if there's a valid regex format in the beginning of url,
+     * undefined or empty string otherwise.
+     */
+    _getRegex(url) {
+        if (!url.startsWith('%r[') || url.length <= 3)
+            return;
+        url = url.substr(3);
+        let re = '';
+        for (let i = 0; i < url.length; i++) {
+            if (url[i] !== ']' || (i > 0 && url[i - 1] === '\\'))
+                re += url[i];
+            else
+                return re;
+        }
+    },
+
+    /**
      * Replace the formats in the redirect URL with parts from the link's URL. If
      * the redirect URL doesn't contain any format, the link's URL is appended to
      * the redirect URL.
@@ -44,13 +96,19 @@ const format = {
      * %q - query parameters. Or %q[KEY], where KEY is the name of the query
      * parameter. e.g. in http://example.com/?a=1&b=2 %q[a] is 1 and %q[b] is 2.
      * %f - fragment
+     * %r - A regular expression. The regular expression is replaced with the
+     * match, or if capture groups are used, their matches are concatenated or
+     * empty string if there's no match. Right square brackets must be escaped,
+     * e.g. https://%r[[a-z.\]+]/
      * @param linkUrl {String} Link's URL.
      * @return {String} URL with formats replaced.
      * @throw {String} If path index is out of bounds or if query parameter
      * doesn't exist.
      */
     replaceFormats(url, linkUrl) {
-        if (!/%(s|h|p|q|f|u)/.test(url))
+        // TODO This can be removed and if after the loop the newUrl is the same
+        // as redirect url.
+        if (!/%(s|h|p|q|f|u|r)/.test(url))
             return url + linkUrl;
 
         const a = new URL(linkUrl);
@@ -63,8 +121,9 @@ const format = {
             params[key] = value;
         });
 
-        const pathRe = /^%p\[(\d+)\]/;
-        const paramRe = /^%q\[([^\]]+)\]/;
+        const pathRe = /^%p\[(\d+)\]/,
+            paramRe = /^%q\[([^\]]+)\]/,
+            regexFormatStartLength = 3;
         let newUrl = '',
             res;
         for (let i = 0; i < url.length; i++) {
@@ -73,15 +132,20 @@ const format = {
                 break;
             }
             const nextTwoChars = url.substr(i, 2);
+            const urlFromIthIndex = url.substr(i);
             // These two conditionals must come before the others, because these
             // can match longer than 2 characters.
-            if ((res = pathRe.exec(url.substr(i)))) {
+            if ((res = pathRe.exec(urlFromIthIndex))) {
                 newUrl += this._getPath(paths, res[1]);
                 i += res[0].length - 1;
             }
-            else if ((res = paramRe.exec(url.substr(i)))) {
+            else if ((res = paramRe.exec(urlFromIthIndex))) {
                 newUrl += this._getParam(params, res[1]);
                 i += res[0].length - 1;
+            }
+            else if ((res = this._getRegex(urlFromIthIndex))) {
+                newUrl += this._replaceRegex(linkUrl, res);
+                i += regexFormatStartLength + res.length;
             }
             else if (nextTwoChars === '%s') {
                 newUrl += scheme;

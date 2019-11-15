@@ -141,10 +141,14 @@ QUnit.test('%f format', (assert) => {
 });
 
 QUnit.test('Format in URL bug', (assert) => {
-    const url = 'http://www.google.com/#%u';
-    assert.equal(format.replaceFormats('http://localhost/%f', url),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%f',
+            'http://www.google.com/#%u'
+        ),
         'http://localhost/#%u',
-        'Format in url is not replaced');
+        'Format in url is not replaced'
+    );
 });
 
 QUnit.test('Some redirections listed on github', (assert) => {
@@ -167,4 +171,160 @@ QUnit.test('Some redirections listed on github', (assert) => {
         'https://www.youtube.com/intl/en-GB/yt/dev/'),
         'https://isitup.org/check.php?domain=www.youtube.com',
         'Is it up? redirection');
+});
+
+QUnit.test('%r format', (assert) => {
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/#%r[.]',
+            'http://google.com'
+        ),
+        'http://localhost/#h',
+        'Length of one character regex'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/#%r[.*]',
+            'http://google.com'
+        ),
+        'http://localhost/#http://google.com',
+        'Match all 1'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%r[.*]',
+            'http://google.com'
+        ),
+        'http://google.com',
+        'Match all 2'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/#%r[(:/{1,2})]',
+            'http://google.com'
+        ),
+        'http://localhost/#://',
+        'Capture group'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/#%r[(.)(.)(.)$]',
+            'http://google.com'
+        ),
+        'http://localhost/#com',
+        'Multiple capture groups'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%r[nomatch]abc',
+            'http://google.com'
+        ),
+        'http://localhost/abc',
+        'Non-matching regex is replaced with empty string'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%r[/([a-z\\]+)]',
+            'http://google.com'
+        ),
+        'http://localhost/google',
+        'Character class'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            'https://%r[^https://www.google.[^/\\]+/amp/(.*?)/amp.*]',
+            'https://www.google.ie/amp/www.howtogeek.com/282487/how-to-take-photos-at-night/amp/?client=safari'
+        ),
+        'https://www.howtogeek.com/282487/how-to-take-photos-at-night',
+        'Google AMP'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/#%r[]+$]',
+            'https://en.wikipedia.org/wiki/Main_Page#]'
+        ),
+        'http://localhost/#%r[]+$]',
+        'Non-escaped right bracket'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/#%r[]',
+            'https://en.wikipedia.org/'
+        ),
+        'http://localhost/#%r[]',
+        'Empty regex is not replaced 1'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/#%r[]a',
+            'https://en.wikipedia.org/'
+        ),
+        'http://localhost/#%r[]a',
+        'Empty regex is not replaced 2'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%r[.*abc',
+            'https://en.wikipedia.org/abc'
+        ),
+        '%r[.*abc',
+        'Format with missing right bracket is not replaced 1'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%r[',
+            'https://en.wikipedia.org/'
+        ),
+        '%r[',
+        'Format with missing right bracket is not replaced 2'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%r[\\[]]',
+            'https://en.wikipedia.org/#[X'
+        ),
+        '[]',
+        'Format ends to first unescaped right bracket 1'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%r[]]',
+            'https://en.wikipedia.org/#]'
+        ),
+        '%r[]]',
+        'Format ends to first unescaped right bracket 2'
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%r[[^\\\\]\\]+]',
+            'http://localhost/abc]'
+        ),
+        'http://localhost/abc',
+        'Match up to not right bracket'
+    );
+
+    // SyntaxErrors can't be catched.
+    /*assert.throws(() =>
+        format.replaceFormats(
+            'http://localhost/%r[[]',
+            'http://google.com'
+        ),
+        SyntaxError,
+        'Invalid regex throws'
+    );*/
 });
