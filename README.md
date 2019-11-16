@@ -19,12 +19,19 @@ You can redirect links and the current page. Current page can be redirected by
 clicking the right mouse button on the page, not on any kind of media or other
 elements, but basically the background.
 
+Watch a [demo](https://fluks.github.io/redirect-link/demo.ogv) video what this
+add-on does.
+
 ## Options
 
 The URL field denotes where the page or the link is redirected to. It must start
 with a scheme, e.g. https://. It can contain formats, which are replaced by the
 component parts of the link's or page's URL. If the URL doesn't contain any
 formats, the link's or page's URL is appended to this URL.
+
+You can reorder redirections by holding Ctrl + Alt and clicking with left mouse
+button on a redirection row and then moving it with the mouse and releasing the
+left mouse button.
 
 ### Formats
 
@@ -37,17 +44,18 @@ formats, the link's or page's URL is appended to this URL.
 * %q - all query parameters, or %q[KEY], where KEY is the name of the query
 parameter. e.g. in http://example.com/?a=1&b=2, %q[a] is 1 and %q[b] is 2
 * %f - fragment
+* %r[REGEX] - the regular expression is replaced with the match, or if capture groups are used, their matches are concatenated or empty string if there's no match. Right square brackets must be escaped in the regex. E.g. https://%r[[a-z.\\]+]
 
 There are examples in the other screenshot.
 
 To enable a redirection everywhere, leave Enable URL field empty. If you want to
 enable it only on certain URLs, add the URL or part of it and you can use a
-regular expression also.  This feature works only on versions 63 and newer.
+regular expression also. This feature works only on versions 63 and newer.
 
 Remember to save if you changed options!
 
-More redirections and you can propose or share new redirections at GitHub in this issue:
-https://github.com/fluks/redirect-link/issues/7
+More redirections and you can propose or share new redirections at GitHub in
+this issue: https://github.com/fluks/redirect-link/issues/7
 
 ## Permissions
 
@@ -64,4 +72,5 @@ https://github.com/fluks/redirect-link/issues/7
 
 Everything else is licensed as GPL3, but the images are licensed as
 GFDL 1.2/CC-by-sa-2.5/CC-by-sa-3.0. The author of the original
-image is Stephan Baum. The image was found on [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Disambiguation.svg).
+image is Stephan Baum. The image was found on
+[Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Disambiguation.svg).
