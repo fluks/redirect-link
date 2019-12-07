@@ -281,6 +281,32 @@ const addItems = async (tbody, options) => {
         g_openInContainer.checked = options['open-in-container'];
 };
 
+/**
+ *
+ */
+const exportSettings = () => {
+    chrome.storage.local.get(null, (options) => {
+        const filename = 'redirect-link_settings.json';
+        const file = new File([ JSON.stringify(options) ], filename, { type: 'application/json' });
+
+        const link = document.querySelector('iframe')
+            .contentWindow.document.querySelector('#save-link');
+        link.href = URL.createObjectURL(file);
+        link.download = filename;
+        link.addEventListener('click', function cleanResources() {
+            URL.revokeObjectURL(file);
+            this.removeEventListener('click', cleanResources);
+        });
+        link.click();
+    });
+};
+
+/**
+ *
+ */
+const importSettings = () => {
+};
+
 const tbody = document.getElementsByTagName('tbody')[0];
 
 (async () => await removeUnsupportedStaticElements())();
@@ -295,3 +321,7 @@ document.querySelector('#add-row-button').addEventListener(
 });
 document.querySelector('#save-button').addEventListener(
     'click', () => saveOptions(tbody));
+document.querySelector('#export-button').addEventListener(
+    'click', exportSettings);
+document.querySelector('#import-button').addEventListener(
+    'click', importSettings);
