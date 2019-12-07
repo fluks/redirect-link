@@ -12,11 +12,12 @@ const g_rowsDiv = document.querySelector('#redirections');
  * @param redirectUrl {String} Redirect URL.
  * @param tab {tabs.Tab} Information about the current tab.
  */
-const redirect = (redirectUrl, tab) => {
+const redirect = (redirectUrl, tab, e) => {
     chrome.runtime.sendMessage({
         name: 'redirect',
         redirectUrl: redirectUrl,
         tab: tab,
+        info: { button: e.button, },
     });
     window.close();
 };
@@ -45,7 +46,8 @@ const loadRows = async (options) => {
                 const div = document.createElement('div');
                 const button = document.createElement('button');
                 button.textContent = title;
-                button.addEventListener('click', () => redirect(row.url, tab));
+                button.addEventListener('click', (e) => redirect(row.url, tab, e));
+                button.addEventListener('auxclick', (e) => redirect(row.url, tab, e));
                 div.appendChild(button);
                 g_rowsDiv.appendChild(div);
             }

@@ -132,14 +132,14 @@ const setDefaultOptions = (details) => {
  * @param url {String|undefined} Redirect URL when browser action is used,
  * undefined otherwise.
  */
-const redirect = (info, tab, url) => {
+const redirect = (info, tab, url, isPopup) => {
     chrome.storage.local.get(null, async (options) => {
         let targetUrl = '',
             menuItemId = '',
             redirectUrl = '';
 
         // Browser action.
-        if (info === null) {
+        if (isPopup) {
             targetUrl = tab.url;
             redirectUrl = url;
         }
@@ -170,7 +170,11 @@ const redirect = (info, tab, url) => {
         };
         if (await common.isSupportedContainer() && options['open-in-container'])
             args.cookieStoreId = tab.cookieStoreId;
-        chrome.tabs.create(args);
+
+        if (info.button === 1)
+            chrome.tabs.create(args);
+        else
+            chrome.tabs.update({ url: redirectUrl, });
     });
 };
 
@@ -218,6 +222,6 @@ setupContextMenus();
 })();
 chrome.runtime.onMessage.addListener((request) => {
     if (request.name === 'redirect') {
-        redirect(null, request.tab, request.redirectUrl);
+        redirect(request.info, request.tab, request.redirectUrl, 1);
     }
 });
