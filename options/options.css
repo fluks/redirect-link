@@ -66,3 +66,7 @@ iframe {
   width: 0;
   height: 0;
 }
+
+#import-button {
+  display: none;
+}

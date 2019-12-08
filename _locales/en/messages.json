@@ -17,6 +17,9 @@
     "options_js_enableURLTooltip": {
         "message": "A URL of a link or a page where this redirect is enabled. Otherwise the redirect is hidden in the context menu and toolbar popup. You can use a regular expression. Leave empty to enable always.\n\nThis doesn't work in the context menu on Chrome, but does in the toolbar's popup."
     },
+    "options_js_importedDuplicateTitle": {
+        "message": "(duplicate) "
+    },
     "options_html_addRowButton": {
         "message": "_A_dd Row"
     },
@@ -43,5 +46,17 @@
     },
     "options_html_openInContainer": {
         "message": "_O_pen in a Container (only if containers are enabled)"
+    },
+    "options_html_exportSettings": {
+        "message": "_E_xport Settings"
+    },
+    "options_html_importSettings": {
+        "message": "_I_mport Settings"
+    },
+    "options_html_importReplace": {
+        "message": "_R_eplace"
+    },
+    "options_html_importAdd": {
+        "message": "A_d_d"
     }
 }

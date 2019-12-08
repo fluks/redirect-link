@@ -6,7 +6,8 @@ import * as common from '../common/common.js';
 
 const _ = chrome.i18n.getMessage,
     g_openInContainer = document.querySelector('#open-in-container'),
-    g_switchToOpenedTab = document.querySelector('#switch-to-opened-tab');
+    g_switchToOpenedTab = document.querySelector('#switch-to-opened-tab'),
+    g_importButton = document.querySelector('#import-button');
 
 /**
  * Remove static elements when on a platform that doesn't support required
@@ -282,7 +283,8 @@ const addItems = async (tbody, options) => {
 };
 
 /**
- *
+ * Export and save all the settings to a file.
+ * @function exportSettings
  */
 const exportSettings = () => {
     chrome.storage.local.get(null, (options) => {
@@ -301,13 +303,39 @@ const exportSettings = () => {
     });
 };
 
-/**
- *
- */
-const importSettings = () => {
-};
-
 const tbody = document.getElementsByTagName('tbody')[0];
+
+/**
+ * Import settings from a file either replacing or adding redirections.
+ * @function importSettings
+ * @async
+ * @param e {ChangeEvent}
+ */
+const importSettings = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const text = await file.text();
+        const options = JSON.parse(text);
+        if (document.querySelector('#import-replace').checked) {
+            Array.from(tbody.children).forEach(c => c.remove());
+        }
+        else {
+            const titles = document.querySelectorAll('.title-input');
+            const duplicateTranslation = _('options_js_importedDuplicateTitle');
+            Array.from(titles)
+                .forEach(title => {
+                    const t = title.value;
+                    const sameTitlePrefix =
+                        ({}).hasOwnProperty.call(options.rows, t) ?
+                            duplicateTranslation : '';
+                    const key = sameTitlePrefix + t;
+                    options.rows[key] = options.rows[t];
+                    delete options.rows[t];
+                });
+        }
+        addItems(tbody, options);
+    }
+};
 
 (async () => await removeUnsupportedStaticElements())();
 localize();
@@ -323,5 +351,6 @@ document.querySelector('#save-button').addEventListener(
     'click', () => saveOptions(tbody));
 document.querySelector('#export-button').addEventListener(
     'click', exportSettings);
-document.querySelector('#import-button').addEventListener(
-    'click', importSettings);
+document.querySelector('#fake-import-button').addEventListener(
+    'click', () => g_importButton.click());
+g_importButton.addEventListener('change', importSettings);
