@@ -60,3 +60,15 @@ tr:hover td, tr:hover th  {
 #other-options {
   margin: 10px 0 0px 0;
 }
+
+.move-img {
+  height: 15px;
+  position: relative;
+  right: 15px;
+  top: 50%;
+  transform: translateY(50%);
+}
+
+.move-img:hover {
+  cursor: move;
+}

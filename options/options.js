@@ -147,9 +147,6 @@ const findMoveTargetRow = (node, tbody) => {
  * @param e {MouseEvent} Mousedown event.
  */
 const startMovingARow = (tr, e) => {
-    if (!(e.ctrlKey && e.altKey))
-        return;
-
     const tbody = tr.parentNode;
 
     const showMovingARow = (e) => {
@@ -200,7 +197,6 @@ const addRow = async (tbody, row) => {
 
     const tr = document.createElement('tr');
     tr.classList.add('redirect-row');
-    tr.addEventListener('mousedown', (e) => startMovingARow(tr, e));
 
     // Redirect enabled cell.
     let td = document.createElement('td');
@@ -255,6 +251,14 @@ const addRow = async (tbody, row) => {
     input.addEventListener('click', () => tr.remove());
     td.appendChild(input);
     tr.appendChild(td);
+
+    // Drag image.
+    const moveImg = document.createElement('img');
+    moveImg.classList.add('move-img');
+    moveImg.src = './move.svg';
+    moveImg.title = 'Move';
+    moveImg.addEventListener('mousedown', (e) => startMovingARow(tr, e));
+    tr.appendChild(moveImg);
 
     tbody.appendChild(tr);
 };
