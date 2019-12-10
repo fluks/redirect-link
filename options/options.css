@@ -45,30 +45,10 @@ table {
   margin: 10px 0 0 0;
 }
 
-:root {
-  --row-move-highlight-size: 0;
-}
-
-tr:hover td, tr:hover th  {
-  border-bottom: calc(var(--row-move-highlight-size) * 1px) dashed blue;
-}
-
 #save-div {
   margin-top: 25px;
 }
 
 #other-options {
   margin: 10px 0 0px 0;
-}
-
-.move-img {
-  height: 15px;
-  position: relative;
-  right: 15px;
-  top: 50%;
-  transform: translateY(50%);
-}
-
-.move-img:hover {
-  cursor: move;
 }

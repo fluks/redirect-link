@@ -7,6 +7,7 @@ import * as common from '../common/common.js';
 const _ = chrome.i18n.getMessage,
     g_openInContainer = document.querySelector('#open-in-container'),
     g_switchToOpenedTab = document.querySelector('#switch-to-opened-tab');
+let g_draggedRow;
 
 /**
  * Remove static elements when on a platform that doesn't support required
@@ -114,68 +115,6 @@ const saveOptions = async (tbody) => {
 };
 
 /**
- * Find where user is trying to move a row.
- * @function findMoveTargetRow
- * @param node {HTMLElement} Target node where user tried to move a row.
- * @param tbody {HTMLElement} Element which children redirection rows are.
- * @return {HTMLElement[]} A redirection row and its next sibling if node
- * is a header or redirection row, or null or undefined and undefined otherwise.
- */
-const findMoveTargetRow = (node, tbody) => {
-    let referenceNode;
-    do {
-        // Mouseup on top of header row. Insert as a first row.
-        if (node.classList && node.classList.contains('header-row')) {
-            referenceNode = tbody.children[0];
-            break;
-        }
-        // Mouseup on top of any redirection row. Insert after it.
-        else if (node.classList && node.classList.contains('redirect-row')) {
-            referenceNode = node.nextSibling;
-            break;
-        }
-        node = node.parentNode;
-    } while (node);
-
-    return [ node, referenceNode ];
-};
-
-/**
- * Move a row.
- * @function startMovingARow
- * @param tr {HTMLElement} Row to move.
- * @param e {MouseEvent} Mousedown event.
- */
-const startMovingARow = (tr, e) => {
-    const tbody = tr.parentNode;
-
-    const showMovingARow = (e) => {
-        const [ node ] = findMoveTargetRow(e.target, tbody);
-        if (node)
-            node.style.setProperty('--row-move-highlight-size', 1);
-    };
-    const table = document.getElementsByTagName('table')[0];
-    table.addEventListener('mouseover', showMovingARow);
-
-    const nextSibling = tr.nextSibling;
-    tr.remove();
-    const moveRow = (e) => {
-        const [ node, referenceNode ] = findMoveTargetRow(e.target, tbody);
-        if (node)
-            tbody.insertBefore(tr, referenceNode);
-        // Moved to incorrect area, move the row back where it was.
-        else
-            tbody.insertBefore(tr, nextSibling);
-
-        table.querySelectorAll('tr').forEach(r =>
-            r.style.setProperty('--row-move-highlight-size', 0));
-        document.removeEventListener('mouseup', moveRow);
-        table.removeEventListener('mouseover', showMovingARow);
-    };
-    document.addEventListener('mouseup', moveRow);
-};
-
-/**
  * Add a new row to the redirect options table.
  * @function addRow
  * @async
@@ -196,6 +135,7 @@ const addRow = async (tbody, row) => {
         checked = 'checked';
 
     const tr = document.createElement('tr');
+    tr.setAttribute('draggable', true);
     tr.classList.add('redirect-row');
 
     // Redirect enabled cell.
@@ -252,14 +192,6 @@ const addRow = async (tbody, row) => {
     td.appendChild(input);
     tr.appendChild(td);
 
-    // Drag image.
-    const moveImg = document.createElement('img');
-    moveImg.classList.add('move-img');
-    moveImg.src = './move.svg';
-    moveImg.title = 'Move';
-    moveImg.addEventListener('mousedown', (e) => startMovingARow(tr, e));
-    tr.appendChild(moveImg);
-
     tbody.appendChild(tr);
 };
 
@@ -285,6 +217,74 @@ const addItems = async (tbody, options) => {
         g_openInContainer.checked = options['open-in-container'];
 };
 
+/**
+ * Find where user is trying to move a row.
+ * @function findMoveTargetRow
+ * @param node {HTMLElement} Target node where user tried to move a row.
+ * @param tbody {HTMLElement} Element which children redirection rows are.
+ * @return {HTMLElement[]} A redirection row and its next sibling if node
+ * is a header or redirection row, or null or undefined and undefined otherwise.
+ */
+const findMoveTargetRow = (node, tbody) => {
+    let referenceNode;
+    do {
+        // Mouseup on top of header row. Insert as a first row.
+        if (node.classList && node.classList.contains('header-row')) {
+            referenceNode = tbody.children[0];
+            break;
+        }
+        // Mouseup on top of any redirection row. Insert after it.
+        else if (node.classList && node.classList.contains('redirect-row')) {
+            referenceNode = node.nextSibling;
+            break;
+        }
+        node = node.parentNode;
+    } while (node);
+
+    return [ node, referenceNode ];
+};
+
+/**
+ * Start dragging a redirect row.
+ * @function dragstartHandler
+ * @param e {Event}
+ */
+const dragstartHandler = (e) => {
+    if (!e.target.classList.contains('redirect-row'))
+        return;
+
+    g_draggedRow = e.target;
+    // Some data must be set.
+    e.dataTransfer.setData('text/plain', '');
+    e.dataTransfer.dropEffect = 'move';
+};
+
+/**
+ * Show drop effect on elements.
+ * @function dragoverHandler
+ * @param e {Event}
+ */
+const dragoverHandler = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+};
+
+/**
+ * Drop a redirect row. It can only be dropped on another redirect row or the
+ * top header.
+ * @function dropHandler
+ * @param e {Event}
+ */
+const dropHandler = (e) => {
+    e.preventDefault();
+    const tbody = document.querySelector('tbody');
+    const [ node, referenceNode ] = findMoveTargetRow(e.target, tbody);
+    if (node && !g_draggedRow.isSameNode(referenceNode)) {
+        g_draggedRow.remove();
+        tbody.insertBefore(g_draggedRow, referenceNode);
+    }
+};
+
 const tbody = document.getElementsByTagName('tbody')[0];
 
 (async () => await removeUnsupportedStaticElements())();
@@ -299,3 +299,6 @@ document.querySelector('#add-row-button').addEventListener(
 });
 document.querySelector('#save-button').addEventListener(
     'click', () => saveOptions(tbody));
+document.addEventListener('dragstart', dragstartHandler);
+document.addEventListener('dragover', dragoverHandler);
+document.addEventListener('drop', dropHandler);
