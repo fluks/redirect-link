@@ -2,6 +2,8 @@
 
 'use strict';
 
+export const MIDDLE_MOUSE_BUTTON = 1;
+
 /**
  * Check whether the browser is Chromium based.
  * @function isChromium

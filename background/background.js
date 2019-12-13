@@ -171,7 +171,7 @@ const redirect = (info, tab, url, isPopup) => {
         if (await common.isSupportedContainer() && options['open-in-container'])
             args.cookieStoreId = tab.cookieStoreId;
 
-        if (info.button === 1)
+        if (info.button === common.MIDDLE_MOUSE_BUTTON)
             chrome.tabs.create(args);
         else
             chrome.tabs.update({ url: redirectUrl, });

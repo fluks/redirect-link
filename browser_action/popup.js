@@ -48,6 +48,8 @@ const loadRows = async (options) => {
                 button.textContent = title;
                 button.addEventListener('click', (e) => redirect(row.url, tab, e));
                 button.addEventListener('auxclick', (e) => redirect(row.url, tab, e));
+                button.addEventListener('contextmenu', (e) =>
+                    redirect(row.url, tab, { button: common.MIDDLE_MOUSE_BUTTON, }));
                 div.appendChild(button);
                 g_rowsDiv.appendChild(div);
             }
