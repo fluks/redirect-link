@@ -7,7 +7,8 @@ import * as common from '../common/common.js';
 const _ = chrome.i18n.getMessage,
     g_openInContainer = document.querySelector('#open-in-container'),
     g_switchToOpenedTab = document.querySelector('#switch-to-opened-tab'),
-    g_importButton = document.querySelector('#import-button');
+    g_importButton = document.querySelector('#import-button'),
+    g_tbody = document.getElementsByTagName('tbody')[0];
 
 /**
  * Remove static elements when on a platform that doesn't support required
@@ -303,8 +304,6 @@ const exportSettings = () => {
     });
 };
 
-const tbody = document.getElementsByTagName('tbody')[0];
-
 /**
  * Import settings from a file either replacing or adding redirections.
  * @function importSettings
@@ -317,7 +316,7 @@ const importSettings = (e) => {
         fr.onload = (e) => {
             const options = JSON.parse(e.target.result);
             if (document.querySelector('#import-replace').checked) {
-                Array.from(tbody.children).forEach(c => c.remove());
+                Array.from(g_tbody.children).forEach(c => c.remove());
             }
             else {
                 const titles = document.querySelectorAll('.title-input');
@@ -333,7 +332,7 @@ const importSettings = (e) => {
                         delete options.rows[t];
                     });
             }
-            addItems(tbody, options);
+            addItems(g_tbody, options);
         };
         fr.readAsText(file);
     }
@@ -341,16 +340,16 @@ const importSettings = (e) => {
 
 (async () => await removeUnsupportedStaticElements())();
 localize();
-chrome.storage.local.get(null, (options) => addItems(tbody, options));
+chrome.storage.local.get(null, (options) => addItems(g_tbody, options));
 document.querySelector('#add-row-button').addEventListener(
     'click', async () => {
-        await addRow(tbody);
+        await addRow(g_tbody);
         const trs = document.querySelectorAll('tr');
         const lastTr = trs[trs.length - 1];
         lastTr.querySelector('.title-input').focus();
 });
 document.querySelector('#save-button').addEventListener(
-    'click', () => saveOptions(tbody));
+    'click', () => saveOptions(g_tbody));
 document.querySelector('#export-button').addEventListener(
     'click', exportSettings);
 document.querySelector('#fake-import-button').addEventListener(
