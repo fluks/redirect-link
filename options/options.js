@@ -308,32 +308,34 @@ const tbody = document.getElementsByTagName('tbody')[0];
 /**
  * Import settings from a file either replacing or adding redirections.
  * @function importSettings
- * @async
  * @param e {ChangeEvent}
  */
-const importSettings = async (e) => {
+const importSettings = (e) => {
     const file = e.target.files[0];
     if (file) {
-        const text = await file.text();
-        const options = JSON.parse(text);
-        if (document.querySelector('#import-replace').checked) {
-            Array.from(tbody.children).forEach(c => c.remove());
-        }
-        else {
-            const titles = document.querySelectorAll('.title-input');
-            const duplicateTranslation = _('options_js_importedDuplicateTitle');
-            Array.from(titles)
-                .forEach(title => {
-                    const t = title.value;
-                    const sameTitlePrefix =
-                        ({}).hasOwnProperty.call(options.rows, t) ?
-                            duplicateTranslation : '';
-                    const key = sameTitlePrefix + t;
-                    options.rows[key] = options.rows[t];
-                    delete options.rows[t];
-                });
-        }
-        addItems(tbody, options);
+        const fr = new FileReader();
+        fr.onload = (e) => {
+            const options = JSON.parse(e.target.result);
+            if (document.querySelector('#import-replace').checked) {
+                Array.from(tbody.children).forEach(c => c.remove());
+            }
+            else {
+                const titles = document.querySelectorAll('.title-input');
+                const duplicateTranslation = _('options_js_importedDuplicateTitle');
+                Array.from(titles)
+                    .forEach(title => {
+                        const t = title.value;
+                        const sameTitlePrefix =
+                            ({}).hasOwnProperty.call(options.rows, t) ?
+                                duplicateTranslation : '';
+                        const key = sameTitlePrefix + t;
+                        options.rows[key] = options.rows[t];
+                        delete options.rows[t];
+                    });
+            }
+            addItems(tbody, options);
+        };
+        fr.readAsText(file);
     }
 };
 
