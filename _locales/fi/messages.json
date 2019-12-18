@@ -43,5 +43,8 @@
     },
     "options_html_openInContainer": {
         "message": "_A_vaa eristystilassa (vain jos eristystilat on käytössä)"
+    },
+    "options_html_openToNewTab": {
+        "message": "Avaa _u_usi välilehti"
     }
 }

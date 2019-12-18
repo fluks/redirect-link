@@ -33,6 +33,7 @@ const g_defaultOptions = {
     },
     'switch-to-opened-tab': false,
     'open-in-container': true,
+    'open-to-new-tab': true,
 },
 g_currentTabIdSuffix = '-current';
 
@@ -116,6 +117,9 @@ const setDefaultOptions = (details) => {
             if (!Object.prototype.hasOwnProperty.call(opts, 'open-in-container'))
                 opts['open-in-container'] = true;
 
+            if (!Object.prototype.hasOwnProperty.call(opts, 'open-to-new-tab'))
+                opts['open-to-new-tab'] = true;
+
             chrome.storage.local.set(opts);
         });
     }
@@ -171,8 +175,11 @@ const redirect = (info, tab, url, isPopup) => {
         if (await common.isSupportedContainer() && options['open-in-container'])
             args.cookieStoreId = tab.cookieStoreId;
 
-        if (info.button === common.MIDDLE_MOUSE_BUTTON)
+        if ((info.button === common.MIDDLE_MOUSE_BUTTON) ||
+                (await common.detectBrowser() === common.CHROME &&
+                !isPopup && options['open-to-new-tab'])) {
             chrome.tabs.create(args);
+        }
         else
             chrome.tabs.update({ url: redirectUrl, });
     });
@@ -222,6 +229,6 @@ setupContextMenus();
 })();
 chrome.runtime.onMessage.addListener((request) => {
     if (request.name === 'redirect') {
-        redirect(request.info, request.tab, request.redirectUrl, 1);
+        redirect(request.info, request.tab, request.redirectUrl, true);
     }
 });

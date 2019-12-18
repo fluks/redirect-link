@@ -6,7 +6,8 @@ import * as common from '../common/common.js';
 
 const _ = chrome.i18n.getMessage,
     g_openInContainer = document.querySelector('#open-in-container'),
-    g_switchToOpenedTab = document.querySelector('#switch-to-opened-tab');
+    g_switchToOpenedTab = document.querySelector('#switch-to-opened-tab'),
+    g_openToNewTab = document.querySelector('#open-to-new-tab');
 
 /**
  * Remove static elements when on a platform that doesn't support required
@@ -15,10 +16,11 @@ const _ = chrome.i18n.getMessage,
  * @async
  */
 const removeUnsupportedStaticElements = async () => {
-    if (!await common.isSupportedContainer()) {
-        Array.from(document.querySelectorAll('.remove-container'))
-            .forEach(e => e.remove());
-    }
+    if (!await common.isSupportedContainer())
+         document.querySelector('#open-in-container-div').remove();
+
+    if (await common.detectBrowser() !== common.CHROME)
+        document.querySelector('#open-to-new-tab-div').remove();
 };
 
 /**
@@ -109,6 +111,8 @@ const saveOptions = async (tbody) => {
     };
     if (await common.isSupportedContainer())
         opts['open-in-container'] = g_openInContainer.checked;
+    if (await common.detectBrowser() === common.CHROME)
+        opts['open-to-new-tab'] = g_openToNewTab.checked;
 
     chrome.storage.local.set(opts, () => showInfo(_('options_js_settingsSaved')));
 };
@@ -279,6 +283,8 @@ const addItems = async (tbody, options) => {
     g_switchToOpenedTab.checked = options['switch-to-opened-tab'];
     if (await common.isSupportedContainer())
         g_openInContainer.checked = options['open-in-container'];
+    if (await common.detectBrowser() === common.CHROME)
+        g_openToNewTab.checked = options['open-to-new-tab'];
 };
 
 const tbody = document.getElementsByTagName('tbody')[0];
