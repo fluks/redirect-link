@@ -43,5 +43,8 @@
     },
     "options_html_openInContainer": {
         "message": "_O_pen in a Container (only if containers are enabled)"
+    },
+    "options_html_openToNewTab": {
+        "message": "O_p_en New Tab"
     }
 }

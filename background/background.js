@@ -33,6 +33,7 @@ const g_defaultOptions = {
     },
     'switch-to-opened-tab': false,
     'open-in-container': true,
+    'open-to-new-tab': true,
 },
 g_currentTabIdSuffix = '-current';
 
@@ -116,6 +117,9 @@ const setDefaultOptions = (details) => {
             if (!Object.prototype.hasOwnProperty.call(opts, 'open-in-container'))
                 opts['open-in-container'] = true;
 
+            if (!Object.prototype.hasOwnProperty.call(opts, 'open-to-new-tab'))
+                opts['open-to-new-tab'] = true;
+
             chrome.storage.local.set(opts);
         });
     }
@@ -132,14 +136,14 @@ const setDefaultOptions = (details) => {
  * @param url {String|undefined} Redirect URL when browser action is used,
  * undefined otherwise.
  */
-const redirect = (info, tab, url) => {
+const redirect = (info, tab, url, isPopup) => {
     chrome.storage.local.get(null, async (options) => {
         let targetUrl = '',
             menuItemId = '',
             redirectUrl = '';
 
         // Browser action.
-        if (info === null) {
+        if (isPopup) {
             targetUrl = tab.url;
             redirectUrl = url;
         }
@@ -170,7 +174,14 @@ const redirect = (info, tab, url) => {
         };
         if (await common.isSupportedContainer() && options['open-in-container'])
             args.cookieStoreId = tab.cookieStoreId;
-        chrome.tabs.create(args);
+
+        if ((info.button === common.MIDDLE_MOUSE_BUTTON) ||
+                (await common.detectBrowser() === common.CHROME &&
+                !isPopup && options['open-to-new-tab'])) {
+            chrome.tabs.create(args);
+        }
+        else
+            chrome.tabs.update({ url: redirectUrl, });
     });
 };
 
@@ -218,6 +229,6 @@ setupContextMenus();
 })();
 chrome.runtime.onMessage.addListener((request) => {
     if (request.name === 'redirect') {
-        redirect(null, request.tab, request.redirectUrl);
+        redirect(request.info, request.tab, request.redirectUrl, true);
     }
 });

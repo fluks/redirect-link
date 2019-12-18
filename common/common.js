@@ -2,29 +2,28 @@
 
 'use strict';
 
-/**
- * Check whether the browser is Chromium based.
- * @function isChromium
- * @return {Bool} Return true if browser is Chromium based, false otherwise.
- */
-const isChromium = () => {
-    return !!window.chrome &&
-        (!!window.chrome.webstore || !!window.chrome.runtime);
-};
+export const
+    MIDDLE_MOUSE_BUTTON = 1,
+    FIREFOX = 1,
+    FIREFOX_FOR_ANDROID = 2,
+    CHROME = 3;
 
 /**
- * Check whether the browser is desktop Firefox.
- * @function isFirefox
+ * Detect the browser.
+ * @function detectBrowser
  * @async
- * @return {Promise<Bool>} Return true if browser is desktop Firefox, false otherwise.
+ * @return {Promise<Int>} FIREFOX if the browser is Firefox, FIREFOX_FOR_ANDROID
+ * if it's Firefox for Android and CHROME for Chromium based.
  */
-const isFirefox = async () => {
+export const detectBrowser = async () => {
     try {
-        const b = await browser.runtime.getBrowserInfo();
-        return /firefox/i.test(b.name);
+        const info = await browser.runtime.getBrowserInfo();
+        if (/fennec/i.test(info.name))
+            return FIREFOX_FOR_ANDROID;
+        return FIREFOX;
     }
-    catch (e) {
-        return false;
+    catch (error) {
+        return CHROME;
     }
 };
 
@@ -36,7 +35,7 @@ const isFirefox = async () => {
  * @return {Promise<Bool>} True if containers are supported, false otherwise.
  */
 export const isSupportedContainer = async () => {
-    return isFirefox();
+    return (await detectBrowser()) === FIREFOX;
 };
 
 /**
@@ -46,13 +45,7 @@ export const isSupportedContainer = async () => {
  * @return {Promise<Bool>}
  */
 export const isSupportedMenus = async () => {
-    try {
-        return isChromium() ||
-            /firefox/i.test((await browser.runtime.getBrowserInfo()).name);
-    }
-    catch (e) {
-        return false;
-    }
+    return (await detectBrowser()) !== FIREFOX_FOR_ANDROID;
 };
 
 /**
@@ -62,13 +55,7 @@ export const isSupportedMenus = async () => {
  * @return {Promise<Bool>}
  */
 export const isMobile = async () => {
-    try {
-        const b = await browser.runtime.getBrowserInfo();
-        return /fennec/i.test(b.name);
-    }
-    catch (e) {
-        return false;
-    }
+    return (await detectBrowser()) === FIREFOX_FOR_ANDROID;
 };
 
 /**
@@ -78,7 +65,7 @@ export const isMobile = async () => {
  * @return {Promise<Bool>}
  */
 export const isSupportedMenuOnShown = async () => {
-    return isFirefox();
+    return (await detectBrowser()) === FIREFOX;
 };
 
 /**
