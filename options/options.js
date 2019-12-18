@@ -7,7 +7,9 @@ import * as common from '../common/common.js';
 const _ = chrome.i18n.getMessage,
     g_openInContainer = document.querySelector('#open-in-container'),
     g_switchToOpenedTab = document.querySelector('#switch-to-opened-tab'),
-    g_openToNewTab = document.querySelector('#open-to-new-tab');
+    g_openToNewTab = document.querySelector('#open-to-new-tab'),
+    g_importButton = document.querySelector('#import-button'),
+    g_tbody = document.getElementsByTagName('tbody')[0];
 let g_draggedRow;
 
 /**
@@ -291,20 +293,79 @@ const dropHandler = (e) => {
     }
 };
 
-const tbody = document.getElementsByTagName('tbody')[0];
+/**
+ * Export and save all the settings to a file.
+ * @function exportSettings
+ */
+const exportSettings = () => {
+    chrome.storage.local.get(null, (options) => {
+        const filename = 'redirect-link_settings.json';
+        const file = new File([ JSON.stringify(options) ], filename, { type: 'application/json' });
+
+        const link = document.querySelector('iframe')
+            .contentWindow.document.querySelector('#save-link');
+        link.href = URL.createObjectURL(file);
+        link.download = filename;
+        link.addEventListener('click', function cleanResources() {
+            URL.revokeObjectURL(file);
+            this.removeEventListener('click', cleanResources);
+        });
+        link.click();
+    });
+};
+
+/**
+ * Import settings from a file either replacing or adding redirections.
+ * @function importSettings
+ * @param e {ChangeEvent}
+ */
+const importSettings = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const fr = new FileReader();
+        fr.onload = (e) => {
+            const options = JSON.parse(e.target.result);
+            if (document.querySelector('#import-replace').checked) {
+                Array.from(g_tbody.children).forEach(c => c.remove());
+            }
+            else {
+                const titles = document.querySelectorAll('.title-input');
+                const duplicateTranslation = _('options_js_importedDuplicateTitle');
+                Array.from(titles)
+                    .forEach(title => {
+                        const t = title.value;
+                        const sameTitlePrefix =
+                            ({}).hasOwnProperty.call(options.rows, t) ?
+                                duplicateTranslation : '';
+                        const key = sameTitlePrefix + t;
+                        options.rows[key] = options.rows[t];
+                        delete options.rows[t];
+                    });
+            }
+            addItems(g_tbody, options);
+        };
+        fr.readAsText(file);
+    }
+};
 
 (async () => await removeUnsupportedStaticElements())();
 localize();
-chrome.storage.local.get(null, (options) => addItems(tbody, options));
+chrome.storage.local.get(null, (options) => addItems(g_tbody, options));
 document.querySelector('#add-row-button').addEventListener(
     'click', async () => {
-        await addRow(tbody);
+        await addRow(g_tbody);
         const trs = document.querySelectorAll('tr');
         const lastTr = trs[trs.length - 1];
         lastTr.querySelector('.title-input').focus();
 });
 document.querySelector('#save-button').addEventListener(
-    'click', () => saveOptions(tbody));
+    'click', () => saveOptions(g_tbody));
+document.querySelector('#export-button').addEventListener(
+    'click', exportSettings);
+document.querySelector('#fake-import-button').addEventListener(
+    'click', () => g_importButton.click());
+g_importButton.addEventListener('change', importSettings);
+
 document.addEventListener('dragstart', dragstartHandler);
 document.addEventListener('dragover', dragoverHandler);
 document.addEventListener('drop', dropHandler);

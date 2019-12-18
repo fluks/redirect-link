@@ -52,3 +52,13 @@ table {
 #other-options {
   margin: 10px 0 0px 0;
 }
+
+iframe {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+#import-button {
+  display: none;
+}

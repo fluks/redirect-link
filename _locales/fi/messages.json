@@ -17,6 +17,9 @@
     "options_js_enableURLTooltip": {
         "message": "Linkin tai sivun URL, missä tämä uudelleenohjaus on käytössä. Muussa tapauksessa tämä uudelleenohjaus piilotetaan pikavalikosta ja ponnahdusikkunasta. Voit käyttää säännöllistä lauseketta. Jätä tyhjäksi, että uudelleenohjaus sallitaan kaikkialla.\n\nTämä ei toimi Chromen pikavalikossa, työkalurivin ponnahdusikkunassa toimii."
     },
+    "options_js_importedDuplicateTitle": {
+        "message": "(kopio) "
+    },
     "options_html_addRowButton": {
         "message": "_L_isää rivi"
     },
@@ -46,5 +49,17 @@
     },
     "options_html_openToNewTab": {
         "message": "Avaa _u_usi välilehti"
+    },
+    "options_html_exportSettings": {
+        "message": "V_i_e asetukset"
+    },
+    "options_html_importSettings": {
+        "message": "T_u_o asetukset"
+    },
+    "options_html_importReplace": {
+        "message": "_K_orvaa"
+    },
+    "options_html_importAdd": {
+        "message": "Li_s_ää"
     }
 }

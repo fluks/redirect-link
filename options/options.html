@@ -6,6 +6,16 @@
   </head>
   <body>
     <div>
+      <button id="export-button" data-i18n="options_html_exportSettings"></button>
+      <button id="fake-import-button" data-i18n="options_html_importSettings"></button>
+      <input type="radio" name="import-mode" value="replace" id="import-replace" checked>
+      <label for="import-replace" data-i18n="options_html_importReplace"></label>
+      <input type="radio" name="import-mode" value="add" id="import-add">
+      <label for="import-add" data-i18n="options_html_importAdd"></label>
+      <input id="import-button" type="file"/>
+      <iframe srcdoc="<a id='save-link' href='' download></a>"></iframe>
+    </div>
+    <div>
       <table id="table">
         <colgroup>
           <col id="enabled-width"/>

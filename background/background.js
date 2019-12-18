@@ -96,8 +96,9 @@ const updateContextMenus = (changes) => {
  * @param details {Object} Details about installed addon.
  */
 const setDefaultOptions = (details) => {
-    if (details.reason === 'install')
+    if (details.reason === 'install') {
         chrome.storage.local.set(g_defaultOptions);
+    }
     else if (details.reason === 'update') {
         chrome.storage.local.get(null, (opts) => {
             // Add new options here.
