@@ -285,11 +285,10 @@ const dragoverHandler = (e) => {
  */
 const dropHandler = (e) => {
     e.preventDefault();
-    const tbody = document.querySelector('tbody');
-    const [ node, referenceNode ] = findMoveTargetRow(e.target, tbody);
+    const [ node, referenceNode ] = findMoveTargetRow(e.target, g_tbody);
     if (node && !g_draggedRow.isSameNode(referenceNode)) {
         g_draggedRow.remove();
-        tbody.insertBefore(g_draggedRow, referenceNode);
+        g_tbody.insertBefore(g_draggedRow, referenceNode);
     }
 };
 
