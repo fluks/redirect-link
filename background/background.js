@@ -136,6 +136,8 @@ const setDefaultOptions = (details) => {
  * place.
  * @param url {String|undefined} Redirect URL when browser action is used,
  * undefined otherwise.
+ * @param isPopup {Boolean} True if user used browser action popup, false
+ * otherwise.
  */
 const redirect = (info, tab, url, isPopup) => {
     chrome.storage.local.get(null, async (options) => {

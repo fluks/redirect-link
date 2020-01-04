@@ -11,6 +11,7 @@ const g_rowsDiv = document.querySelector('#redirections');
  * @function redirect
  * @param redirectUrl {String} Redirect URL.
  * @param tab {tabs.Tab} Information about the current tab.
+ * @param e {MouseEvent}
  */
 const redirect = (redirectUrl, tab, e) => {
     chrome.runtime.sendMessage({
