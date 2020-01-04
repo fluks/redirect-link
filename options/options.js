@@ -323,26 +323,26 @@ const importSettings = (e) => {
     const file = e.target.files[0];
     if (file) {
         const fr = new FileReader();
-        fr.onload = (e) => {
-            const options = JSON.parse(e.target.result);
+        fr.onload = async (e) => {
+            const importedOptions = JSON.parse(e.target.result);
+            const options = await browser.storage.local.get([ 'rows' ]);
+
             if (document.querySelector('#import-replace').checked) {
                 Array.from(g_tbody.children).forEach(c => c.remove());
             }
             else {
-                const titles = document.querySelectorAll('.title-input');
                 const duplicateTranslation = _('options_js_importedDuplicateTitle');
-                Array.from(titles)
-                    .forEach(title => {
-                        const t = title.value;
-                        const sameTitlePrefix =
-                            ({}).hasOwnProperty.call(options.rows, t) ?
-                                duplicateTranslation : '';
-                        const key = sameTitlePrefix + t;
-                        options.rows[key] = options.rows[t];
-                        delete options.rows[t];
-                    });
+                Object.keys(options.rows).forEach(title => {
+                    const sameTitlePrefix =
+                        ({}).hasOwnProperty.call(importedOptions.rows, title) ?
+                        duplicateTranslation : '';
+                    const newTitle = sameTitlePrefix + title;
+                    importedOptions.rows[newTitle] = importedOptions.rows[title];
+                    delete importedOptions.rows[title];
+                });
+
             }
-            addItems(g_tbody, options);
+            addItems(g_tbody, importedOptions);
         };
         fr.readAsText(file);
     }
