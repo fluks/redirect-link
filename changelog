@@ -1,3 +1,14 @@
+4.0.0
+
+ * Redirect in current tab or to another depending on click or touch.
+   Left click opens in current tab, middle opens to another.
+   This doesn't work in context menu in Chromium.
+   Touch opens in current and long touch opens another in Firefox for Android.
+ * Add import and export options.
+ * Use Drag and Drop API to order redirects.
+
+ -- fluks <fluks.github@gmail.com>  Sun, 05 Jan 2020 13:45:18 +0200
+
 3.3.0
 
  * Small UI changes on options page.

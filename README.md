@@ -19,6 +19,11 @@ You can redirect links and the current page. Current page can be redirected by
 clicking the right mouse button on the page, not on any kind of media or other
 elements, but basically the background.
 
+Left click redirects in the current tab and middle click opens a tab and
+redirects it. This doesn't work in the context menu in Chrome. And in Firefox
+for Android, a touch redirects the current tab and a long touch redirects in a
+new tab.
+
 Watch a [demo](https://fluks.github.io/redirect-link/demo.ogv) video what this
 add-on does.
 
@@ -29,9 +34,7 @@ with a scheme, e.g. https://. It can contain formats, which are replaced by the
 component parts of the link's or page's URL. If the URL doesn't contain any
 formats, the link's or page's URL is appended to this URL.
 
-You can reorder redirections by holding Ctrl + Alt and clicking with left mouse
-button on a redirection row and then moving it with the mouse and releasing the
-left mouse button.
+You can reorder redirections by dragging and dropping rows.
 
 ### Formats
 
