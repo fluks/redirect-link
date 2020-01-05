@@ -123,6 +123,14 @@ const setDefaultOptions = (details) => {
 
             chrome.storage.local.set(opts);
         });
+
+        // TODO Remove this before next update and notifications permission too.
+        chrome.notifications.create({
+            type: 'basic',
+            title: 'Usage change',
+            message: 'Use left mouse click to redirect in current tab and ' +
+                'middle click to open another tab.',
+        });
     }
 };
 
