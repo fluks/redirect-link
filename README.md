@@ -60,6 +60,8 @@ Remember to save if you changed options!
 More redirections and you can propose or share new redirections at GitHub in
 this issue: https://github.com/fluks/redirect-link/issues/7
 
+All proposed redirections in [this gist](https://gist.githubusercontent.com/fluks/3278db63486c1dc8baee475df7373379/raw/d61a26ca47a80a8c11b3a7e5ec186b00e8f9fe8a/redirect-link_settings.json).
+
 ## Permissions
 
 * Access your data for all websites - Needed for disabling redirections on
