@@ -141,7 +141,6 @@ const addRow = async (tbody, row) => {
         checked = 'checked';
 
     const tr = document.createElement('tr');
-    tr.setAttribute('draggable', true);
     tr.classList.add('redirect-row');
 
     // Redirect enabled cell.
@@ -195,6 +194,16 @@ const addRow = async (tbody, row) => {
     input.type = 'button';
     input.value = _('options_js_removeRowButton');
     input.addEventListener('click', () => tr.remove());
+    td.appendChild(input);
+    tr.appendChild(td);
+
+    // Drag row button cell.
+    td = document.createElement('td');
+    input = document.createElement('input');
+    input.type = 'button';
+    input.value = _('options_js_dragButton');
+    input.addEventListener('mousedown', () => tr.draggable = true);
+    tr.addEventListener('mouseup', () => tr.draggable = false);
     td.appendChild(input);
     tr.appendChild(td);
 

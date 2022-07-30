@@ -23,7 +23,11 @@ input[type=text], input[type=url] {
 }
 
 #remove-width {
-  width: 10%;
+  width: 5%;
+}
+
+#drag-width {
+  width: 5%;
 }
 
 .hidden {
