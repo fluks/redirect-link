@@ -1,3 +1,9 @@
+4.0.1
+
+ * Fix drag and drop bux.
+
+ -- fluks <fluks.github@gmail.com>  Sat, 30 Jul 2022 14:39:35 +0300
+
 4.0.0
 
  * Redirect in current tab or to another depending on click or touch.
