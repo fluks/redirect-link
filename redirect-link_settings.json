@@ -1,1 +1,229 @@
-{"open-in-container":true,"open-to-new-tab":true,"rows":{"Google WebCache":{"enabled":true,"url":"https://webcache.googleusercontent.com/search?q=cache:%u","index":0,"enableURL":""},"Wayback Machine (search)":{"enabled":true,"url":"https://web.archive.org/web/*/%u","index":1,"enableURL":""},"Wayback Machine (save)":{"enabled":true,"url":"https://web.archive.org/save/%u","index":2,"enableURL":""},"archive.is (search)":{"enabled":true,"url":"https://archive.today/%u","index":3,"enableURL":""},"archive.is (save)":{"enabled":true,"url":"https://archive.today/?run=1&url=%u","index":4,"enableURL":""},"BitChute":{"enabled":false,"url":"https://www.bitchute.com/video/%q[v]/","index":5,"enableURL":"^https://www.youtube.com/watch\\?v="},"invidio.us":{"enabled":true,"url":"https://yewtu.be/watch?v=%q[v]","index":6,"enableURL":"^https://www.youtube.com/watch\\?v="},"HookTube":{"enabled":false,"url":"https://hooktube.com/watch?%q","index":7,"enableURL":""},"YouPak":{"enabled":false,"url":"https://www.youpak.com/search?q=%u","index":8,"enableURL":""},"Google Image Search":{"enabled":true,"url":"https://www.google.com/searchbyimage?image_url=%u","index":9,"enableURL":""},"TinEye":{"enabled":true,"url":"https://www.tineye.com/search?url=%u","index":10,"enableURL":""},"Imgur Image":{"enabled":true,"url":"https://i.imgur.com/%p[0].jpg","index":11,"enableURL":"^https://imgur.com/[A-Za-z0-9]{7}$"},"is.gd (shorten URL)":{"enabled":true,"url":"https://is.gd/create.php?format=simple&url=","index":12,"enableURL":""},"Unshorten URL":{"enabled":true,"url":"https://unshorten.me/s/","index":13,"enableURL":""},"TinyURL":{"enabled":false,"url":"https://tinyurl.com/create.php?url=%u","index":14,"enableURL":""},"AMP to normal":{"enabled":true,"url":"https://%r[^https://www.google.[^/\\]+/amp/(?:[a-z\\]/)?(.*?)(?:\\.amp$|/amp/.*)]","index":15,"enableURL":"^https://www.google.[^/]+/amp/.*(\\.amp)?$"},"Netcraft":{"enabled":false,"url":"https://toolbar.netcraft.com/site_report?url=%h","index":16,"enableURL":""},"SafeBrowsing Site Status":{"enabled":true,"url":"https://transparencyreport.google.com/safe-browsing/search?url=%u","index":17,"enableURL":""},"SSL Server Test":{"enabled":true,"url":"https://www.ssllabs.com/ssltest/analyze.html?d=%h&latest","index":18,"enableURL":""},"VirusTotal":{"enabled":false,"url":"https://www.virustotal.com/en/url/submission/?force=1&url=","index":19,"enableURL":""},"Webbkoll":{"enabled":true,"url":"https://webbkoll.dataskydd.net/en/results?url=%u","index":20,"enableURL":""},"WOT":{"enabled":false,"url":"https://www.mywot.com/en/scorecard/%h","index":21,"enableURL":""},"Clone Page":{"enabled":true,"url":"%u","index":22,"enableURL":""},"Geotool":{"enabled":false,"url":"https://iplookup.flagfox.net/?search=%h","index":23,"enableURL":""},"Google Drive Download":{"enabled":false,"url":"https://drive.google.com/uc?export=download&id=%p[2]","index":24,"enableURL":"^https://drive.google.com/file/d/\\w+/(view|edit)"},"Google Translate (en)":{"enabled":true,"url":"https://translate.google.com/translate?sl=auto&tl=en&hl=en&ie=UTF-8&u=%u","index":25,"enableURL":""},"Google Translate (fi)":{"enabled":true,"url":"https://translate.google.com/translate?sl=auto&tl=fi&hl=en&ie=UTF-8&u=%u","index":26,"enableURL":""},"PrintFriendly":{"enabled":false,"url":"https://www.printfriendly.com/print/?url=%u","index":27,"enableURL":""},"SaveClipBro":{"enabled":false,"url":"https://www.saveclipbro.com/convert?main_search[linkToDownload]=%u","index":28,"enableURL":""},"Is it up?":{"enabled":true,"url":"https://isitup.org/check.php?domain=%h","index":29,"enableURL":""},"whois":{"enabled":true,"url":"https://www.whois.com/whois/%h","index":30,"enableURL":""},"SocialBlade":{"enabled":true,"url":"https://socialblade.com/youtube/channel/%p[1]","index":31,"enableURL":"^https://www.youtube.com/channel/"},"Twitter Shadowban":{"enabled":false,"url":"https://shadowban.eu/%p[0]","index":32,"enableURL":"^https://twitter.com/[^/]+"},"Nitter":{"enabled":true,"url":"https://nitter.net/%p","index":33,"enableURL":"^https://(mobile\\.)?twitter.com/"},"securityscorecard":{"enabled":true,"url":"https://securityscorecard.com/security-rating/%r[(?:https?:\\/\\/)(?:[^\\.\\]+\\.)?([^\\.\\/\\]+\\.[^\\.\\/\\]+)]","index":34,"enableURL":""},"W3C CSS Validator":{"enabled":true,"url":"https://jigsaw.w3.org/css-validator/validator?uri=%u&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en","index":35,"enableURL":""},"W3C HTML Validator":{"enabled":true,"url":"https://validator.w3.org/nu/?doc=","index":36,"enableURL":""}},"switch-to-opened-tab":false}
+{
+   "open-in-container" : true,
+   "open-to-new-tab" : true,
+   "rows" : {
+      "AMP to normal" : {
+         "enableURL" : "^https://www.google.[^/]+/amp/.*(\\.amp)?$",
+         "enabled" : true,
+         "index" : 15,
+         "url" : "https://%r[^https://www.google.[^/\\]+/amp/(?:[a-z\\]/)?(.*?)(?:\\.amp$|/amp/.*)]"
+      },
+      "BitChute" : {
+         "enableURL" : "^https://www.youtube.com/watch\\?v=",
+         "enabled" : false,
+         "index" : 5,
+         "url" : "https://www.bitchute.com/video/%q[v]/"
+      },
+      "Clone Page" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 22,
+         "url" : "%u"
+      },
+      "Geotool" : {
+         "enableURL" : "",
+         "enabled" : false,
+         "index" : 23,
+         "url" : "https://iplookup.flagfox.net/?search=%h"
+      },
+      "Google Drive Download" : {
+         "enableURL" : "^https://drive.google.com/file/d/\\w+/(view|edit)",
+         "enabled" : false,
+         "index" : 24,
+         "url" : "https://drive.google.com/uc?export=download&id=%p[2]"
+      },
+      "Google Image Search" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 9,
+         "url" : "https://www.google.com/searchbyimage?image_url=%u"
+      },
+      "Google Translate (en)" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 25,
+         "url" : "https://translate.google.com/translate?sl=auto&tl=en&hl=en&ie=UTF-8&u=%u"
+      },
+      "Google Translate (fi)" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 26,
+         "url" : "https://translate.google.com/translate?sl=auto&tl=fi&hl=en&ie=UTF-8&u=%u"
+      },
+      "Google WebCache" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 0,
+         "url" : "https://webcache.googleusercontent.com/search?q=cache:%u"
+      },
+      "HookTube" : {
+         "enableURL" : "",
+         "enabled" : false,
+         "index" : 7,
+         "url" : "https://hooktube.com/watch?%q"
+      },
+      "Imgur Image" : {
+         "enableURL" : "^https://imgur.com/[A-Za-z0-9]{7}$",
+         "enabled" : true,
+         "index" : 11,
+         "url" : "https://i.imgur.com/%p[0].jpg"
+      },
+      "Is it up?" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 29,
+         "url" : "https://isitup.org/check.php?domain=%h"
+      },
+      "Netcraft" : {
+         "enableURL" : "",
+         "enabled" : false,
+         "index" : 16,
+         "url" : "https://toolbar.netcraft.com/site_report?url=%h"
+      },
+      "Nitter" : {
+         "enableURL" : "^https://(mobile\\.)?twitter.com/",
+         "enabled" : true,
+         "index" : 33,
+         "url" : "https://nitter.net/%p"
+      },
+      "PrintFriendly" : {
+         "enableURL" : "",
+         "enabled" : false,
+         "index" : 27,
+         "url" : "https://www.printfriendly.com/print/?url=%u"
+      },
+      "SSL Server Test" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 18,
+         "url" : "https://www.ssllabs.com/ssltest/analyze.html?d=%h&latest"
+      },
+      "SafeBrowsing Site Status" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 17,
+         "url" : "https://transparencyreport.google.com/safe-browsing/search?url=%u"
+      },
+      "SaveClipBro" : {
+         "enableURL" : "",
+         "enabled" : false,
+         "index" : 28,
+         "url" : "https://www.saveclipbro.com/convert?main_search[linkToDownload]=%u"
+      },
+      "SocialBlade" : {
+         "enableURL" : "^https://www.youtube.com/channel/",
+         "enabled" : true,
+         "index" : 31,
+         "url" : "https://socialblade.com/youtube/channel/%p[1]"
+      },
+      "TinEye" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 10,
+         "url" : "https://www.tineye.com/search?url=%u"
+      },
+      "TinyURL" : {
+         "enableURL" : "",
+         "enabled" : false,
+         "index" : 14,
+         "url" : "https://tinyurl.com/create.php?url=%u"
+      },
+      "Twitter Shadowban" : {
+         "enableURL" : "^https://twitter.com/[^/]+",
+         "enabled" : false,
+         "index" : 32,
+         "url" : "https://shadowban.eu/%p[0]"
+      },
+      "Unshorten URL" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 13,
+         "url" : "https://unshorten.me/s/"
+      },
+      "VirusTotal" : {
+         "enableURL" : "",
+         "enabled" : false,
+         "index" : 19,
+         "url" : "https://www.virustotal.com/en/url/submission/?force=1&url="
+      },
+      "W3C CSS Validator" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 35,
+         "url" : "https://jigsaw.w3.org/css-validator/validator?uri=%u&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en"
+      },
+      "W3C HTML Validator" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 36,
+         "url" : "https://validator.w3.org/nu/?doc="
+      },
+      "WOT" : {
+         "enableURL" : "",
+         "enabled" : false,
+         "index" : 21,
+         "url" : "https://www.mywot.com/en/scorecard/%h"
+      },
+      "Wayback Machine (save)" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 2,
+         "url" : "https://web.archive.org/save/%u"
+      },
+      "Wayback Machine (search)" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 1,
+         "url" : "https://web.archive.org/web/*/%u"
+      },
+      "Webbkoll" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 20,
+         "url" : "https://webbkoll.dataskydd.net/en/results?url=%u"
+      },
+      "YouPak" : {
+         "enableURL" : "",
+         "enabled" : false,
+         "index" : 8,
+         "url" : "https://www.youpak.com/search?q=%u"
+      },
+      "archive.is (save)" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 4,
+         "url" : "https://archive.today/?run=1&url=%u"
+      },
+      "archive.is (search)" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 3,
+         "url" : "https://archive.today/%u"
+      },
+      "invidio.us" : {
+         "enableURL" : "^https://www.youtube.com/watch\\?v=",
+         "enabled" : true,
+         "index" : 6,
+         "url" : "https://yewtu.be/watch?v=%q[v]"
+      },
+      "is.gd (shorten URL)" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 12,
+         "url" : "https://is.gd/create.php?format=simple&url="
+      },
+      "securityscorecard" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 34,
+         "url" : "https://securityscorecard.com/security-rating/%r[(?:https?:\\/\\/)(?:[^\\.\\]+\\.)?([^\\.\\/\\]+\\.[^\\.\\/\\]+)]"
+      },
+      "whois" : {
+         "enableURL" : "",
+         "enabled" : true,
+         "index" : 30,
+         "url" : "https://www.whois.com/whois/%h"
+      }
+   },
+   "switch-to-opened-tab" : false
+}
