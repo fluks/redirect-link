@@ -60,7 +60,8 @@ Remember to save if you changed options!
 More redirections and you can propose or share new redirections at GitHub in
 this issue: https://github.com/fluks/redirect-link/issues/7
 
-All proposed redirections in [this file](https://github.com/fluks/redirect-link/raw/master/redirect-link_settings.json).
+All proposed redirections in [this file](https://github.com/fluks/redirect-link/raw/master/redirect-link_settings.json)
+you can import.
 
 ## Permissions
 
