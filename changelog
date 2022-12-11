@@ -1,3 +1,9 @@
+4.1.0
+
+ * Remove max width for popup.
+
+ -- fluks <fluks.github@gmail.com>  Sun, 11 Dec 2022 23:31:11 +0200
+
 4.0.1
 
  * Fix drag and drop bux.
