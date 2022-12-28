@@ -55,6 +55,15 @@ const loadRows = async (options) => {
                 g_rowsDiv.appendChild(div);
             }
         });
+
+    if (await common.detectBrowser() === common.CHROME) {
+        /* Make the popup a little bit bigger to have enough space for the longest button text.
+         * In Chrome the longest had always ellipsis, even if it was short. */
+        const width = document.body.offsetWidth;
+        const maxPopupWidthPixels = 600, addWidth = 10;
+        if (width + addWidth <= maxPopupWidthPixels)
+            document.body.style.width = width + addWidth + 'px';
+    }
 };
 
 /**
