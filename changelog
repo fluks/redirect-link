@@ -1,3 +1,9 @@
+4.1.1
+
+* Fix popup ellipsis bug in Chrome.
+
+ -- fluks <fluks.github@gmail.com>  Thu, 29 Dec 2022 00:25:52 +0200
+
 4.1.0
 
  * Remove max width for popup.
