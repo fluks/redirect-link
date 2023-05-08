@@ -22,7 +22,7 @@ const removeUnsupportedStaticElements = async () => {
     if (!await common.isSupportedContainer())
          document.querySelector('#open-in-container-div').remove();
 
-    if (await common.detectBrowser() !== common.CHROME)
+    if (await common.detectBrowser() === common.FIREFOX_FOX_ANDROID)
         document.querySelector('#open-to-new-tab-div').remove();
 };
 
@@ -114,7 +114,7 @@ const saveOptions = async (tbody) => {
     };
     if (await common.isSupportedContainer())
         opts['open-in-container'] = g_openInContainer.checked;
-    if (await common.detectBrowser() === common.CHROME)
+    if (await common.detectBrowser() !== common.FIREFOX_FOR_ANDROID)
         opts['open-to-new-tab'] = g_openToNewTab.checked;
 
     chrome.storage.local.set(opts, () => showInfo(_('options_js_settingsSaved')));
@@ -230,7 +230,7 @@ const addItems = async (tbody, options) => {
     g_switchToOpenedTab.checked = options['switch-to-opened-tab'];
     if (await common.isSupportedContainer())
         g_openInContainer.checked = options['open-in-container'];
-    if (await common.detectBrowser() === common.CHROME)
+    if (await common.detectBrowser() !== common.FIREFOX_FOR_ANDROID)
         g_openToNewTab.checked = options['open-to-new-tab'];
 };
 

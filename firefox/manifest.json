@@ -46,7 +46,6 @@
         "contextMenus",
         "tabs",
         "<all_urls>",
-        "cookies",
-        "notifications"
+        "cookies"
     ]
 }

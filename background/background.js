@@ -33,7 +33,7 @@ const g_defaultOptions = {
     },
     'switch-to-opened-tab': false,
     'open-in-container': true,
-    'open-to-new-tab': true,
+    'open-to-new-tab': false,
 },
 g_currentTabIdSuffix = '-current';
 
@@ -100,7 +100,7 @@ const setDefaultOptions = (details) => {
         chrome.storage.local.set(g_defaultOptions);
     }
     else if (details.reason === 'update') {
-        chrome.storage.local.get(null, (opts) => {
+        chrome.storage.local.get(null, async (opts) => {
             // Add new options here.
             // These are new redirections from g_defaultOptions between start
             // update rows and end update rows.
@@ -118,18 +118,12 @@ const setDefaultOptions = (details) => {
             if (!Object.prototype.hasOwnProperty.call(opts, 'open-in-container'))
                 opts['open-in-container'] = true;
 
-            if (!Object.prototype.hasOwnProperty.call(opts, 'open-to-new-tab'))
-                opts['open-to-new-tab'] = true;
+            if (!Object.prototype.hasOwnProperty.call(opts, 'open-to-new-tab') ||
+                    (await common.detectBrowser() !== common.CHROME)) {
+                opts['open-to-new-tab'] = false;
+            }
 
             chrome.storage.local.set(opts);
-        });
-
-        // TODO Remove this before next update and notifications permission too.
-        chrome.notifications.create({
-            type: 'basic',
-            title: 'Usage change',
-            message: 'Use left mouse click to redirect in current tab and ' +
-                'middle click to open another tab.',
         });
     }
 };
@@ -186,9 +180,9 @@ const redirect = (info, tab, url, isPopup) => {
         if (await common.isSupportedContainer() && options['open-in-container'])
             args.cookieStoreId = tab.cookieStoreId;
 
-        if ((info.button === common.MIDDLE_MOUSE_BUTTON) ||
-                (await common.detectBrowser() === common.CHROME &&
-                !isPopup && options['open-to-new-tab'])) {
+        const browser = await common.detectBrowser();
+        if ((options['open-to-new-tab'] && browser !== common.FIREFOX_FOR_ANDROID) ||
+                (!options['open-to-new-tab'] && browser === common.FIREFOX && info.button === common.MIDDLE_MOUSE_BUTTON)) {
             chrome.tabs.create(args);
         }
         else
