@@ -307,7 +307,8 @@ const dropHandler = (e) => {
  */
 const exportSettings = () => {
     chrome.storage.local.get(null, (options) => {
-        const filename = 'redirect-link_settings.json';
+        const date = (new Date()).toLocaleString(navigator.language).replace(/\/|\\|:/g, '_');
+        const filename = `redirect-link_settings_${date}.json`;
         const file = new File([ JSON.stringify(options) ], filename, { type: 'application/json' });
 
         const link = document.querySelector('iframe')
