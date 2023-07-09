@@ -36,6 +36,7 @@ const g_defaultOptions = {
     'open-to-new-tab': false,
 },
 g_currentTabIdSuffix = '-current';
+let g_alwaysRedirects = [];
 
 /**
  * Create context menu items.
@@ -49,7 +50,7 @@ const addContextMenuItems = (rows) => {
         .forEach(title => {
             const row = rows[title];
 
-            if (row && row.enabled) {
+            if (row && row.enabled && !row.redirectAlways) {
                 chrome.contextMenus.create({
                     id: title,
                     contexts: [ 'link' ],
@@ -217,6 +218,39 @@ const hideRedirects = (info) => {
     });
 };
 
+/**
+ * Redirect always redirected URLs.
+ * @function redirectWebRequest
+ * @param details {Object} Details about the request.
+ * @return {Object|undefined} Undefined if no redirection is made or on error, Object otherwise.
+ */
+const redirectWebRequest = (details) => {
+    const redirect = g_alwaysRedirects.find(r => (new RegExp(r.enableURL)).test(details.url));
+    if (!redirect)
+        return;
+    try {
+        return { redirectUrl: format.replaceFormats(redirect.url, details.url), };
+    }
+    catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+/**
+ * Update global variable that has always redirected URLs on change of settings.
+ * @function updateAlwaysRedirects
+ */
+const updateAlwaysRedirects = () => {
+    chrome.storage.local.get('rows', (options) => {
+        g_alwaysRedirects = [];
+        Object.values(options.rows).forEach(row => {
+            if (row.enabled && row.redirectAlways && row.enableURL)
+                g_alwaysRedirects.push(row);
+        });
+    });
+};
+
 chrome.runtime.onInstalled.addListener(setDefaultOptions);
 
 // TODO This uses contextMenus API, move it to the below the isSupportedMenus
@@ -237,3 +271,7 @@ chrome.runtime.onMessage.addListener((request) => {
         redirect(request.info, request.tab, request.redirectUrl, true);
     }
 });
+chrome.storage.onChanged.addListener(updateAlwaysRedirects);
+chrome.webRequest.onBeforeRequest.addListener(redirectWebRequest, {
+    urls: [ '<all_urls>' ], types: [ 'main_frame' ],
+}, [ 'blocking' ]);

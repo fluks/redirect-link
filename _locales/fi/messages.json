@@ -18,7 +18,13 @@
         "message": "Drag"
     },
     "options_js_enableURLTooltip": {
-        "message": "Linkin tai sivun URL, missä tämä uudelleenohjaus on käytössä. Muussa tapauksessa tämä uudelleenohjaus piilotetaan pikavalikosta ja ponnahdusikkunasta. Voit käyttää säännöllistä lauseketta. Jätä tyhjäksi, että uudelleenohjaus sallitaan kaikkialla.\n\nTämä ei toimi Chromen pikavalikossa, työkalurivin ponnahdusikkunassa toimii."
+        "message": "Linkin tai sivun URL, missä tämä uudelleenohjaus on käytössä. Muussa tapauksessa tämä uudelleenohjaus piilotetaan pikavalikosta ja ponnahdusikkunasta. Voit käyttää säännöllistä lauseketta. Jätä tyhjäksi, että uudelleenohjaus sallitaan kaikkialla.\n\nTämä ei toimi Chromen pikavalikossa, työkalurivin ponnahdusikkunassa toimii. Voit aktivoida aina-asetuksen täyttämällä tämän kentän."
+    },
+    "options_html_headerRedirectAlways": {
+        "message": "Aina"
+    },
+    "options_js_redirectAlwaysTooltip": {
+        "message": "Uudelleenohjaa aina automaattisesti. Tämän asetuksen saa päälle täyttämällä Salli URL -kentän."
     },
     "options_js_importedDuplicateTitle": {
         "message": "(kopio) "

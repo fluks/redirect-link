@@ -106,6 +106,7 @@ const saveOptions = async (tbody) => {
         const enableURLElement = tr.querySelector('.enable-url-input');
         if (enableURLElement)
             rows[title].enableURL = enableURLElement.value;
+        rows[title].redirectAlways = tr.querySelector('.redirect-always-input').checked;
     });
 
     const opts = {
@@ -121,6 +122,19 @@ const saveOptions = async (tbody) => {
 };
 
 /**
+ * Enable or disable Always checkbox.
+ * @function enableOrDisableAlwaysCheckbox
+ * @param tr {HTMLElement}
+ */
+const enableOrDisableAlwaysCheckbox = (tr) => {
+    const redirectAlwaysInput = tr.querySelector('.redirect-always-input'),
+        enableURLInput = tr.querySelector('.enable-url-input');
+    redirectAlwaysInput.disabled = !enableURLInput.value
+    if (redirectAlwaysInput.checked && !enableURLInput.value)
+        redirectAlwaysInput.checked = false;
+};
+
+/**
  * Add a new row to the redirect options table.
  * @function addRow
  * @async
@@ -128,14 +142,15 @@ const saveOptions = async (tbody) => {
  * @param row {Object} A redirect option.
  */
 const addRow = async (tbody, row) => {
-    let checked, title, url, enableURL;
-    checked = title = url = enableURL = '';
+    let checked, title, url, enableURL, redirectAlways;
+    checked = title = url = enableURL = redirectAlways = '';
 
     if (row) {
         checked = row.enabled ? 'checked' : '';
         title = row.title;
         url = row.url;
         enableURL = row.enableURL || '';
+        redirectAlways = row.redirectAlways ? 'checked' : '';
     }
     else
         checked = 'checked';
@@ -185,6 +200,18 @@ const addRow = async (tbody, row) => {
     input.className = 'enable-url-input';
     input.value = enableURL;
     input.title = _('options_js_enableURLTooltip');
+    input.addEventListener('input', () => enableOrDisableAlwaysCheckbox(tr));
+    td.appendChild(input);
+    tr.appendChild(td);
+
+    td = document.createElement('td');
+    td.className = 'redirect-always-column';
+    input = document.createElement('input');
+    input.type = 'checkbox';
+    input.className = 'redirect-always-input';
+    input.checked = redirectAlways;
+    input.disabled = !enableURL;
+    input.title = _('options_js_redirectAlwaysTooltip');
     td.appendChild(input);
     tr.appendChild(td);
 

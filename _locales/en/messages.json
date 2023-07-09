@@ -18,7 +18,13 @@
         "message": "Drag"
     },
     "options_js_enableURLTooltip": {
-        "message": "A URL of a link or a page where this redirect is enabled. Otherwise the redirect is hidden in the context menu and toolbar popup. You can use a regular expression. Leave empty to enable always.\n\nThis doesn't work in the context menu on Chrome, but does in the toolbar's popup."
+        "message": "A URL of a link or a page where this redirect is enabled. Otherwise the redirect is hidden in the context menu and toolbar popup. You can use a regular expression. Leave empty to enable always.\n\nThis doesn't work in the context menu on Chrome, but does in the toolbar's popup. You can enable Always field by filling this field."
+    },
+    "options_html_headerRedirectAlways": {
+        "message": "Always"
+    },
+    "options_js_redirectAlwaysTooltip": {
+        "message": "Redirect always automatically. You can enable this field by filling Enable URL field."
     },
     "options_js_importedDuplicateTitle": {
         "message": "(duplicate) "
