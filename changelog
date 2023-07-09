@@ -1,12 +1,19 @@
+5.0.0
+
+ -- fluks <fluks.github@gmail.com>  Sun, 09 Jul 2023 12:14:16 +0300
+
+ * Add redirect always option.
+ * Add date time to settings file's name.
+
 4.2.0
 
-* Add always open to new tab option for Firefox.
+ * Add always open to new tab option for Firefox.
 
  -- fluks <fluks.github@gmail.com>  Mon, 08 May 2023 22:53:57 +0300
 
 4.1.1
 
-* Fix popup ellipsis bug in Chrome.
+ * Fix popup ellipsis bug in Chrome.
 
  -- fluks <fluks.github@gmail.com>  Thu, 29 Dec 2022 00:25:52 +0200
 
