@@ -82,3 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
     addMobileClass();
     chrome.storage.local.get([ 'rows' ], loadRows);
 });
+
+document.querySelector('#options-button').addEventListener('click', () => {
+    chrome.runtime.openOptionsPage();
+    window.close();
+});

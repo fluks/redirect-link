@@ -1,12 +1,24 @@
-#redirections {
+body {
+  margin: 5px;
+}
+
+hr {
+  width: 95%;
+}
+
+div {
   text-align: center;
 }
 
-button {
+#redirections button {
   width: 100%;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+
+#redirections {
+  margin-bottom: 10px;
 }
 
 body.mobile button {
