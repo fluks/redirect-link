@@ -271,6 +271,7 @@ chrome.runtime.onMessage.addListener((request) => {
         redirect(request.info, request.tab, request.redirectUrl, true);
     }
 });
+updateAlwaysRedirects();
 chrome.storage.onChanged.addListener(updateAlwaysRedirects);
 chrome.webRequest.onBeforeRequest.addListener(redirectWebRequest, {
     urls: [ '<all_urls>' ], types: [ 'main_frame' ],
