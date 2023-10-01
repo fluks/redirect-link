@@ -1,3 +1,9 @@
+5.1.1
+
+ -- fluks <fluks.github@gmail.com>  Wed, 27 Sep 2023 07:01:39 +0300
+
+ * Fix always redirections not working after browser restart bug.
+
 5.1.0
 
  -- fluks <fluks.github@gmail.com>  Thu, 03 Aug 2023 20:27:00 +0300
