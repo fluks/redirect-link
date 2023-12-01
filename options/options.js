@@ -102,6 +102,7 @@ const saveOptions = async (tbody) => {
             enabled: tr.querySelector('.enabled-input').checked,
             url: tr.querySelector('.url-input').value,
             index: i,
+            favicon: tr.querySelector('.favicon-button').getAttribute('data-favicon'),
         };
         const enableURLElement = tr.querySelector('.enable-url-input');
         if (enableURLElement)
@@ -134,6 +135,41 @@ const enableOrDisableAlwaysCheckbox = (tr) => {
         redirectAlwaysInput.checked = false;
 };
 
+/** Add favicon to element and its data.
+ * @function setFavicon
+ * @param elem {HTMLElement} Element where to show the favicon and add dataURI.
+ * @param dataURI {String} Data URI of the favicon.
+ */
+const setFavicon = (elem, dataURI) => {
+    elem.style.background = `url(${dataURI}) 0% 0% / contain no-repeat`;
+    elem.style.backgroundPosition = 'center';
+    elem.setAttribute('data-favicon', dataURI);
+};
+
+/** Resize favicon, show it and add its data to an element.
+ * @function importFavicon
+ * @param e {Event} Change event.
+ */
+const importFavicon = (e) => {
+    const reader = new FileReader();
+    reader.onload = file => {
+        const img = document.createElement('img');
+        img.addEventListener('load', () => {
+            const canvas = document.createElement('canvas');
+            const faviconSize = 32;
+            canvas.width = canvas.height = faviconSize;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, faviconSize, faviconSize);
+            const dataURI = canvas.toDataURL();
+
+            const label = e.target.parentNode;
+            setFavicon(label, dataURI);
+        });
+        img.src = file.target.result;
+    };
+    reader.readAsDataURL(e.target.files[0]);
+};
+
 /**
  * Add a new row to the redirect options table.
  * @function addRow
@@ -142,8 +178,8 @@ const enableOrDisableAlwaysCheckbox = (tr) => {
  * @param row {Object} A redirect option.
  */
 const addRow = async (tbody, row) => {
-    let checked, title, url, enableURL, redirectAlways;
-    checked = title = url = enableURL = redirectAlways = '';
+    let checked, title, url, enableURL, redirectAlways, favicon;
+    checked = title = url = enableURL = redirectAlways = favicon = '';
 
     if (row) {
         checked = row.enabled ? 'checked' : '';
@@ -151,6 +187,7 @@ const addRow = async (tbody, row) => {
         url = row.url;
         enableURL = row.enableURL || '';
         redirectAlways = row.redirectAlways ? 'checked' : '';
+        favicon = row.favicon || '';
     }
     else
         checked = 'checked';
@@ -166,6 +203,20 @@ const addRow = async (tbody, row) => {
     input.className = 'enabled-input';
     input.checked = checked;
     td.appendChild(input);
+    tr.appendChild(td);
+
+    // Favicon cell.
+    td = document.createElement('td');
+    td.className = 'center';
+    const label = document.createElement('label');
+    label.classList.add('favicon-button');
+    setFavicon(label, favicon);
+    input = document.createElement('input');
+    input.type = 'file';
+    input.classList.add('hidden');
+    input.addEventListener('change', importFavicon);
+    label.appendChild(input);
+    td.appendChild(label);
     tr.appendChild(td);
 
     // Title cell.

@@ -35,6 +35,9 @@
     "options_html_headerEnabled": {
         "message": "Käytössä"
     },
+    "options_html_headerFavicon": {
+        "message": "Favicon"
+    },
     "options_html_headerTitle": {
         "message": "Nimi"
     },

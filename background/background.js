@@ -55,12 +55,14 @@ const addContextMenuItems = (rows) => {
                     id: title,
                     contexts: [ 'link' ],
                     title: title,
+                    icons: { 32: row.favicon },
                 });
 
                 chrome.contextMenus.create({
                     id: title + g_currentTabIdSuffix,
                     contexts: [ 'page' ],
                     title: title,
+                    icons: { 32: row.favicon },
                 });
             }
         });

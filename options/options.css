@@ -11,14 +11,14 @@ input[type=text], input[type=url] {
 }
 
 #url-width, #enabled-url-width {
-  width: 34%;
+  width: 29%;
 }
 
 #title-width {
   width: 17%;
 }
 
-#enabled-width, #redirect-always-width {
+#enabled-width, #redirect-always-width, #favicon-width {
   width: 5%;
 }
 
@@ -65,4 +65,13 @@ iframe {
 
 #import-button {
   display: none;
+}
+
+.favicon-button {
+    border: 1px solid #ccc;
+    display: block;
+    padding: 0px 5px;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
 }

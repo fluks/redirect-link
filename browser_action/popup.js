@@ -45,6 +45,18 @@ const loadRows = async (options) => {
             if (row.enabled && (!row.enableURL ||
                     (new RegExp(row.enableURL)).test(tab.url))) {
                 const div = document.createElement('div');
+                div.classList.add('row');
+                if (row.favicon) {
+                    const img = document.createElement('img');
+                    img.src = row.favicon;
+                    div.appendChild(img);
+                }
+                else {
+                    const placeholder = document.createElement('div');
+                    placeholder.classList.add('placeholder');
+                    div.appendChild(placeholder);
+                }
+
                 const button = document.createElement('button');
                 button.textContent = title;
                 button.addEventListener('click', (e) => redirect(row.url, tab, e));

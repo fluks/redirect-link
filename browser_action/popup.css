@@ -25,3 +25,19 @@ body.mobile button {
   height: 40px;
   margin-bottom: 5px;
 }
+
+img {
+  width: 32px;
+  height: 32px;
+  margin-right: 5px;
+}
+
+.row {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.placeholder {
+  width: 45px;
+  height: 32px;
+}
