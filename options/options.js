@@ -130,7 +130,7 @@ const saveOptions = async (tbody) => {
 const enableOrDisableAlwaysCheckbox = (tr) => {
     const redirectAlwaysInput = tr.querySelector('.redirect-always-input'),
         enableURLInput = tr.querySelector('.enable-url-input');
-    redirectAlwaysInput.disabled = !enableURLInput.value
+    redirectAlwaysInput.disabled = !enableURLInput.value;
     if (redirectAlwaysInput.checked && !enableURLInput.value)
         redirectAlwaysInput.checked = false;
 };

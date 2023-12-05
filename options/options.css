@@ -68,10 +68,16 @@ iframe {
 }
 
 .favicon-button {
-    border: 1px solid #ccc;
-    display: block;
-    padding: 0px 5px;
-    cursor: pointer;
-    height: 20px;
-    width: 20px;
+  border: 1px solid #ccc;
+  display: flex;
+  margin: auto;
+  padding: 0px 5px;
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+}
+
+.enabled-input {
+  display: flex;
+  margin: auto;
 }

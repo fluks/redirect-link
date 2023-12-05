@@ -51,19 +51,18 @@ const addContextMenuItems = (rows) => {
             const row = rows[title];
 
             if (row && row.enabled && !row.redirectAlways) {
-                chrome.contextMenus.create({
+                const options = {
                     id: title,
                     contexts: [ 'link' ],
                     title: title,
-                    icons: { 32: row.favicon },
-                });
+                };
+                if (row.favicon)
+                    options.icons = { "32": row.favicon };
+                chrome.contextMenus.create(options);
 
-                chrome.contextMenus.create({
-                    id: title + g_currentTabIdSuffix,
-                    contexts: [ 'page' ],
-                    title: title,
-                    icons: { 32: row.favicon },
-                });
+                options.id = title + g_currentTabIdSuffix;
+                options.contexts = [ 'page' ];
+                chrome.contextMenus.create(options);
             }
         });
 };
