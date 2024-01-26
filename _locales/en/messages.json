@@ -5,6 +5,9 @@
     "options_js_errorEmptyInput": {
         "message": "Title or URL can't be empty"
     },
+    "options_js_errorSameTitle": {
+        "message": "Titles must be unique"
+    },
     "options_js_settingsSaved": {
         "message": "Settings saved"
     },

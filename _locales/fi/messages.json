@@ -5,6 +5,9 @@
     "options_js_errorEmptyInput": {
         "message": "Nimeä eikä URL:ä saa jättää tyhjäksi"
     },
+    "options_js_errorSameTitle": {
+        "message": "Nimen pitää olla uniikki"
+    },
     "options_js_settingsSaved": {
         "message": "Asetukset tallennettu"
     },

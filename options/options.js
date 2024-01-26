@@ -82,14 +82,19 @@ const showInfo = (text) => {
 
 /**
  * Save all the options. Doesn't save anything if any of the titles or the URLs
- * is an empty string.
+ * is an empty string or if titles are same.
  * @function saveOptions
  * @async
  * @param tbody {HTMLElement} The tag where the redirect options are added.
  */
 const saveOptions = async (tbody) => {
-    const inputs = tbody.querySelectorAll('.title-input, .url-input');
-    const empty = Array.from(inputs).find(input => !input.value);
+    const titles = Array.from(tbody.querySelectorAll('.title-input')).map(t => t.value);
+    if ((new Set(titles)).size !== titles.length) {
+        showInfo(_('options_js_errorSameTitle'));
+        return;
+    }
+    const inputs = Array.from(tbody.querySelectorAll('.url-input')).map(u => u.value).concat(titles);
+    const empty = inputs.some(i => !i);
     if (empty) {
         showInfo(_('options_js_errorEmptyInput'));
         return;
