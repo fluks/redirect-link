@@ -47,7 +47,7 @@ const addContextMenuItems = (rows) => {
     Object.keys(rows)
         .sort((title1, title2) =>
             common.compareRowIndices(rows, title1, title2))
-        .forEach(title => {
+        .forEach(async title => {
             const row = rows[title];
 
             if (row && row.enabled && !row.redirectAlways) {
@@ -56,8 +56,10 @@ const addContextMenuItems = (rows) => {
                     contexts: [ 'link' ],
                     title: title,
                 };
-                if (row.favicon)
-                    options.icons = { "32": row.favicon };
+                if (await common.detectBrowser() === common.FIREFOX) {
+                    if (row.favicon)
+                        options.icons = { '16': row.favicon['16'], '32': row.favicon['32'], };
+                }
                 chrome.contextMenus.create(options);
 
                 options.id = title + g_currentTabIdSuffix;
@@ -124,6 +126,20 @@ const setDefaultOptions = (details) => {
                     (await common.detectBrowser() !== common.CHROME)) {
                 opts['open-to-new-tab'] = false;
             }
+
+            // Resize favicon if there's only one size.
+            Object.keys(opts.rows).forEach(r => {
+                if (r.favicon && typeof r.favicon !== 'object') {
+                    const img = document.createElement('img');
+                    img.addEventListener('load', () => {
+                        r.favicon = {
+                            '16': common.resizeFavicon(img, 16),
+                            '32': common.resizeFavicon(img, 32),
+                        };
+                    });
+                    img.src = r.favicon;
+                }
+            });
 
             chrome.storage.local.set(opts);
         });

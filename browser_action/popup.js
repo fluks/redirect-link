@@ -36,8 +36,8 @@ const loadRows = async (options) => {
         currentWindow: true,
     }))[0];
 
-    Object.keys(options.rows)
-        .sort((title1, title2) =>
+    const atLeastOneFavicon = Object.values(options.rows).find(r => r.favicon);
+    Object.keys(options.rows).sort((title1, title2) =>
             common.compareRowIndices(options.rows, title1, title2))
         .forEach((title) => {
             const row = options.rows[title];
@@ -48,10 +48,10 @@ const loadRows = async (options) => {
                 div.classList.add('row');
                 if (row.favicon) {
                     const img = document.createElement('img');
-                    img.src = row.favicon;
+                    img.src = row.favicon['16'];
                     div.appendChild(img);
                 }
-                else {
+                else if (atLeastOneFavicon) {
                     const placeholder = document.createElement('div');
                     placeholder.classList.add('placeholder');
                     div.appendChild(placeholder);
@@ -61,7 +61,7 @@ const loadRows = async (options) => {
                 button.textContent = title;
                 button.addEventListener('click', (e) => redirect(row.url, tab, e));
                 button.addEventListener('auxclick', (e) => redirect(row.url, tab, e));
-                button.addEventListener('contextmenu', (e) =>
+                button.addEventListener('contextmenu', () =>
                     redirect(row.url, tab, { button: common.MIDDLE_MOUSE_BUTTON, }));
                 div.appendChild(button);
                 g_rowsDiv.appendChild(div);

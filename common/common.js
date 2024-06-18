@@ -83,3 +83,19 @@ export const compareRowIndices = (obj, title1, title2) => {
     const index2 = obj[title2].index || 0;
     return index1 - index2;
 };
+
+/** @function resizeFavicon
+ * @param img {HTMLImageElement} Favicon's image element to draw.
+ * @param size {Int} Size in pixels..
+ * @return {String} Resized favicon's data URL.
+ */
+export const resizeFavicon = (img, size) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, size, size);
+    const dataURL = canvas.toDataURL();
+    canvas.remove();
+
+    return dataURL;
+};

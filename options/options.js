@@ -103,12 +103,18 @@ const saveOptions = async (tbody) => {
     const rows = {};
     tbody.querySelectorAll('tr').forEach((tr, i) => {
         const title = tr.querySelector('.title-input').value;
+        const favicon = tr.querySelector('.favicon-button');
         rows[title] = {
             enabled: tr.querySelector('.enabled-input').checked,
             url: tr.querySelector('.url-input').value,
             index: i,
-            favicon: tr.querySelector('.favicon-button').getAttribute('data-favicon'),
         };
+        if (favicon.hasAttribute('data-favicon-16')) {
+            rows[title]['favicon'] = {
+                '16': favicon.getAttribute('data-favicon-16'),
+                '32': favicon.getAttribute('data-favicon-32'),
+            };
+        }
         const enableURLElement = tr.querySelector('.enable-url-input');
         if (enableURLElement)
             rows[title].enableURL = enableURLElement.value;
@@ -148,7 +154,7 @@ const enableOrDisableAlwaysCheckbox = (tr) => {
 const setFavicon = (elem, dataURI) => {
     elem.style.background = `url(${dataURI}) 0% 0% / contain no-repeat`;
     elem.style.backgroundPosition = 'center';
-    elem.setAttribute('data-favicon', dataURI);
+    elem.setAttribute('data-favicon-32', dataURI);
 };
 
 /** Resize favicon, show it and add its data to an element.
@@ -160,15 +166,11 @@ const importFavicon = (e) => {
     reader.onload = file => {
         const img = document.createElement('img');
         img.addEventListener('load', () => {
-            const canvas = document.createElement('canvas');
-            const faviconSize = 32;
-            canvas.width = canvas.height = faviconSize;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, faviconSize, faviconSize);
-            const dataURI = canvas.toDataURL();
-
+            const favicon16px = common.resizeFavicon(img, 16);
+            const favicon32px = common.resizeFavicon(img, 32);
             const label = e.target.parentNode;
-            setFavicon(label, dataURI);
+            label.setAttribute('data-favicon-16', favicon16px);
+            setFavicon(label, favicon32px);
         });
         img.src = file.target.result;
     };
@@ -215,7 +217,10 @@ const addRow = async (tbody, row) => {
     td.className = 'center';
     const label = document.createElement('label');
     label.classList.add('favicon-button');
-    setFavicon(label, favicon);
+    if (favicon) {
+        setFavicon(label, favicon['32']);
+        label.setAttribute('data-favicon-16', favicon['16']);
+    }
     input = document.createElement('input');
     input.type = 'file';
     input.classList.add('hidden');

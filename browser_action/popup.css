@@ -27,8 +27,8 @@ body.mobile button {
 }
 
 img {
-  width: 32px;
-  height: 32px;
+  width: 16px;
+  height: 16px;
   margin-right: 5px;
 }
 
@@ -38,6 +38,6 @@ img {
 }
 
 .placeholder {
-  width: 45px;
-  height: 32px;
+  width: 24px;
+  height: 16px;
 }
