@@ -66,7 +66,7 @@ install_dependencies:
 
 supported_versions:
 	# Set verbosity on command line: verbosity='-v{1,2}'
-	min_ext_ver.pl -b firefox,chrome $(verbosity) $(js)
+	min_ext_ver.pl -b firefox,chrome,andr $(verbosity) $(js)
 
 # usage: make compare_install_and_source install=PATH1 source=PATH2
 # where PATH1 is path to the installed addon in
