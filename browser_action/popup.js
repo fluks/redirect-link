@@ -37,35 +37,39 @@ const loadRows = async (options) => {
     }))[0];
 
     const atLeastOneFavicon = Object.values(options.rows).find(r => r.favicon);
-    Object.keys(options.rows).sort((title1, title2) =>
-            common.compareRowIndices(options.rows, title1, title2))
-        .forEach((title) => {
+    Object.keys(options.rows)
+        .filter(title => {
             const row = options.rows[title];
             // No need to check is enableURL supported.
-            if (row.enabled && (!row.enableURL ||
-                    (new RegExp(row.enableURL)).test(tab.url))) {
-                const div = document.createElement('div');
-                div.classList.add('row');
-                if (row.favicon) {
-                    const img = document.createElement('img');
-                    img.src = row.favicon['16'];
-                    div.appendChild(img);
-                }
-                else if (atLeastOneFavicon) {
-                    const placeholder = document.createElement('div');
-                    placeholder.classList.add('placeholder');
-                    div.appendChild(placeholder);
-                }
-
-                const button = document.createElement('button');
-                button.textContent = title;
-                button.addEventListener('click', (e) => redirect(row.url, tab, e));
-                button.addEventListener('auxclick', (e) => redirect(row.url, tab, e));
-                button.addEventListener('contextmenu', () =>
-                    redirect(row.url, tab, { button: common.MIDDLE_MOUSE_BUTTON, }));
-                div.appendChild(button);
-                g_rowsDiv.appendChild(div);
+            return row.enabled && !row.redirectAlways &&
+                (!row.enableURL || (new RegExp(row.enableURL)).test(tab.url));
+        })
+        .sort((title1, title2) =>
+            common.compareRowIndices(options.rows, title1, title2)
+        )
+        .forEach((title) => {
+            const row = options.rows[title];
+            const div = document.createElement('div');
+            div.classList.add('row');
+            if (row.favicon) {
+                const img = document.createElement('img');
+                img.src = row.favicon['16'];
+                div.appendChild(img);
             }
+            else if (atLeastOneFavicon) {
+                const placeholder = document.createElement('div');
+                placeholder.classList.add('placeholder');
+                div.appendChild(placeholder);
+            }
+
+            const button = document.createElement('button');
+            button.textContent = title;
+            button.addEventListener('click', (e) => redirect(row.url, tab, e));
+            button.addEventListener('auxclick', (e) => redirect(row.url, tab, e));
+            button.addEventListener('contextmenu', () =>
+                redirect(row.url, tab, { button: common.MIDDLE_MOUSE_BUTTON, }));
+            div.appendChild(button);
+            g_rowsDiv.appendChild(div);
         });
 
     if (await common.detectBrowser() === common.CHROME) {

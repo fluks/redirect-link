@@ -3,9 +3,10 @@
 'use strict';
 
 import * as common from '../common/common.js';
+import {format} from './format.js';
 
 // Default options.
-const g_defaultOptions = {
+const G_DEFAULT_OPTIONS = {
     rows: {
         'Google WebCache': {
             url: 'https://webcache.googleusercontent.com/search?q=cache:%u',
@@ -35,8 +36,7 @@ const g_defaultOptions = {
     'open-in-container': true,
     'open-to-new-tab': false,
 },
-g_currentTabIdSuffix = '-current';
-let g_alwaysRedirects = [];
+G_CURRENT_TAB_ID_SUFFIX = '-current';
 
 /**
  * Create context menu items.
@@ -62,7 +62,7 @@ const addContextMenuItems = (rows) => {
                 }
                 chrome.contextMenus.create(options);
 
-                options.id = title + g_currentTabIdSuffix;
+                options.id = title + G_CURRENT_TAB_ID_SUFFIX;
                 options.contexts = [ 'page' ];
                 chrome.contextMenus.create(options);
             }
@@ -76,8 +76,8 @@ const addContextMenuItems = (rows) => {
 const setupContextMenus = () => {
     chrome.storage.local.get(null, (options) => {
         if (!options || Object.keys(options).length === 0)
-            options = g_defaultOptions;
-        addContextMenuItems(options.rows);
+            options = G_DEFAULT_OPTIONS;
+        chrome.contextMenus.removeAll(() => addContextMenuItems(options.rows));
     });
 };
 
@@ -101,12 +101,12 @@ const updateContextMenus = (changes) => {
  */
 const setDefaultOptions = (details) => {
     if (details.reason === 'install') {
-        chrome.storage.local.set(g_defaultOptions);
+        chrome.storage.local.set(G_DEFAULT_OPTIONS);
     }
     else if (details.reason === 'update') {
         chrome.storage.local.get(null, async (opts) => {
             // Add new options here.
-            // These are new redirections from g_defaultOptions between start
+            // These are new redirections from G_DEFAULT_OPTIONS between start
             // update rows and end update rows.
             const updateRows = {
                 'archive.is (save)': {
@@ -127,17 +127,13 @@ const setDefaultOptions = (details) => {
                 opts['open-to-new-tab'] = false;
             }
 
-            // Resize favicon if there's only one size.
-            Object.keys(opts.rows).forEach(r => {
-                if (r.favicon && typeof r.favicon !== 'object') {
-                    const img = document.createElement('img');
-                    img.addEventListener('load', () => {
-                        r.favicon = {
-                            '16': common.resizeFavicon(img, 16),
-                            '32': common.resizeFavicon(img, 32),
-                        };
-                    });
-                    img.src = r.favicon;
+            // There used to be only one sized favicon. Use old for both sizes.
+            Object.keys(opts.rows).forEach(name => {
+                if (opts.rows[name].favicon && typeof opts.rows[name].favicon !== 'object') {
+                    opts.rows[name].favicon = {
+                        '16': opts.rows[name].favicon,
+                        '32': opts.rows[name].favicon,
+                    };
                 }
             });
 
@@ -171,8 +167,8 @@ const redirect = (info, tab, url, isPopup) => {
             redirectUrl = url;
         }
         // Redirect current tab.
-        else if (info.menuItemId.endsWith(g_currentTabIdSuffix)) {
-            menuItemId = info.menuItemId.split(g_currentTabIdSuffix, 1)[0];
+        else if (info.menuItemId.endsWith(G_CURRENT_TAB_ID_SUFFIX)) {
+            menuItemId = info.menuItemId.split(G_CURRENT_TAB_ID_SUFFIX, 1)[0];
             redirectUrl = options.rows[menuItemId].url;
             targetUrl = tab.url;
         }
@@ -228,7 +224,7 @@ const hideRedirects = (info) => {
                 const regex = new RegExp(enablePattern);
                 const prop = { visible: regex.test(url) };
                 chrome.contextMenus.update(i, prop);
-                chrome.contextMenus.update(i + g_currentTabIdSuffix, prop);
+                chrome.contextMenus.update(i + G_CURRENT_TAB_ID_SUFFIX, prop);
             }
         });
         chrome.contextMenus.refresh();
@@ -236,53 +232,65 @@ const hideRedirects = (info) => {
 };
 
 /**
- * Redirect always redirected URLs.
- * @function redirectWebRequest
- * @param details {Object} Details about the request.
- * @return {Object|undefined} Undefined if no redirection is made or on error, Object otherwise.
+ * @function makeAlwaysRules
+ * @param newRules {Array.Object} Redirect rows.
+ * @return {Array.Rule} New rules.
  */
-const redirectWebRequest = (details) => {
-    const redirect = g_alwaysRedirects.find(r => (new RegExp(r.enableURL)).test(details.url));
-    if (!redirect)
-        return;
-    try {
-        return { redirectUrl: format.replaceFormats(redirect.url, details.url), };
-    }
-    catch (error) {
-        console.log(error);
-        return;
-    }
+const makeAlwaysRules = newRules => {
+    return newRules.map((redirect, i) => {
+        return {
+            id: i + 1,
+            priority: 1,
+            action: {
+                type: 'redirect',
+                redirect: {
+                    regexSubstitution: redirect.url,
+                },
+            },
+            condition: {
+                regexFilter: redirect.enableURL,
+                resourceTypes: [ 'main_frame', ],
+            },
+        };
+    });
 };
 
 /**
- * Update global variable that has always redirected URLs on change of settings.
  * @function updateAlwaysRedirects
+ * @async
  */
-const updateAlwaysRedirects = () => {
-    chrome.storage.local.get('rows', (options) => {
-        g_alwaysRedirects = [];
-        Object.values(options.rows).forEach(row => {
-            if (row.enabled && row.redirectAlways && row.enableURL)
-                g_alwaysRedirects.push(row);
+const updateAlwaysRedirects = async () => {
+    chrome.storage.local.get('rows', async (options) => {
+        if (!options || !options.rows) {
+            return;
+        }
+
+        const newRules = Object.values(options.rows).filter(row => {
+            return row.enabled && row.redirectAlways && row.enableURL
+        });
+        const oldRules = await chrome.declarativeNetRequest.getDynamicRules();
+        const oldRuleIds = oldRules.map(rule => rule.id);
+        await chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: oldRuleIds,
+            addRules: makeAlwaysRules(newRules),
         });
     });
 };
 
 chrome.runtime.onInstalled.addListener(setDefaultOptions);
-
-// TODO This uses contextMenus API, move it to the below the isSupportedMenus
-// check.
-setupContextMenus();
-
-(async () => {
-    if (await common.isSupportedMenus()) {
-        chrome.storage.onChanged.addListener(updateContextMenus);
-        chrome.contextMenus.onClicked.addListener(redirect);
-        if (await common.isSupportedMenuOnShown()) {
-            chrome.contextMenus.onShown.addListener(hideRedirects);
-        }
+chrome.runtime.onInstalled.addListener((details) => {
+    if (details.reason === 'update') {
+        updateAlwaysRedirects();
     }
-})();
+});
+if (chrome.contextMenus) {
+    setupContextMenus();
+    chrome.storage.onChanged.addListener(updateContextMenus);
+    chrome.contextMenus.onClicked.addListener(redirect);
+    if (chrome.contextMenus.onShown) {
+        chrome.contextMenus.onShown.addListener(hideRedirects);
+    }
+}
 chrome.runtime.onMessage.addListener((request) => {
     if (request.name === 'redirect') {
         redirect(request.info, request.tab, request.redirectUrl, true);
@@ -290,6 +298,3 @@ chrome.runtime.onMessage.addListener((request) => {
 });
 updateAlwaysRedirects();
 chrome.storage.onChanged.addListener(updateAlwaysRedirects);
-chrome.webRequest.onBeforeRequest.addListener(redirectWebRequest, {
-    urls: [ '<all_urls>' ], types: [ 'main_frame' ],
-}, [ 'blocking' ]);

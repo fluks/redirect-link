@@ -1,7 +1,7 @@
 /** @module format */
 'use strict';
 
-const format = {
+export const format = {
     /**
      * Get a path part.
      * @function _getPath
