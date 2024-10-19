@@ -29,11 +29,10 @@ ff-profile := dev-edition-default
 
 version_suffix := $(shell grep -o '[0-9]\.[0-9]\.[0-9]' manifest.json | head -1 | sed 's/\./_/g')
 
-.PHONY: run firefox chromium clean change_to_firefox change_to_chromium lint \
-	doc show_doc supported_versions compare_install_and_source 				 \
-	install_dependencies test
+.PHONY: run_firefox run_chromium firefox chromium clean change_to_firefox change_to_chromium lint \
+	doc show_doc supported_versions compare_install_and_source install_dependencies test
 
-run:
+run_firefox:
 	web-ext run \
 		--firefox-binary $(firefox-bin) \
 		--firefox-profile $(ff-profile) \
@@ -41,6 +40,9 @@ run:
 		-u https://en.wikipedia.org/wiki/Main_Page \
 		-u about:debugging \
 		-u about:addons
+
+run_chromium:
+	chromium-browser --temp-profile --load-extension=$(shell pwd)
 
 firefox: change_to_firefox
 	zip -r redirect_link-$(version_suffix).xpi $(firefox_files)
