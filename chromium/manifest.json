@@ -40,7 +40,8 @@
         "storage",
         "contextMenus",
         "tabs",
-        "declarativeNetRequestWithHostAccess"
+        "declarativeNetRequestWithHostAccess",
+        "notifications"
     ],
 
     "host_permissions": [

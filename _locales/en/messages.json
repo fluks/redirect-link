@@ -82,5 +82,12 @@
     },
     "popup_html_optionsButton": {
         "message": "Preferences"
+    },
+    "notifications_MV3Title": {
+        "message": "Manifest V3 Changes"
+    },
+    "notifications_MV3Message": {
+        "message": "This extension uses now Manifest V3 and this brings changes to Always redirects. Formats are not available in those anymore. They are available everywhere else they used to be. You can use regexes and capture groups from Enable URLs."
+
     }
 }

@@ -5,6 +5,7 @@
 import * as common from '../common/common.js';
 import {format} from './format.js';
 
+const _ = chrome.i18n.getMessage;
 // Default options.
 const G_DEFAULT_OPTIONS = {
     rows: {
@@ -277,12 +278,32 @@ const updateAlwaysRedirects = async () => {
     });
 };
 
+/**
+ * @function showMV3Notification
+ * @param details {Object} Details about installed addon.
+ */
+const showMV3Notification = (details) => {
+    if (details.reason === 'update') {
+        const oldVersion = Number(details.previousVersion.replaceAll('.', ''));
+        if (oldVersion < 600) {
+            chrome.notifications.create({
+                type: 'basic',
+                title: _('notifications_MV3Title'),
+                message: _('notifications_MV3Message'),
+                iconUrl: '../data/logo_128x128.png',
+            });
+        }
+    }
+};
+
 chrome.runtime.onInstalled.addListener(setDefaultOptions);
 chrome.runtime.onInstalled.addListener((details) => {
     if (details.reason === 'update') {
         updateAlwaysRedirects();
     }
 });
+chrome.runtime.onInstalled.addListener(showMV3Notification);
+
 if (chrome.contextMenus) {
     setupContextMenus();
     chrome.storage.onChanged.addListener(updateContextMenus);

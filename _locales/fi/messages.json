@@ -82,5 +82,11 @@
     },
     "popup_html_optionsButton": {
         "message": "Asetukset"
+    },
+    "notifications_MV3Title": {
+        "message": "Manifest V3 -muutokset"
+    },
+    "notifications_MV3Message": {
+        "message": "Tämä laajennos käyttää nyt Manifest V3:sta ja tämä tuo muutoksia Aina-uudelleenohjauksiin. Formaatit eivät ole käyttössä enää niissä. Ne ovat saatavilla kaikkialla muualla missä ennenkin. Voit käyttää säännöllisiä lausekkeita ja sieppausryhmiä Salli URL:sta."
     }
 }
