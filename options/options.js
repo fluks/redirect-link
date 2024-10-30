@@ -178,6 +178,31 @@ const importFavicon = (e) => {
 };
 
 /**
+ * @function validateRegexIfAlways
+ * @param tr {HTMLElement} Redirect row.
+ */
+const validateRegexIfAlways = async (tr) => {
+    const enableURL = tr.querySelector('.enable-url-input');
+    const saveButton = document.querySelector('#save-button');
+
+    if (!tr.querySelector('.redirect-always-input').checked) {
+        enableURL.classList.remove('invalid-regex');
+        saveButton.disabled = false;
+    }
+    else {
+        const result = await chrome.runtime.sendMessage({ name: 'validate-regex', regex: enableURL.value, });
+        if (result.result) {
+            enableURL.classList.remove('invalid-regex');
+            saveButton.disabled = false;
+        }
+        else {
+            enableURL.classList.add('invalid-regex');
+            saveButton.disabled = true;
+        }
+    }
+};
+
+/**
  * Add a new row to the redirect options table.
  * @function addRow
  * @async
@@ -262,9 +287,11 @@ const addRow = async (tbody, row) => {
     input.value = enableURL;
     input.title = _('options_js_enableURLTooltip');
     input.addEventListener('input', () => enableOrDisableAlwaysCheckbox(tr));
+    input.addEventListener('input', () => validateRegexIfAlways(tr));
     td.appendChild(input);
     tr.appendChild(td);
 
+    // Always cell.
     td = document.createElement('td');
     td.className = 'redirect-always-column';
     input = document.createElement('input');
@@ -273,6 +300,7 @@ const addRow = async (tbody, row) => {
     input.checked = redirectAlways;
     input.disabled = !enableURL;
     input.title = _('options_js_redirectAlwaysTooltip');
+    input.addEventListener('input', () => validateRegexIfAlways(tr));
     td.appendChild(input);
     tr.appendChild(td);
 

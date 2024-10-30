@@ -312,10 +312,16 @@ if (chrome.contextMenus) {
         chrome.contextMenus.onShown.addListener(hideRedirects);
     }
 }
-chrome.runtime.onMessage.addListener((request) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.name === 'redirect') {
         redirect(request.info, request.tab, request.redirectUrl, true);
     }
+    else if (request.name === 'validate-regex') {
+        chrome.declarativeNetRequest.isRegexSupported({ regex: request.regex, }).then((result) => {
+            sendResponse({ result: result.isSupported, });
+        });
+    }
+    return true;
 });
 updateAlwaysRedirects();
 chrome.storage.onChanged.addListener(updateAlwaysRedirects);

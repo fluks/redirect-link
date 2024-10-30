@@ -81,3 +81,7 @@ iframe {
   display: flex;
   margin: auto;
 }
+
+.invalid-regex {
+  background-color: #ff000040;
+}
