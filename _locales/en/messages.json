@@ -80,6 +80,9 @@
     "options_html_importAdd": {
         "message": "A_d_d"
     },
+    "options_html_sortTitle": {
+        "message": "Sort"
+    },
     "popup_html_optionsButton": {
         "message": "Preferences"
     }

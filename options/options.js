@@ -8,9 +8,13 @@ const _ = chrome.i18n.getMessage,
     g_openInContainer = document.querySelector('#open-in-container'),
     g_switchToOpenedTab = document.querySelector('#switch-to-opened-tab'),
     g_openToNewTab = document.querySelector('#open-to-new-tab'),
-    g_importButton = document.querySelector('#import-button'),
-    g_tbody = document.getElementsByTagName('tbody')[0];
-let g_draggedRow;
+    g_importButton = document.querySelector('#import-button');
+let g_tbody = document.getElementsByTagName('tbody')[0],
+    g_draggedRow,
+    g_sort = {
+        column: null,
+        direction: null,
+    };
 
 /**
  * Remove static elements when on a platform that doesn't support required
@@ -24,47 +28,6 @@ const removeUnsupportedStaticElements = async () => {
 
     if (await common.detectBrowser() === common.FIREFOX_FOX_ANDROID)
         document.querySelector('#open-to-new-tab-div').remove();
-};
-
-/**
- * Add text and accesskey as a span element for a text which has underscores
- * around a character, meaning to create an accesskey for it and that it can
- * be used as a shortcut on the UI.
- * @function addAccesskey
- * @param elem {HTMLElement} Element where the accesskey and texts are appended
- * to as children.
- * @param match {Array} Matches for underscore text, will contain the character
- * surrounded by underscores and strings on the left and right sides of the
- * underscores, they can be empty.
- */
-const addAccesskey = (elem, match) => {
-    const textLeft = document.createTextNode(match[1]);
-    elem.appendChild(textLeft);
-
-    const accesskey = document.createElement('span');
-    accesskey.classList.add('accesskey');
-    accesskey.setAttribute('accesskey', match[2]);
-    accesskey.textContent = match[2];
-    elem.appendChild(accesskey);
-
-    const textRight = document.createTextNode(match[3]);
-    elem.appendChild(textRight);
-};
-
-/**
- * Localize strings in the options page. Each string to be localized in the
- * HTML has data-i18n attribute in the tag.
- * @function localize
- */
-const localize = () => {
-    document.querySelectorAll('[data-i18n]').forEach(e => {
-        const text = _(e.dataset.i18n);
-        const m = text.match(/(.*)_(.)_(.*)/);
-        if (m)
-            addAccesskey(e, m);
-        else
-            e.textContent = text;
-    });
 };
 
 /**
@@ -445,8 +408,63 @@ const importSettings = (e) => {
     }
 };
 
+/**
+ * Sort redirects by some of the redirect attributes.
+ * @function sort
+ * @param _event {Object} Click event.
+ */
+const sort = (_event) => {
+    /* TODO Remove the object and make this simpler. Need to change the selectors elsewhere to
+     * make it possible to select the correct input.
+     */
+    const sortableHeaders = {
+        enabled: {
+            selector: '.enabled-input',
+            value: e => e.checked,
+        },
+        favicon: {
+            selector: '.favicon-button',
+            value: e => e.getAttribute('data-favicon-16') || '',
+        },
+        title: {
+            selector: '.title-input',
+            value: e => e.value,
+        },
+        url: {
+            selector: '.url-input',
+            value: e => e.value,
+        },
+        'enable-url': {
+            selector: '.enable-url-input',
+            value: e => e.value,
+        },
+        always: {
+            selector: '.redirect-always-input',
+            value: e => e.checked,
+        },
+    };
+    const classes = Object.keys(sortableHeaders);
+    const _class = _event.target.className;
+    if (!(classes.includes(_class)))
+        return;
+
+    let direction = (g_sort.column === _class && g_sort.direction) || 'ascending';
+    const sortedRows = Array.from(g_tbody.querySelectorAll('tr')).sort((a, b) => {
+        const aElement = a.querySelector(sortableHeaders[_class].selector);
+        const bElement = b.querySelector(sortableHeaders[_class].selector);
+        const aValue = sortableHeaders[_class].value(aElement).toString();
+        const bValue = sortableHeaders[_class].value(bElement).toString();
+
+        return direction === 'ascending' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+    });
+    g_tbody.replaceChildren(...sortedRows);
+
+    g_sort.column = _class;
+    g_sort.direction = direction === 'ascending' ? 'descending' : 'ascending';
+};
+
 (async () => await removeUnsupportedStaticElements())();
-localize();
+common.localize();
 chrome.storage.local.get(null, (options) => addItems(g_tbody, options));
 document.querySelector('#add-row-button').addEventListener(
     'click', async () => {
@@ -466,3 +484,6 @@ g_importButton.addEventListener('change', importSettings);
 document.addEventListener('dragstart', dragstartHandler);
 document.addEventListener('dragover', dragoverHandler);
 document.addEventListener('drop', dropHandler);
+document.querySelectorAll('.header-row').forEach(e => {
+    e.addEventListener('click', sort);
+});

@@ -99,3 +99,58 @@ export const resizeFavicon = (img, size) => {
 
     return dataURL;
 };
+
+/**
+ * Add text and accesskey as a span element for a text which has underscores
+ * around a character, meaning to create an accesskey for it and that it can
+ * be used as a shortcut on the UI.
+ * @function addAccesskey
+ * @param elem {HTMLElement} Element where the accesskey and texts are appended
+ * to as children.
+ * @param match {Array} Matches for underscore text, will contain the character
+ * surrounded by underscores and strings on the left and right sides of the
+ * underscores, they can be empty.
+ */
+const addAccesskey = (elem, match) => {
+    const textLeft = document.createTextNode(match[1]);
+    elem.appendChild(textLeft);
+
+    const accesskey = document.createElement('span');
+    accesskey.classList.add('accesskey');
+    accesskey.setAttribute('accesskey', match[2]);
+    accesskey.textContent = match[2];
+    elem.appendChild(accesskey);
+
+    const textRight = document.createTextNode(match[3]);
+    elem.appendChild(textRight);
+};
+
+/**
+ * To localize strings in HTML, add data-i18n-<N>="<MESSAGE_NAME>" and corresponding data-i18n-<N>-attr="<ATTRIBUTE>" to elements
+ * which ATTRIBUTE you want to localize to MESSAGE_NAME.
+ * Example: <a data-i18n-1="elementTitle" data-i18n-1-attr="title"> would become <a ... title="Localized title">
+ * <div data-i18n-3="messageText" data-i18n-3-attr="textContent"> would become <a ...>Localized text.</a>
+ * @function localize
+ */
+export const localize = () => {
+    const indexRegex = /^i18n-(\d+)$/;
+    const accesskeyRegex = /(.*)_(.)_(.*)/;
+
+    document.querySelectorAll('*')
+        .forEach(e => {
+            for (const [key, value] of Object.entries(e.dataset)) {
+                const m = key.match(indexRegex);
+                if (m) {
+                    const i = m[1];
+                    const message = chrome.i18n.getMessage(value);
+                    const match = message.match(accesskeyRegex);
+                    if (match) {
+                        addAccesskey(e, match);
+                    }
+                    else {
+                        e[e.dataset[`i18n-${i}Attr`]] = message;
+                    }
+                }
+            }
+        });
+};

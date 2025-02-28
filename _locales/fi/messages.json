@@ -80,6 +80,9 @@
     "options_html_importAdd": {
         "message": "Li_s_ää"
     },
+    "options_html_sortTitle": {
+        "message": "Järjestä"
+    },
     "popup_html_optionsButton": {
         "message": "Asetukset"
     }

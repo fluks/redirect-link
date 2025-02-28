@@ -81,3 +81,7 @@ iframe {
   display: flex;
   margin: auto;
 }
+
+.header-row th {
+  cursor: pointer;
+}
