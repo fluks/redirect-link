@@ -85,3 +85,7 @@ iframe {
 .invalid-regex {
   background-color: #ff000040;
 }
+
+.header-row th {
+  cursor: pointer;
+}
