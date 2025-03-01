@@ -67,7 +67,7 @@ change_to_chromium:
 # web-ext lint finds errors if manifest.json isn't the Firefox version.
 lint: change_to_firefox
 	# Check JSON syntax.
-	$(foreach file,$(locale_files),python -m json.tool < $(file) 1>/dev/null || exit;)
+	$(foreach file,$(locale_files),python3 -m json.tool < $(file) 1>/dev/null || exit;)
 	web-ext lint --ignore-files doc/*
 	eslint $(js)
 
