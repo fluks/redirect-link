@@ -27,11 +27,13 @@ firefox-bin := ~/Downloads/firefox_dev/firefox
 # temporary profile.
 ff-profile := dev-edition-default
 
+android-device=$(shell adb devices | head -2 | tail -1 | cut -f 1)
+
 version_suffix := $(shell grep -o '[0-9]\.[0-9]\.[0-9]' manifest.json | head -1 | sed 's/\./_/g')
 
 .PHONY: run firefox chromium clean change_to_firefox change_to_chromium lint \
 	doc show_doc supported_versions compare_install_and_source 				 \
-	install_dependencies test
+	install_dependencies test run-firefox-android
 
 run:
 	web-ext run \
@@ -40,7 +42,15 @@ run:
 		--pref intl.locale.requested=en \
 		-u https://en.wikipedia.org/wiki/Main_Page \
 		-u about:debugging \
-		-u about:addons
+		-u about:addons \
+		--verbose
+
+run-firefox-android:
+	web-ext run \
+	   --target=firefox-android \
+	   --android-device=$(android-device) \
+	   --firefox-apk=org.mozilla.fenix \
+	   --firefox-apk-component=HomeActivity
 
 firefox: change_to_firefox
 	zip -r redirect_link-$(version_suffix).xpi $(firefox_files)
