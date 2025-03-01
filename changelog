@@ -1,3 +1,9 @@
+6.2.0-chromium
+
+ -- fluks <fluks.github@gmail.com>  Sat, 01 Mar 2025 18:25:28 +0200
+
+ * Sort redirects from headers.
+
 6.1.0-chromium
 
  -- fluks <fluks.github@gmail.com>  Wed, 30 Oct 2024 17:10:14 +0200
