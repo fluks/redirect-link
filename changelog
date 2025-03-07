@@ -1,3 +1,9 @@
+5.6.0
+
+ -- fluks <fluks.github@gmail.com>  Fri, 07 Mar 2025 20:20:34 +0200
+
+ * Add capturing groups in URL and EnableURL fields.
+
 5.5.0
 
  -- fluks <fluks.github@gmail.com>  Sat, 01 Mar 2025 18:04:48 +0200
