@@ -12,13 +12,15 @@ const g_rowsDiv = document.querySelector('#redirections');
  * @param redirectUrl {String} Redirect URL.
  * @param tab {tabs.Tab} Information about the current tab.
  * @param e {MouseEvent}
+ * @param enableURL {String}
  */
-const redirect = (redirectUrl, tab, e) => {
+const redirect = (redirectUrl, tab, e, enableURL) => {
     chrome.runtime.sendMessage({
         name: 'redirect',
         redirectUrl: redirectUrl,
         tab: tab,
         info: { button: e.button, },
+        enableURL: enableURL,
     });
     window.close();
 };
@@ -59,10 +61,10 @@ const loadRows = async (options) => {
 
                 const button = document.createElement('button');
                 button.textContent = title;
-                button.addEventListener('click', (e) => redirect(row.url, tab, e));
-                button.addEventListener('auxclick', (e) => redirect(row.url, tab, e));
+                button.addEventListener('click', (e) => redirect(row.url, tab, e, row.enableURL));
+                button.addEventListener('auxclick', (e) => redirect(row.url, tab, e, row.enableURL));
                 button.addEventListener('contextmenu', () =>
-                    redirect(row.url, tab, { button: common.MIDDLE_MOUSE_BUTTON, }));
+                    redirect(row.url, tab, { button: common.MIDDLE_MOUSE_BUTTON, }, row.enableURL));
                 div.appendChild(button);
                 g_rowsDiv.appendChild(div);
             }

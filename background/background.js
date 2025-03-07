@@ -156,35 +156,39 @@ const setDefaultOptions = (details) => {
  * place.
  * @param url {String|undefined} Redirect URL when browser action is used,
  * undefined otherwise.
- * @param isPopup {Boolean} True if user used browser action popup, false
- * otherwise.
+ * @param isPopup {Boolean|undefined} True if user used browser action popup.
+ * @param enableURL {String|undefined} EnableURL if browser action popup used.
  */
-const redirect = (info, tab, url, isPopup) => {
+const redirect = (info, tab, url, isPopup, enableURL) => {
     chrome.storage.local.get(null, async (options) => {
         let targetUrl = '',
             menuItemId = '',
-            redirectUrl = '';
+            redirectUrl = '',
+            enableUrl = '';
 
         // Browser action.
         if (isPopup) {
             targetUrl = tab.url;
             redirectUrl = url;
+            enableUrl = enableURL;
         }
         // Redirect current tab.
         else if (info.menuItemId.endsWith(g_currentTabIdSuffix)) {
             menuItemId = info.menuItemId.split(g_currentTabIdSuffix, 1)[0];
             redirectUrl = options.rows[menuItemId].url;
             targetUrl = tab.url;
+            enableUrl = options.rows[menuItemId].enableURL;
         }
         // Redirect link.
         else {
             menuItemId = info.menuItemId;
             redirectUrl = options.rows[menuItemId].url;
             targetUrl = info.linkUrl;
+            enableUrl = options.rows[menuItemId].enableURL;
         }
 
         try {
-            redirectUrl = format.replaceFormats(redirectUrl, targetUrl);
+            redirectUrl = format.replaceFormats(redirectUrl, targetUrl, enableUrl);
         }
         catch (error) {
             console.log(error);
@@ -246,7 +250,7 @@ const redirectWebRequest = (details) => {
     if (!redirect)
         return;
     try {
-        return { redirectUrl: format.replaceFormats(redirect.url, details.url), };
+        return { redirectUrl: format.replaceFormats(redirect.url, details.url, redirect.enableURL), };
     }
     catch (error) {
         console.log(error);
@@ -285,7 +289,7 @@ setupContextMenus();
 })();
 chrome.runtime.onMessage.addListener((request) => {
     if (request.name === 'redirect') {
-        redirect(request.info, request.tab, request.redirectUrl, true);
+        redirect(request.info, request.tab, request.redirectUrl, true, request.enableURL);
     }
 });
 updateAlwaysRedirects();

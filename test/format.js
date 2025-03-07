@@ -318,13 +318,65 @@ QUnit.test('%r format', (assert) => {
         'Match up to not right bracket'
     );
 
-    // SyntaxErrors can't be catched.
-    /*assert.throws(() =>
+    assert.throws(() =>
         format.replaceFormats(
             'http://localhost/%r[[]',
             'http://google.com'
         ),
-        SyntaxError,
+        // What this returns? We match any string. Must use regex.
+        /.*/,
         'Invalid regex throws'
-    );*/
+    );
+});
+
+QUnit.test('%g format', (assert) => {
+    assert.equal(
+        format.replaceFormats(
+            '%g[1]',
+            'http://google.com',
+            'http://google.(com)',
+        ),
+        'com',
+        'Capture something',
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%g[0]',
+            'http://google.com',
+            'http://google.(com)',
+        ),
+        'http://google.com',
+        '0 returns whole string',
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%g[2]-%g[1]',
+            'http://google.com',
+            'http://(google).(com)',
+        ),
+        'com-google',
+        'Use multiple groups',
+    );
+
+    assert.throws(() =>
+        format.replaceFormats(
+            '%g[2]',
+            'http://google.com',
+            'http://google.(com)',
+        ),
+        /^No matching captured group with index 2$/,
+        'Invalid capturing group index',
+    );
+
+    assert.throws(() =>
+        format.replaceFormats(
+            '%g[2]',
+            'http://google.com',
+            'http://google.(net)',
+        ),
+        /^Enable URL didn't match$/,
+        'Doesn\'t match EnableURL',
+    );
 });

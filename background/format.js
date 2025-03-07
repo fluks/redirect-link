@@ -31,6 +31,25 @@ const format = {
     },
 
     /**
+     * Get capturing group's match.
+     * @function _getGroup
+     * @param enableURL {String}
+     * @param url {String} URL to be redirected.
+     * @param i {Integer} Index of captured group.
+     * @return {String} Captured group's match.
+     * @throw {String} If EnableURL doesn't match or there's no captured group by index i.
+     */
+    _getGroup(enableURL, url, i) {
+        const m = url.match(enableURL);
+        if (!m)
+            throw 'Enable URL didn\'t match';
+        else if (!m[i])
+            throw `No matching captured group with index ${i}`;
+
+        return m[i];
+    },
+
+    /**
      * Replace a regular expression format.
      * @function _replaceRegex
      * @param url {String} Page's or link's URL to be redirected.
@@ -101,14 +120,15 @@ const format = {
      * empty string if there's no match. Right square brackets must be escaped,
      * e.g. https://%r[[a-z.\]+]/
      * @param linkUrl {String} Link's URL.
+     * @param enableURL {String}
      * @return {String} URL with formats replaced.
      * @throw {String} If path index is out of bounds or if query parameter
      * doesn't exist.
      */
-    replaceFormats(url, linkUrl) {
+    replaceFormats(url, linkUrl, enableURL) {
         // TODO This can be removed and if after the loop the newUrl is the same
         // as redirect url.
-        if (!/%(s|h|p|q|f|u|r)/.test(url))
+        if (!/%(s|h|p|q|f|u|r|g)/.test(url))
             return url + linkUrl;
 
         const a = new URL(linkUrl);
@@ -123,7 +143,8 @@ const format = {
 
         const pathRe = /^%p\[(\d+)\]/,
             paramRe = /^%q\[([^\]]+)\]/,
-            regexFormatStartLength = 3;
+            regexFormatStartLength = 3,
+            groupRe = /^%g\[(\d+)\]/;
         let newUrl = '',
             res;
         for (let i = 0; i < url.length; i++) {
@@ -141,6 +162,10 @@ const format = {
             }
             else if ((res = paramRe.exec(urlFromIthIndex))) {
                 newUrl += this._getParam(params, res[1]);
+                i += res[0].length - 1;
+            }
+            else if ((res = groupRe.exec(urlFromIthIndex))) {
+                newUrl += this._getGroup(enableURL, linkUrl, res[1]);
                 i += res[0].length - 1;
             }
             else if ((res = this._getRegex(urlFromIthIndex))) {
