@@ -153,35 +153,39 @@ const setDefaultOptions = (details) => {
  * place.
  * @param url {String|undefined} Redirect URL when browser action is used,
  * undefined otherwise.
- * @param isPopup {Boolean} True if user used browser action popup, false
- * otherwise.
+ * @param isPopup {Boolean|undefined} True if user used browser action popup.
+ * @param enableURL {String|undefined} EnableURL if browser action popup used.
  */
-const redirect = (info, tab, url, isPopup) => {
+const redirect = (info, tab, url, isPopup, enableURL) => {
     chrome.storage.local.get(null, async (options) => {
         let targetUrl = '',
             menuItemId = '',
-            redirectUrl = '';
+            redirectUrl = '',
+            enableUrl = '';
 
         // Browser action.
         if (isPopup) {
             targetUrl = tab.url;
             redirectUrl = url;
+            enableUrl = enableURL;
         }
         // Redirect current tab.
         else if (info.menuItemId.endsWith(G_CURRENT_TAB_ID_SUFFIX)) {
             menuItemId = info.menuItemId.split(G_CURRENT_TAB_ID_SUFFIX, 1)[0];
             redirectUrl = options.rows[menuItemId].url;
             targetUrl = tab.url;
+            enableUrl = options.rows[menuItemId].enableURL;
         }
         // Redirect link.
         else {
             menuItemId = info.menuItemId;
             redirectUrl = options.rows[menuItemId].url;
             targetUrl = info.linkUrl;
+            enableUrl = options.rows[menuItemId].enableURL;
         }
 
         try {
-            redirectUrl = format.replaceFormats(redirectUrl, targetUrl);
+            redirectUrl = format.replaceFormats(redirectUrl, targetUrl, enableUrl);
         }
         catch (error) {
             console.log(error);
@@ -314,7 +318,7 @@ if (chrome.contextMenus) {
 }
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.name === 'redirect') {
-        redirect(request.info, request.tab, request.redirectUrl, true);
+        redirect(request.info, request.tab, request.redirectUrl, true, request.enableURL);
     }
     else if (request.name === 'validate-regex') {
         chrome.declarativeNetRequest.isRegexSupported({ regex: request.regex, }).then((result) => {
