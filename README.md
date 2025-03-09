@@ -48,6 +48,7 @@ You can reorder redirections by dragging and dropping rows.
 parameter. e.g. in http://example.com/?a=1&b=2, %q[a] is 1 and %q[b] is 2
 * %f - fragment
 * %r[REGEX] - the regular expression is replaced with the match, or if capture groups are used, their matches are concatenated or empty string if there's no match. Right square brackets must be escaped in the regex. E.g. https://%r[[a-z.\\]+]
+* %g[N] - Capturing group from EnableURL field, where N is the index of captured group
 
 There are examples in the other screenshot.
 
@@ -72,6 +73,7 @@ you can import.
 ## Screenshots
 
 ![Menu](screenshot_menu.png)
+![Popup](screenshot_popup.png)
 ![Options](screenshot_options.png)
 
 ## License
