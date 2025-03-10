@@ -24,7 +24,7 @@ redirects it. This doesn't work in the context menu in Chrome. And in Firefox
 for Android, a touch redirects the current tab and a long touch redirects in a
 new tab.
 
-Watch a [demo](https://fluks.github.io/redirect-link/demo.ogv) video what this
+Watch a [demo](https://fluks.github.io/redirect-link/) video what this
 add-on does.
 
 ## Options
