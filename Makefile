@@ -30,7 +30,7 @@ ff-profile := dev-edition-default
 version_suffix := $(shell grep -o '[0-9]\.[0-9]\.[0-9]' manifest.json | head -1 | sed 's/\./_/g')
 
 .PHONY: run_firefox run_chromium firefox chromium clean change_to_firefox change_to_chromium lint \
-	doc show_doc supported_versions compare_install_and_source install_dependencies test
+	doc show_doc supported_versions compare_install_and_source install_dependencies test test-chromium
 
 run_firefox:
 	web-ext run \
@@ -96,3 +96,6 @@ clean:
 
 test:
 	$(firefox-bin) -P $(ff-profile) test/main.html
+
+test-chromium:
+	chromium-browser --temp-profile --disable-web-security test/main.html

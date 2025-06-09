@@ -66,7 +66,8 @@ export const format = {
         try {
             const re = new RegExp(regex);
             m = url.match(re);
-        } catch (e) {
+        }
+        catch (e) {
             throw e.message;
         }
 
@@ -84,12 +85,13 @@ export const format = {
      * Get regular expression from regex format.
      * @function _getRegex
      * @param url {String} Redirection url from i'th index.
+     * @param formatLetter {String}
      * @return {String|undefined} Regex without format characters
      * ('%r[' and ']') if there's a valid regex format in the beginning of url,
      * undefined or empty string otherwise.
      */
-    _getRegex(url) {
-        if (!url.startsWith('%r[') || url.length <= 3)
+    _getRegex(url, formatLetter) {
+        if (!url.startsWith(`%${formatLetter}[`) || url.length <= 3)
             return;
         url = url.substr(3);
         let re = '';
@@ -98,6 +100,31 @@ export const format = {
                 re += url[i];
             else
                 return re;
+        }
+    },
+
+    /**
+     * @function _replaceReplace
+     * @param url {String} Page's or link's URL to be redirected.
+     * @param regex {String} Regular expression from a replace format.
+     * @return {String} Regex's match or matched groups concatenated or empty
+     * string if there's no match.
+     * @throw {String} If replace regex is invalid.
+     */
+    _replaceReplace(url, regex) {
+        // Right bracket in character classes must be escaped in the format.
+        // Remove the backslash. E.g. '%r[[a-z\]+]' -> '%r[[a-z]+]'
+        regex = regex.replace(/\\]/g, ']');
+        try {
+            const m = regex.match(/^\/(?<regex>.*)(?<!\\)\/(?<replacement>.*)\/(?<flags>(g|i|v)+)?$/);
+            if (!m)
+                throw { message: 'Invalid regex', };
+            const re = new RegExp(m.groups.regex, m.groups.flags);
+
+            return url.replace(re, m.groups.replacement);
+        }
+        catch (e) {
+            throw e.message;
         }
     },
 
@@ -128,7 +155,7 @@ export const format = {
     replaceFormats(url, linkUrl, enableURL) {
         // TODO This can be removed and if after the loop the newUrl is the same
         // as redirect url.
-        if (!/%(s|h|p|q|f|u|r|g)/.test(url))
+        if (!/%(s|h|p|q|f|u|r|g|e)/.test(url))
             return url + linkUrl;
 
         const a = new URL(linkUrl);
@@ -144,6 +171,7 @@ export const format = {
         const pathRe = /^%p\[(\d+)\]/,
             paramRe = /^%q\[([^\]]+)\]/,
             regexFormatStartLength = 3,
+            regexLastBracketLength = 1,
             groupRe = /^%g\[(\d+)\]/;
         let newUrl = '',
             res;
@@ -157,49 +185,132 @@ export const format = {
             // These two conditionals must come before the others, because these
             // can match longer than 2 characters.
             if ((res = pathRe.exec(urlFromIthIndex))) {
-                newUrl += this._getPath(paths, res[1]);
+                const addToUrl = this._getPath(paths, res[1]);
                 i += res[0].length - 1;
+                // Check if replace format is next. In that case use this format's
+                // output as input for replace format.
+                if ((res = this._getRegex(url.substr(i), 'e'))) {
+                    const formatReplace = this._replaceReplace(addToUrl, res);
+                    i += regexFormatStartLength + res.length + regexLastBracketLength;
+                    newUrl += formatReplace;
+                }
+                else
+                    newUrl += addToUrl;
             }
             else if ((res = paramRe.exec(urlFromIthIndex))) {
-                newUrl += this._getParam(params, res[1]);
+                const addToUrl = this._getParam(params, res[1]);
                 i += res[0].length - 1;
+                if ((res = this._getRegex(url.substr(i), 'e'))) {
+                    const formatReplace = this._replaceReplace(addToUrl, res);
+                    i += regexFormatStartLength + res.length + regexLastBracketLength;
+                    newUrl += formatReplace;
+                }
+                else
+                    newUrl += addToUrl;
             }
             else if ((res = groupRe.exec(urlFromIthIndex))) {
-                newUrl += this._getGroup(enableURL, linkUrl, res[1]);
+                const addToUrl = this._getGroup(enableURL, linkUrl, res[1]);
                 i += res[0].length - 1;
+                if ((res = this._getRegex(url.substr(i), 'e'))) {
+                    const formatReplace = this._replaceReplace(addToUrl, res);
+                    i += regexFormatStartLength + res.length + regexLastBracketLength;
+                    newUrl += formatReplace;
+                }
+                else
+                    newUrl += addToUrl;
             }
-            else if ((res = this._getRegex(urlFromIthIndex))) {
-                newUrl += this._replaceRegex(linkUrl, res);
+            else if ((res = this._getRegex(urlFromIthIndex, 'r'))) {
+                const addToUrl = this._replaceRegex(linkUrl, res);
                 i += regexFormatStartLength + res.length;
+                if ((res = this._getRegex(url.substr(i + 1), 'e'))) {
+                    const formatReplace = this._replaceReplace(addToUrl, res);
+                    i += regexFormatStartLength + res.length + regexLastBracketLength;
+                    newUrl += formatReplace;
+                }
+                else
+                    newUrl += addToUrl;
+            }
+            else if ((res = this._getRegex(urlFromIthIndex, 'e'))) {
+                const addToUrl = this._replaceReplace(linkUrl, res);
+                i += regexFormatStartLength + res.length;
+                newUrl += addToUrl;
             }
             else if (nextTwoChars === '%s') {
-                newUrl += scheme;
+                const addToUrl = scheme;
                 ++i;
+                if ((res = this._getRegex(url.substr(i + 1), 'e'))) {
+                    const formatReplace = this._replaceReplace(addToUrl, res);
+                    i += regexFormatStartLength + res.length + regexLastBracketLength;
+                    newUrl += formatReplace;
+                }
+                else
+                    newUrl += addToUrl;
             }
             else if (nextTwoChars === '%h') {
-                newUrl += a.hostname;
+                const addToUrl = a.hostname;
                 ++i;
+                if ((res = this._getRegex(url.substr(i + 1), 'e'))) {
+                    const formatReplace = this._replaceReplace(addToUrl, res);
+                    i += regexFormatStartLength + res.length + regexLastBracketLength;
+                    newUrl += formatReplace;
+                }
+                else
+                    newUrl += addToUrl;
             }
             else if (nextTwoChars === '%f') {
-                newUrl += a.hash;
+                const addToUrl = a.hash;
                 ++i;
+                if ((res = this._getRegex(url.substr(i + 1), 'e'))) {
+                    const formatReplace = this._replaceReplace(addToUrl, res);
+                    i += regexFormatStartLength + res.length + regexLastBracketLength;
+                    newUrl += formatReplace;
+                }
+                else
+                    newUrl += addToUrl;
             }
             else if (nextTwoChars === '%u') {
-                newUrl += linkUrl;
+                const addToUrl = linkUrl;
                 ++i;
+                if ((res = this._getRegex(url.substr(i + 1), 'e'))) {
+                    const formatReplace = this._replaceReplace(addToUrl, res);
+                    i += regexFormatStartLength + res.length + regexLastBracketLength;
+                    newUrl += formatReplace;
+                }
+                else
+                    newUrl += addToUrl;
             }
             else if (nextTwoChars === '%p') {
-                newUrl += a.pathname.substr(1);
+                const addToUrl = a.pathname.substr(1);
                 ++i;
+                if ((res = this._getRegex(url.substr(i + 1), 'e'))) {
+                    const formatReplace = this._replaceReplace(addToUrl, res);
+                    i += regexFormatStartLength + res.length + regexLastBracketLength;
+                    newUrl += formatReplace;
+                }
+                else
+                    newUrl += addToUrl;
             }
             else if (nextTwoChars === '%q') {
-                newUrl += search;
+                const addToUrl = search;
                 ++i;
+                if ((res = this._getRegex(url.substr(i + 1), 'e'))) {
+                    const formatReplace = this._replaceReplace(addToUrl, res);
+                    i += regexFormatStartLength + res.length + regexLastBracketLength;
+                    newUrl += formatReplace;
+                }
+                else
+                    newUrl += addToUrl;
             }
             else
                 newUrl += url[i];
         }
+        // Add linkUrl to the end of redirect URL if a format really wasn't used.
+        // This is more complete than the test in the beginning of the function.
+        if (newUrl === url)
+            return url + linkUrl;
 
         return newUrl;
     },
 };
+
+export default format;

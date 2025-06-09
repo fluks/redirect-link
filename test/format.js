@@ -1,143 +1,212 @@
+import format from '../background/format.js';
+
 QUnit.test('No formats used', (assert) => {
     const url = 'http://localhost';
-    assert.equal(format.replaceFormats('', url),
+    assert.equal(
+        format.replaceFormats('', url),
         url,
-        'Append url to replace url if no formats are used 1');
+        'Append url to replace url if no formats are used 1'
+    );
 
     const replaceUrl = 'https://www.google.com/';
-    assert.equal(format.replaceFormats(replaceUrl, url),
+    assert.equal(
+        format.replaceFormats(replaceUrl, url),
         replaceUrl + url,
-        'Append url to replace url if no formats are used 2');
+        'Append url to replace url if no formats are used 2'
+    );
 });
 
 QUnit.test('%u format', (assert) => {
     const url = 'https://www.google.com';
-    assert.equal(format.replaceFormats('%u', url),
+    assert.equal(
+        format.replaceFormats('%u', url),
         url,
-        '%u alone');
+        '%u alone'
+    );
 
-    assert.equal(format.replaceFormats('a%ub', url),
+    assert.equal(
+        format.replaceFormats('a%ub', url),
         'a' + url + 'b',
-        'Something in left and right');
+        'Something in left and right'
+    );
 
-    assert.equal(format.replaceFormats('a%u', url),
+    assert.equal(
+        format.replaceFormats('a%u', url),
         'a' + url,
-        'Something before');
+        'Something before'
+    );
 
-    assert.equal(format.replaceFormats('%ua', url),
+    assert.equal(
+        format.replaceFormats('%ua', url),
         url + 'a',
-        'Something after');
+        'Something after'
+    );
 
-    assert.equal(format.replaceFormats('%u%u', url),
+    assert.equal(
+        format.replaceFormats('%u%u', url),
         url + url,
-        'Two formats');
+        'Two formats'
+    );
 });
 
 QUnit.test('%p format', (assert) => {
-    assert.equal(format.replaceFormats(
-        'http://localhost/%p',
-        'https://www.youtube.com/'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%p',
+            'https://www.youtube.com/'
+        ),
         'http://localhost/',
-        'Empty path');
+        'Empty path'
+    );
 
-    assert.equal(format.replaceFormats(
-        'http://localhost/%p',
-        'https://en.wikipedia.org/wiki/Main_Page'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%p',
+            'https://en.wikipedia.org/wiki/Main_Page'
+        ),
         'http://localhost/wiki/Main_Page',
-        'Two path elements');
+        'Two path elements'
+    );
 
-    assert.equal(format.replaceFormats(
-        'http://localhost/#%p[1] %p[0]',
-        'https://en.wikipedia.org/wiki/Main_Page'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/#%p[1] %p[0]',
+            'https://en.wikipedia.org/wiki/Main_Page'
+        ),
         'http://localhost/#Main_Page wiki',
-        'Using indices');
+        'Using indices'
+    );
 
-    assert.equal(format.replaceFormats(
-        'http://localhost/#%p[]',
-        'https://en.wikipedia.org/wiki/Main_Page'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/#%p[]',
+            'https://en.wikipedia.org/wiki/Main_Page'
+        ),
         'http://localhost/#wiki/Main_Page[]',
-        'Empty brackets after are ignored');
+        'Empty brackets after are ignored'
+    );
 
-    assert.equal(format.replaceFormats(
-        'http://localhost/#%p[a]',
-        'https://en.wikipedia.org/wiki/Main_Page'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/#%p[a]',
+            'https://en.wikipedia.org/wiki/Main_Page'
+        ),
         'http://localhost/#wiki/Main_Page[a]',
-        'Brackets with not a number after are ignored');
+        'Brackets with not a number after are ignored'
+    );
 
-    assert.throws(() => format.replaceFormats(
-        'http://localhost/#%p[2]',
-        'https://en.wikipedia.org/wiki/Main_Page'),
-        'Index overflow throws');
+    assert.throws(() =>
+        format.replaceFormats(
+            'http://localhost/#%p[2]',
+            'https://en.wikipedia.org/wiki/Main_Page'
+        ),
+        'Index overflow throws'
+    );
 });
 
 QUnit.test('%q format', (assert) => {
-    assert.equal(format.replaceFormats(
-        'http://localhost/%q',
-        'https://www.youtube.com/watch?v=EYs22diuCTg&t=87'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%q',
+            'https://www.youtube.com/watch?v=EYs22diuCTg&t=87'
+        ),
         'http://localhost/v=EYs22diuCTg&t=87',
-        'Just %q with two parameters');
+        'Just %q with two parameters'
+    );
 
-    assert.equal(format.replaceFormats(
-        'http://localhost/%q[t]/%q[v]',
-        'https://www.youtube.com/watch?v=EYs22diuCTg&t=87'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%q[t]/%q[v]',
+            'https://www.youtube.com/watch?v=EYs22diuCTg&t=87'
+        ),
         'http://localhost/87/EYs22diuCTg',
-        'Individual keys');
+        'Individual keys'
+    );
 
-    assert.equal(format.replaceFormats(
-        'http://localhost/%q[t]%q[t]%q[t]',
-        'https://www.youtube.com/watch?v=EYs22diuCTg&t=87'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%q[t]%q[t]%q[t]',
+            'https://www.youtube.com/watch?v=EYs22diuCTg&t=87'
+        ),
         'http://localhost/878787',
-        'Same key replaced multiple times');
+        'Same key replaced multiple times'
+    );
 
-    assert.equal(format.replaceFormats(
-        'http://localhost/%q',
-        'https://www.youtube.com/'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%q',
+            'https://www.youtube.com/'
+        ),
         'http://localhost/',
-        'No parameters');
+        'No parameters'
+    );
 
-    assert.equal(format.replaceFormats(
-        'http://localhost/%q[]xyz',
-        'https://www.youtube.com/watch?v=EYs22diuCTg&t=87'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%q[]xyz',
+            'https://www.youtube.com/watch?v=EYs22diuCTg&t=87'
+        ),
         'http://localhost/v=EYs22diuCTg&t=87[]xyz',
-        'Empty brackets are ignored');
+        'Empty brackets are ignored'
+    );
 
-    assert.throws(() => format.replaceFormats(
-        'http://localhost/%q[x]',
-        'https://www.youtube.com/search?y=1'),
-        'Throws with non-existing key');
+    assert.throws(() =>
+        format.replaceFormats(
+            'http://localhost/%q[x]',
+            'https://www.youtube.com/search?y=1'
+        ),
+        'Throws with non-existing key'
+    );
 });
 
 QUnit.test('%s format', (assert) => {
-    assert.equal(format.replaceFormats('%s://localhost/a/b/?x=1&y=2#abc',
-        'https://localhost/'),
+    assert.equal(
+        format.replaceFormats(
+            '%s://localhost/a/b/?x=1&y=2#abc',
+            'https://localhost/'
+        ),
         'https://localhost/a/b/?x=1&y=2#abc',
-        'Only %s format');
+        'Only %s format'
+    );
 
     // XXX Add-ons might not support file protocol.
-    assert.equal(format.replaceFormats('%s://localhost/%s',
-        'file:///home/user'),
+    assert.equal(
+        format.replaceFormats(
+            '%s://localhost/%s',
+            'file:///home/user'
+        ),
         'file://localhost/file',
-        'Only %s format');
+        'Only %s format'
+    );
 });
 
 QUnit.test('%f format', (assert) => {
-    assert.equal(format.replaceFormats(
-        'http://localhost/%f',
-        'http://localhost/#abc'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%f',
+            'http://localhost/#abc'
+        ),
         'http://localhost/#abc',
-        'Only %f format');
+        'Only %f format'
+    );
 
-    assert.equal(format.replaceFormats(
-        'http://localhost/%f',
-        'http://localhost/a/q?a=1'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%f',
+            'http://localhost/a/q?a=1'
+        ),
         'http://localhost/',
-        'Without fragment');
+        'Without fragment'
+    );
 
-    assert.equal(format.replaceFormats(
-        'http://localhost/%f#%f',
-        'http://localhost/#abc#xyz'),
+    assert.equal(
+        format.replaceFormats(
+            'http://localhost/%f#%f',
+            'http://localhost/#abc#xyz'
+        ),
         'http://localhost/#abc#xyz##abc#xyz',
-        'Two formats');
+        'Two formats'
+    );
 });
 
 QUnit.test('Format in URL bug', (assert) => {
@@ -152,25 +221,34 @@ QUnit.test('Format in URL bug', (assert) => {
 });
 
 QUnit.test('Some redirections listed on github', (assert) => {
-    let id = 'JyA1lBJl_qM';
-    assert.equal(format.replaceFormats(
-        'https://www.bitchute.com/video/%q[v]/',
-        `https://www.youtube.com/watch?v=${id}`),
-        `https://www.bitchute.com/video/${id}/`,
-        'Bitchute redirection');
+        let id = 'JyA1lBJl_qM';
+        assert.equal(
+            format.replaceFormats(
+                'https://www.bitchute.com/video/%q[v]/',
+                `https://www.youtube.com/watch?v=${id}`
+            ),
+            `https://www.bitchute.com/video/${id}/`,
+            'Bitchute redirection'
+        );
 
-    id = 'vE9og17';
-    assert.equal(format.replaceFormats(
-        'https://i.imgur.com/%p[0].jpg',
-        `https://imgur.com/${id}`),
-        `https://i.imgur.com/${id}.jpg`,
-        'Imgur image redirection');
+        id = 'vE9og17';
+        assert.equal(
+            format.replaceFormats(
+                'https://i.imgur.com/%p[0].jpg',
+                `https://imgur.com/${id}`
+            ),
+            `https://i.imgur.com/${id}.jpg`,
+            'Imgur image redirection'
+        );
 
-    assert.equal(format.replaceFormats(
-        'https://isitup.org/check.php?domain=%h',
-        'https://www.youtube.com/intl/en-GB/yt/dev/'),
-        'https://isitup.org/check.php?domain=www.youtube.com',
-        'Is it up? redirection');
+        assert.equal(
+            format.replaceFormats(
+                'https://isitup.org/check.php?domain=%h',
+                'https://www.youtube.com/intl/en-GB/yt/dev/'
+             ),
+            'https://isitup.org/check.php?domain=www.youtube.com',
+            'Is it up? redirection'
+       );
 });
 
 QUnit.test('%r format', (assert) => {
@@ -251,7 +329,7 @@ QUnit.test('%r format', (assert) => {
             'http://localhost/#%r[]+$]',
             'https://en.wikipedia.org/wiki/Main_Page#]'
         ),
-        'http://localhost/#%r[]+$]',
+        'http://localhost/#%r[]+$]https://en.wikipedia.org/wiki/Main_Page#]',
         'Non-escaped right bracket'
     );
 
@@ -260,7 +338,7 @@ QUnit.test('%r format', (assert) => {
             'http://localhost/#%r[]',
             'https://en.wikipedia.org/'
         ),
-        'http://localhost/#%r[]',
+        'http://localhost/#%r[]https://en.wikipedia.org/',
         'Empty regex is not replaced 1'
     );
 
@@ -269,7 +347,7 @@ QUnit.test('%r format', (assert) => {
             'http://localhost/#%r[]a',
             'https://en.wikipedia.org/'
         ),
-        'http://localhost/#%r[]a',
+        'http://localhost/#%r[]ahttps://en.wikipedia.org/',
         'Empty regex is not replaced 2'
     );
 
@@ -278,7 +356,7 @@ QUnit.test('%r format', (assert) => {
             '%r[.*abc',
             'https://en.wikipedia.org/abc'
         ),
-        '%r[.*abc',
+        '%r[.*abchttps://en.wikipedia.org/abc',
         'Format with missing right bracket is not replaced 1'
     );
 
@@ -287,7 +365,7 @@ QUnit.test('%r format', (assert) => {
             '%r[',
             'https://en.wikipedia.org/'
         ),
-        '%r[',
+        '%r[https://en.wikipedia.org/',
         'Format with missing right bracket is not replaced 2'
     );
 
@@ -305,7 +383,7 @@ QUnit.test('%r format', (assert) => {
             '%r[]]',
             'https://en.wikipedia.org/#]'
         ),
-        '%r[]]',
+        '%r[]]https://en.wikipedia.org/#]',
         'Format ends to first unescaped right bracket 2'
     );
 
@@ -324,7 +402,7 @@ QUnit.test('%r format', (assert) => {
             'http://google.com'
         ),
         // What this returns? We match any string. Must use regex.
-        /.*/,
+        /./,
         'Invalid regex throws'
     );
 });
@@ -378,5 +456,97 @@ QUnit.test('%g format', (assert) => {
         ),
         /^Enable URL didn't match$/,
         'Doesn\'t match EnableURL',
+    );
+});
+
+QUnit.test('%e format', (assert) => {
+    assert.equal(
+        format.replaceFormats(
+            '%e[/t/X/]',
+            'http://google.com',
+        ),
+        'hXtp://google.com',
+        'Only first match is replaced',
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%e[/o/X/g]',
+            'http://google.com',
+        ),
+        'http://gXXgle.cXm',
+        'All matches are replaced',
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%p%e[/a/X/g]',
+            'http://google.com/a/b/a',
+        ),
+        'X/b/X',
+        'Use %p format as input for %e',
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%r[(\/\/)]%e[/\//X/g]',
+            'http://google.com/',
+        ),
+        'XX',
+        'Use %r format as input for %e',
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%p%p%e[/a/X/g]%p',
+            'http://google.com/a',
+        ),
+        'aXa',
+        'Use only the correct format as input for %e',
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%e[///]',
+            'http://google.com/a/b/a',
+        ),
+        'http://google.com/a/b/a',
+        'Empty replacement does nothing',
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            '%e[',
+            'http://google.com/a/b/a',
+        ),
+        '%e[http://google.com/a/b/a',
+        'No last bracket',
+    );
+
+    assert.throws(() =>
+        format.replaceFormats(
+            '%e[/]',
+            'http://abc',
+        ),
+        /Invalid regex/,
+        'Only 1 forward slash',
+    );
+
+    assert.throws(() =>
+        format.replaceFormats(
+            '%e[/a/]',
+            'http://abc',
+        ),
+        /Invalid regex/,
+        'Only 2 forward slashes',
+    );
+
+    assert.throws(() =>
+        format.replaceFormats(
+            '%e[/a/b/x]',
+            'http://abc',
+        ),
+        /Invalid regex/,
+        'Invalid regex flag',
     );
 });
