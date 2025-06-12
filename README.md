@@ -49,6 +49,7 @@ parameter. e.g. in http://example.com/?a=1&b=2, %q[a] is 1 and %q[b] is 2
 * %f - fragment
 * %r[REGEX] - the regular expression is replaced with the match, or if capture groups are used, their matches are concatenated or empty string if there's no match. Right square brackets must be escaped in the regex. E.g. https://%r[[a-z.\\]+]
 * %g[N] - Capturing group from EnableURL field, where N is the index of captured group
+* %e[/REGEX/REPLACEMENT/FLAGS] - Replace REGEX with REPLACEMENT and optionally use FLAGS (i, g, etc.) using link/page URL as input. If you put some format before this format, it is used as input for this format. Example: http://a.com/%p[1]%e[/a|b|c/x/g] - %p[1] is used for input for %e and it changes all occurances of a, b and c to x from %p[1]
 
 There are examples in the other screenshot.
 
