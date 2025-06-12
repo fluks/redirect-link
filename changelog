@@ -1,3 +1,9 @@
+6.4.0-chromium
+
+ -- fluks <fluks.github@gmail.com>  Thu, 12 Jun 2025 19:59:55 +0300
+
+ * Add %e replace format.
+
 6.3.0-chromium
 
  -- fluks <fluks.github@gmail.com>  Sat, 08 Mar 2025 15:45:18 +0200
