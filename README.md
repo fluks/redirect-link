@@ -77,6 +77,20 @@ you can import.
 ![Popup](screenshot_popup.png)
 ![Options](screenshot_options.png)
 
+## Developing
+
+### Requirements
+
+* make, npm, Firefox
+
+### Environment
+
+* ```make install_dependencies```
+* Make sure correct manifest is in root directory: ```make change_to_firefox```
+* Change ```firefox-bin``` variable in [Makefile](./Makefile) to point to your Firefox binary you want to use and ```ff-profile``` variable to your Firefox profile you want to use.
+* ```make run```
+* ```make test```
+
 ## License
 
 Everything else is licensed as GPL3, but the images are licensed as
