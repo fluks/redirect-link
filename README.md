@@ -77,6 +77,19 @@ you can import.
 ![Popup](screenshot_popup.png)
 ![Options](screenshot_options.png)
 
+## Developing
+
+### Requirements
+
+* make, npm, Chromium
+
+### Environment
+
+* ```make install_dependencies```
+* Make sure correct manifest is in root directory: ```make change_to_chromium```
+* ```make run_chromium```
+* ```make test-chromium```
+
 ## License
 
 Everything else is licensed as GPL3, but the images are licensed as
