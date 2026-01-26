@@ -38,24 +38,27 @@ You can reorder redirections by dragging and dropping rows.
 
 ### Formats
 
-* %u - entire URL
-* %s - scheme
-* %h - hostname
+* %u - entire URL -- https://fsf.org, %u = https://fsf.org
+* %s - scheme -- https://fsf.org, %s = https
+* %h - hostname -- https://fsf.org, %h = fsf.org
 * %p - whole path without the leading slash, or %p[N], where N is index of the
-* path part. e.g. in http://example.com/a/b/c?param=1, %p[0] is a, %p[1] is b and
-%p[2] is c
+path part -- https://fsf.org/a/b/c/, %p = a/b/c/, %p[0] = a, %p[1] = b, %p[2]
+  = c
 * %q - all query parameters, or %q[KEY], where KEY is the name of the query
-parameter. e.g. in http://example.com/?a=1&b=2, %q[a] is 1 and %q[b] is 2
-* %f - fragment
-* %r[REGEX] - the regular expression is replaced with the match, or if capture groups are used, their matches are concatenated or empty string if there's no match. Right square brackets must be escaped in the regex. E.g. https://%r[[a-z.\\]+]
-* %g[N] - Capturing group from EnableURL field, where N is the index of captured group
+parameter -- https://fsf.org/a/b/c?x=1&y=2, %q = x=1&y=2, %q[x] = 1, %q[y] = 2
+* %f - fragment -- https://fsf.org/a/b/c?x=1&y=2#foobar, %f = foobar
+* %r[REGEX] - the regular expression is replaced with the match, or if capture groups are used, their matches are concatenated or empty string if there's no match. Right square brackets must be escaped in the regex. E.g. https://%r[[a-z.\\]+]. (?:) grouping isn't included in the replacement as expected -- https://www.fsf.org/blogs/, %r[//(.\*?)/(.\*)] = www.fsf.orgblogs
+* %g[N] - Capturing group from EnableURL field, where N is the index of captured group -- https://fsf.org/a/b/c?x=1&y=2#foobar. Enable URL: ://([^/]\*)/.\*#(.*), %g[0] = ://fsf.org/a/b/c?x=1&y=2#foobar (the whole match of Enable URL), %g[1] = fsf.org, %g[2] = foobar
 * %e[/REGEX/REPLACEMENT/FLAGS] - Replace REGEX with REPLACEMENT and optionally use FLAGS (i, g, etc.) using link/page URL as input. If you put some format before this format, it is used as input for this format. Example: http://a.com/%p[1]%e[/a|b|c/x/g] - %p[1] is used for input for %e and it changes all occurances of a, b and c to x from %p[1]
 
 There are examples in the other screenshot.
 
 To enable a redirection everywhere, leave Enable URL field empty. If you want to
 enable it only on certain URLs, add the URL or part of it and you can use a
-regular expression also. This feature works only on versions 63 and newer.
+regular expression also.
+
+If you want to redirect always you can check Always field after you have set the
+Enable URL. Then if Enable URL matches the page is redirected automatically.
 
 Remember to save if you changed options!
 
