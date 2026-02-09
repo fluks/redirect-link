@@ -10,32 +10,13 @@ input[type=text], input[type=url] {
   width: 100%;
 }
 
-#url-width, #enabled-url-width {
-  width: 29%;
-}
-
-#title-width {
-  width: 17%;
-}
-
-#enabled-width, #redirect-always-width, #favicon-width {
-  width: 5%;
-}
-
-#remove-width {
-  width: 5%;
-}
-
-#drag-width {
-  width: 5%;
-}
-
 .hidden {
   display: none;
 }
 
 th {
   text-align: center;
+  background: no-repeat right url(resize.png);
 }
 
 td {
@@ -44,7 +25,7 @@ td {
 }
 
 table {
-  table-layout: fixed;
+  table-layout: auto;
   width: 100%;
   margin: 10px 0 0 0;
 }
