@@ -42,7 +42,7 @@ run_firefox:
 		-u about:addons
 
 run_chromium:
-	chromium-browser --temp-profile --load-extension=$(shell pwd)
+	chromium --temp-profile --load-extension=$(shell pwd)
 
 firefox: change_to_firefox
 	zip -r redirect_link-$(version_suffix).xpi $(firefox_files)
