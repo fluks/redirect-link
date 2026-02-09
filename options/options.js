@@ -88,6 +88,13 @@ const saveOptions = async (tbody) => {
         rows: rows,
         'switch-to-opened-tab': g_switchToOpenedTab.checked,
     };
+
+    const columnSizes = {};
+    document.querySelectorAll("thead tr th").forEach(e => {
+        columnSizes[e.getAttribute('id')] = e.offsetWidth;
+    });
+    opts['column-sizes'] = columnSizes;
+
     if (await common.isSupportedContainer())
         opts['open-in-container'] = g_openInContainer.checked;
     if (await common.detectBrowser() !== common.FIREFOX_FOR_ANDROID)
@@ -283,6 +290,11 @@ const addItems = async (tbody, options) => {
         g_openInContainer.checked = options['open-in-container'];
     if (await common.detectBrowser() !== common.FIREFOX_FOR_ANDROID)
         g_openToNewTab.checked = options['open-to-new-tab'];
+    if ('column-sizes' in options) {
+        for (const [id, size] of Object.entries(options['column-sizes'])) {
+            document.querySelector(`#${id}`).style.width = `${size}px`;
+        }
+    }
 };
 
 /**
@@ -318,7 +330,7 @@ const findMoveTargetRow = (node, tbody) => {
  * @param e {Event}
  */
 const dragstartHandler = (e) => {
-    if (!e.target.classList.contains('redirect-row'))
+    if (!e.target.classList?.contains('redirect-row'))
         return;
 
     g_draggedRow = e.target;
@@ -463,6 +475,57 @@ const sort = (_event) => {
     g_sort.direction = direction === 'ascending' ? 'descending' : 'ascending';
 };
 
+/** Resize columns of the table. Found from https://jsfiddle.net/thrilleratplay/epcybL4v/.
+ */
+const resizeColumns = () => {
+    let thElm, startOffset;
+
+    const ths = document.querySelectorAll("thead tr th, tfoot tr th");
+    Array.prototype.forEach.call(ths, (th) => {
+        th.style.position = 'relative';
+
+        const grip = document.createElement('div');
+        grip.innerHTML = "&nbsp;";
+        grip.style.top = 0;
+        grip.style.right = 0;
+        grip.style.bottom = 0;
+        grip.style.width = '20px';
+        grip.style.position = 'absolute';
+        grip.style.cursor = 'col-resize';
+        grip.addEventListener('mousedown', (e) => {
+            thElm = th;
+            startOffset = th.offsetWidth - e.pageX;
+        });
+
+        th.appendChild(grip);
+    });
+
+    const findOtherTh = (th) => {
+        const _class = th.className;
+        if (th.parentNode.parentNode.nodeName === 'THEAD')
+            return document.querySelector(`tfoot tr th.${_class}`);
+        else if (th.parentNode.parentNode.nodeName === 'TFOOT')
+            return document.querySelector(`thead tr th.${_class}`);
+        else
+            return;
+    };
+
+    document.addEventListener('mousemove', (e) => {
+        if (thElm) {
+            const otherTh = findOtherTh(thElm);
+            if (!otherTh)
+                return;
+            const width = startOffset + e.pageX + 'px';
+            thElm.style.width = width;
+            otherTh.style.width = width;
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        thElm = undefined;
+    });
+};
+
 (async () => await removeUnsupportedStaticElements())();
 common.localize();
 chrome.storage.local.get(null, (options) => addItems(g_tbody, options));
@@ -487,3 +550,4 @@ document.addEventListener('drop', dropHandler);
 document.querySelectorAll('.header-row').forEach(e => {
     e.addEventListener('click', sort);
 });
+document.addEventListener('DOMContentLoaded', resizeColumns);
