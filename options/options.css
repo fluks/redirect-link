@@ -70,3 +70,9 @@ iframe {
 .header-row th {
   cursor: pointer;
 }
+
+#help-row {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
