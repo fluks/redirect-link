@@ -1,3 +1,10 @@
+6.5.0-chromium
+
+ -- fluks <fluks.github@gmail.com>  Tue, 10 Feb 2026 17:50:36 +0200
+
+ * Add resize columns on options page.
+ * Add link to help page.
+
 6.4.0-chromium
 
  -- fluks <fluks.github@gmail.com>  Thu, 12 Jun 2025 19:59:55 +0300
