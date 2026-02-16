@@ -22,7 +22,7 @@ export const detectBrowser = async () => {
             return FIREFOX_FOR_ANDROID;
         return FIREFOX;
     }
-    catch (error) {
+    catch {
         return CHROME;
     }
 };

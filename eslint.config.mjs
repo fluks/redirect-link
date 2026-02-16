@@ -19,7 +19,7 @@ export default [...compat.extends("eslint:recommended"), {
             ...globals.webextensions,
         },
 
-        ecmaVersion: 8,
+        ecmaVersion: 11,
         sourceType: "module",
     },
 

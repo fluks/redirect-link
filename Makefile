@@ -68,7 +68,7 @@ change_to_chromium:
 lint: change_to_firefox
 	# Check JSON syntax.
 	$(foreach file,$(locale_files),python3 -m json.tool < $(file) 1>/dev/null || exit;)
-	web-ext lint --ignore-files doc/*
+	web-ext lint --ignore-files doc/* settings2markdown.py
 	eslint $(js)
 
 install_dependencies:

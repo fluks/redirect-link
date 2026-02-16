@@ -90,7 +90,7 @@ const saveOptions = async (tbody) => {
     };
 
     const columnSizes = {};
-    document.querySelectorAll("thead tr th").forEach(e => {
+    document.querySelectorAll('thead tr th').forEach(e => {
         columnSizes[e.getAttribute('id')] = e.offsetWidth;
     });
     opts['column-sizes'] = columnSizes;
@@ -480,12 +480,12 @@ const sort = (_event) => {
 const resizeColumns = () => {
     let thElm, startOffset;
 
-    const ths = document.querySelectorAll("thead tr th, tfoot tr th");
+    const ths = document.querySelectorAll('thead tr th, tfoot tr th');
     Array.prototype.forEach.call(ths, (th) => {
         th.style.position = 'relative';
 
         const grip = document.createElement('div');
-        grip.innerHTML = "&nbsp;";
+        grip.innerHTML = '&nbsp;';
         grip.style.top = 0;
         grip.style.right = 0;
         grip.style.bottom = 0;
