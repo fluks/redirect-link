@@ -14,9 +14,12 @@
         "128": "data/logo_128x128.svg"
     },
 
-    "applications": {
+    "browser_specific_settings": {
         "gecko": {
-            "id": "redirectlink@fluks"
+            "id": "redirectlink@fluks",
+            "data_collection_permissions": {
+                "required": [ "none" ]
+            }
         }
     },
 
