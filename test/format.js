@@ -549,4 +549,32 @@ QUnit.test('%e format', (assert) => {
         /Invalid regex/,
         'Invalid regex flag',
     );
+
+    assert.equal(
+        format.replaceFormats(
+            'https://%g[1]%e[/\-/\./g]/%g[2]',
+            'https://www-pcforalla-se.translate.goog/article/3041151/raspberry-pi-slapper-eget-usb-minne.html?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en',
+            '^https:\/\/([^.]+)\.translate\.goog\/(.*)',
+        ),
+        'https://www.pcforalla.se/article/3041151/raspberry-pi-slapper-eget-usb-minne.html?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en',
+        'Bug using another format as input for %e #52 with %g',
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            'https://%p[0]%e[/\\./X/g]',
+            'http://abc.com/x.y.z/yyy',
+        ),
+        'https://xXyXz',
+        'Bug using another format as input for %e #52 with %p',
+    );
+
+    assert.equal(
+        format.replaceFormats(
+            'http://aaa-%q[b]%e[/2/0/g]-bbb',
+            'https://abc.com/?a=1&b=2',
+        ),
+        'http://aaa-0-bbb',
+        'Bug using another format as input for %e #52 with %q',
+    );
 });

@@ -189,7 +189,7 @@ export const format = {
                 i += res[0].length - 1;
                 // Check if replace format is next. In that case use this format's
                 // output as input for replace format.
-                if ((res = this._getRegex(url.substr(i), 'e'))) {
+                if ((res = this._getRegex(url.substr(i + 1), 'e'))) {
                     const formatReplace = this._replaceReplace(addToUrl, res);
                     i += regexFormatStartLength + res.length + regexLastBracketLength;
                     newUrl += formatReplace;
@@ -200,7 +200,7 @@ export const format = {
             else if ((res = paramRe.exec(urlFromIthIndex))) {
                 const addToUrl = this._getParam(params, res[1]);
                 i += res[0].length - 1;
-                if ((res = this._getRegex(url.substr(i), 'e'))) {
+                if ((res = this._getRegex(url.substr(i + 1), 'e'))) {
                     const formatReplace = this._replaceReplace(addToUrl, res);
                     i += regexFormatStartLength + res.length + regexLastBracketLength;
                     newUrl += formatReplace;
@@ -211,7 +211,7 @@ export const format = {
             else if ((res = groupRe.exec(urlFromIthIndex))) {
                 const addToUrl = this._getGroup(enableURL, linkUrl, res[1]);
                 i += res[0].length - 1;
-                if ((res = this._getRegex(url.substr(i), 'e'))) {
+                if ((res = this._getRegex(url.substr(i + 1), 'e'))) {
                     const formatReplace = this._replaceReplace(addToUrl, res);
                     i += regexFormatStartLength + res.length + regexLastBracketLength;
                     newUrl += formatReplace;
