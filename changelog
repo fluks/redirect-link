@@ -1,3 +1,9 @@
+6.6.0-chromium
+
+ -- fluks <fluks.github@gmail.com>  Mon, 16 Feb 2026 14:33:05 +0200
+
+ * Fix replace format bug.
+
 6.5.0-chromium
 
  -- fluks <fluks.github@gmail.com>  Tue, 10 Feb 2026 17:50:36 +0200
