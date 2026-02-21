@@ -26,8 +26,12 @@ const removeUnsupportedStaticElements = async () => {
     if (!await common.isSupportedContainer())
          document.querySelector('#open-in-container-div').remove();
 
-    if (await common.detectBrowser() === common.FIREFOX_FOX_ANDROID)
+    if (await common.detectBrowser() === common.FIREFOX_FOR_ANDROID) {
         document.querySelector('#open-to-new-tab-div').remove();
+
+        document.querySelector('#drag-width').remove();
+        document.querySelectorAll('.drag').forEach(e => e.remove());
+    }
 };
 
 /**
@@ -256,14 +260,17 @@ const addRow = async (tbody, row) => {
     tr.appendChild(td);
 
     // Drag row button cell.
-    td = document.createElement('td');
-    input = document.createElement('input');
-    input.type = 'button';
-    input.value = _('options_js_dragButton');
-    input.addEventListener('mousedown', () => tr.draggable = true);
-    tr.addEventListener('mouseup', () => tr.draggable = false);
-    td.appendChild(input);
-    tr.appendChild(td);
+    if (await common.detectBrowser() !== common.FIREFOX_FOR_ANDROID) {
+        td = document.createElement('td');
+        input = document.createElement('input');
+        input.type = 'button';
+        input.value = _('options_js_dragButton');
+        input.className = 'drag-button';
+        input.addEventListener('mousedown', () => tr.draggable = true);
+        tr.addEventListener('mouseup', () => tr.draggable = false);
+        td.appendChild(input);
+        tr.appendChild(td);
+    }
 
     tbody.appendChild(tr);
 };

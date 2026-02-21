@@ -18,7 +18,7 @@ export const
 export const detectBrowser = async () => {
     try {
         const info = await browser.runtime.getBrowserInfo();
-        if (/fennec/i.test(info.name))
+        if (/fennec|nightly/i.test(info.name))
             return FIREFOX_FOR_ANDROID;
         return FIREFOX;
     }
