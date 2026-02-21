@@ -485,7 +485,15 @@ const sort = (_event) => {
 /** Resize columns of the table. Found from https://jsfiddle.net/thrilleratplay/epcybL4v/.
  */
 const resizeColumns = () => {
-    let thElm, startOffset;
+    const findOtherTh = (th) => {
+        const _class = th.className;
+        if (th.parentNode.parentNode.nodeName === 'THEAD')
+            return document.querySelector(`tfoot tr th.${_class}`);
+        else if (th.parentNode.parentNode.nodeName === 'TFOOT')
+            return document.querySelector(`thead tr th.${_class}`);
+        else
+            return;
+    };
 
     const ths = document.querySelectorAll('thead tr th, tfoot tr th');
     Array.prototype.forEach.call(ths, (th) => {
@@ -499,37 +507,32 @@ const resizeColumns = () => {
         grip.style.width = '20px';
         grip.style.position = 'absolute';
         grip.style.cursor = 'col-resize';
-        grip.addEventListener('mousedown', (e) => {
-            thElm = th;
-            startOffset = th.offsetWidth - e.pageX;
+        grip.style.touchAction = 'none';
+
+        let startOffset;
+        grip.addEventListener('pointerdown', (e) => {
+            startOffset = th.offsetWidth - e.clientX;
+            grip.setPointerCapture(e.pointerId);
+            e.preventDefault();
+        });
+
+        document.addEventListener('pointermove', (e) => {
+            if (!grip.hasPointerCapture(e.pointerId))
+                return;
+
+            const otherTh = findOtherTh(th);
+            if (!otherTh)
+                return;
+            const width = startOffset + e.clientX + 'px';
+            th.style.width = width;
+            otherTh.style.width = width;
+        });
+
+        document.addEventListener('pointerup', (e) => {
+            grip.releasePointerCapture(e.pointerId);
         });
 
         th.appendChild(grip);
-    });
-
-    const findOtherTh = (th) => {
-        const _class = th.className;
-        if (th.parentNode.parentNode.nodeName === 'THEAD')
-            return document.querySelector(`tfoot tr th.${_class}`);
-        else if (th.parentNode.parentNode.nodeName === 'TFOOT')
-            return document.querySelector(`thead tr th.${_class}`);
-        else
-            return;
-    };
-
-    document.addEventListener('mousemove', (e) => {
-        if (thElm) {
-            const otherTh = findOtherTh(thElm);
-            if (!otherTh)
-                return;
-            const width = startOffset + e.pageX + 'px';
-            thElm.style.width = width;
-            otherTh.style.width = width;
-        }
-    });
-
-    document.addEventListener('mouseup', () => {
-        thElm = undefined;
     });
 };
 

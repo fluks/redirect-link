@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+.drag-button {
+  touch-action: none;
+}
+
 .accesskey {
   text-decoration: underline;
 }
